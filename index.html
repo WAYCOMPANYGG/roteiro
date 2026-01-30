@@ -12,9 +12,13 @@
       background: linear-gradient(135deg, #0f0f0f, #1b1b1b);
       font-family: Arial, sans-serif;
       color: #fff;
+    }
+
+    .page {
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
+      padding: 40px 16px;
     }
 
     .card {
@@ -69,43 +73,70 @@
       background: #25D366;
     }
 
-    .btn-agenda {
-      background: #2563eb;
+    .agenda {
+      width: 100%;
+      max-width: 900px;
+      margin-top: 48px;
+      background: #121212;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.6);
+    }
+
+    .agenda h2 {
+      font-size: 20px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .agenda iframe {
+      width: 100%;
+      height: 900px;
+      border: none;
+      border-radius: 12px;
     }
 
     .footer {
       margin-top: 18px;
       font-size: 12px;
       opacity: 0.6;
+      text-align: center;
     }
   </style>
 </head>
 
 <body>
-  <div class="card">
+  <div class="page">
 
-    <img src="logo-lalaia.png" alt="Lalaiá Music" class="logo">
+    <!-- CARD PRINCIPAL -->
+    <div class="card">
+      <img src="logo-lalaia.png" alt="Lalaiá Music" class="logo">
 
-    <h1>Cronograma do Show</h1>
-    <p>Links oficiais da produção</p>
+      <h1>Cronograma do Show</h1>
+      <p>Visualize o cronograma completo em PDF</p>
 
-    <a href="cronograma-matheusinho.pdf" target="_blank" class="btn btn-pdf">
-      📄 Abrir Cronograma (PDF)
-    </a>
+      <a href="cronograma-matheusinho.pdf" target="_blank" class="btn btn-pdf">
+        📄 Abrir Cronograma (PDF)
+      </a>
 
-    <a href="https://www.midiasonora.com.br/agenda/lalaia/v2/?cat=all&artista=&grupo=&descart=&obs=Equipe"
-       target="_blank"
-       class="btn btn-agenda">
-      📅 Ver Agenda Oficial
-    </a>
+      <a href="https://wa.me/5521983764623" target="_blank" class="btn btn-whatsapp">
+        💬 Falar com Produtor Executivo
+      </a>
 
-    <a href="https://wa.me/5521983764623" target="_blank" class="btn btn-whatsapp">
-      💬 Falar com Produtor Executivo
-    </a>
+      <div class="footer">
+        Desenvolvido por Luke<br>
+        © Lalaiá Music
+      </div>
+    </div>
 
-    <div class="footer">
-      Desenvolvido por Luke<br>
-      © Lalaiá Music
+    <!-- AGENDA -->
+    <div class="agenda">
+      <h2>📅 Agenda Oficial Lalaiá</h2>
+
+      <iframe 
+        src="https://www.midiasonora.com.br/agenda/lalaia/v2/?cat=all&artista=&grupo=&descart=&obs=Equipe"
+        loading="lazy">
+      </iframe>
     </div>
 
   </div>
