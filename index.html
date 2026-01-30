@@ -1,208 +1,166 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Reserva da Van | WayCompanyGG</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Reserva de Van | Lalaiá</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #0f0f0f, #1b1b1b);
-      font-family: Arial, sans-serif;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+<style>
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0f0f, #1b1b1b);
+  font-family: Arial, sans-serif;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-    .card {
-      background: #121212;
-      padding: 32px;
-      border-radius: 18px;
-      width: 100%;
-      max-width: 460px;
-      box-shadow: 0 20px 50px rgba(0,0,0,.6);
-    }
+.card {
+  background: #121212;
+  padding: 32px;
+  border-radius: 16px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0,0,0,.6);
+}
 
-    h1 {
-      text-align: center;
-      margin-bottom: 8px;
-    }
+.logo {
+  max-width: 160px;
+  margin-bottom: 16px;
+}
 
-    p {
-      text-align: center;
-      opacity: 0.8;
-      margin-bottom: 20px;
-    }
+h1 {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
 
-    .admin-badge {
-      text-align: center;
-      color: #ef4444;
-      font-size: 13px;
-      margin-bottom: 12px;
-      display: none;
-    }
+p {
+  font-size: 14px;
+  opacity: .85;
+  margin-bottom: 20px;
+}
 
-    .van {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-bottom: 20px;
-    }
+/* VAN */
+.van {
+  background: #1c1c1c;
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
 
-    .seat {
-      background: #2a2a2a;
-      border-radius: 8px;
-      padding: 16px 6px;
-      text-align: center;
-      cursor: pointer;
-      font-size: 14px;
-      transition: 0.2s;
-    }
+/* ASSENTOS */
+.seats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
 
-    .seat:hover {
-      background: #3a3a3a;
-    }
+.seat {
+  background: #2e2e2e;
+  height: 42px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: .2s;
+}
 
-    .seat.reserved {
-      background: #7c3aed;
-      cursor: default;
-    }
+.seat:hover {
+  background: #3a3a3a;
+}
 
-    .seat.admin {
-      outline: 2px solid #ef4444;
-    }
+.seat.reserved {
+  background: #7c3aed;
+  cursor: not-allowed;
+}
 
-    .btn {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: none;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-bottom: 10px;
-    }
+/* LEGENDA */
+.legend {
+  display: flex;
+  justify-content: space-around;
+  font-size: 13px;
+  margin-top: 12px;
+}
 
-    .btn-admin {
-      background: #ef4444;
-      color: #fff;
-    }
+.legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
 
-    .btn-exit {
-      background: #374151;
-      color: #fff;
-      display: none;
-    }
+.box {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+}
+.free { background: #2e2e2e; }
+.busy { background: #7c3aed; }
 
-    .footer {
-      margin-top: 16px;
-      text-align: center;
-      font-size: 12px;
-      opacity: 0.6;
-    }
-  </style>
+.footer {
+  font-size: 12px;
+  opacity: .6;
+  margin-top: 14px;
+}
+</style>
 </head>
 
 <body>
-  <div class="card">
-    <h1>🚐 Reserva da Van</h1>
-    <p>Escolha seu lugar e informe seu nome</p>
 
-    <div id="adminBadge" class="admin-badge">👮‍♂️ MODO ADMIN ATIVO</div>
+<div class="card">
+  <img src="logo-lalaia.png" class="logo" alt="Lalaiá">
 
-    <div id="van" class="van"></div>
+  <h1>Reserva de Lugares — Van</h1>
+  <p>Clique em um lugar disponível e informe seu nome</p>
 
-    <button id="adminBtn" class="btn btn-admin">Entrar como Admin</button>
-    <button id="exitAdminBtn" class="btn btn-exit">Sair do Admin</button>
-
-    <a href="https://waycompanygg.github.io/roteiro/" class="btn btn-exit">
-  ⬅ Voltar para o site principal
-</a>
-
-
-    <div class="footer">WayCompanyGG ©</div>
+  <div class="van">
+    <div class="seats" id="seats"></div>
   </div>
 
-  <script>
-    const TOTAL_SEATS = 12;
-    const van = document.getElementById("van");
-    const adminBtn = document.getElementById("adminBtn");
-    const exitAdminBtn = document.getElementById("exitAdminBtn");
-    const adminBadge = document.getElementById("adminBadge");
+  <div class="legend">
+    <span><div class="box free"></div> Livre</span>
+    <span><div class="box busy"></div> Reservado</span>
+  </div>
 
-    let isAdmin = false;
-    let seats = JSON.parse(localStorage.getItem("vanSeats")) 
-      || Array(TOTAL_SEATS).fill(null);
+  <div class="footer">
+    © Lalaiá Music
+  </div>
+</div>
 
-    function render() {
-      van.innerHTML = "";
-      seats.forEach((name, index) => {
-        const seat = document.createElement("div");
-        seat.classList.add("seat");
+<script>
+const totalSeats = 12; // ajuste aqui
+const seatsContainer = document.getElementById("seats");
+let reservations = JSON.parse(localStorage.getItem("vanSeats")) || {};
 
-        if (name) {
-          seat.classList.add("reserved");
-          seat.textContent = name;
-          if (isAdmin) seat.classList.add("admin");
-        } else {
-          seat.textContent = `Lugar ${index + 1}`;
-        }
+function renderSeats() {
+  seatsContainer.innerHTML = "";
+  for (let i = 1; i <= totalSeats; i++) {
+    const seat = document.createElement("div");
+    seat.className = "seat";
+    seat.innerText = i;
 
-        seat.onclick = () => handleSeatClick(index);
-        van.appendChild(seat);
-      });
+    if (reservations[i]) {
+      seat.classList.add("reserved");
+      seat.title = "Reservado por " + reservations[i];
+    } else {
+      seat.onclick = () => reserveSeat(i);
     }
 
-    function handleSeatClick(index) {
-      if (seats[index] && !isAdmin) return;
+    seatsContainer.appendChild(seat);
+  }
+}
 
-      if (isAdmin && seats[index]) {
-        if (confirm(`Liberar o lugar de ${seats[index]}?`)) {
-          seats[index] = null;
-          save();
-        }
-        return;
-      }
+function reserveSeat(number) {
+  const name = prompt("Digite seu nome para reservar o lugar " + number);
+  if (!name) return;
 
-      if (!seats[index]) {
-        const name = prompt("Digite seu nome para reservar:");
-        if (name) {
-          seats[index] = name;
-          save();
-        }
-      }
-    }
+  reservations[number] = name;
+  localStorage.setItem("vanSeats", JSON.stringify(reservations));
+  renderSeats();
+}
 
-    function save() {
-      localStorage.setItem("vanSeats", JSON.stringify(seats));
-      render();
-    }
+renderSeats();
+</script>
 
-    adminBtn.onclick = () => {
-      const senha = prompt("Senha do admin:");
-      if (senha === "1234") {
-        isAdmin = true;
-        adminBadge.style.display = "block";
-        adminBtn.style.display = "none";
-        exitAdminBtn.style.display = "block";
-        render();
-      } else {
-        alert("Senha incorreta");
-      }
-    };
-
-    exitAdminBtn.onclick = () => {
-      isAdmin = false;
-      adminBadge.style.display = "none";
-      adminBtn.style.display = "block";
-      exitAdminBtn.style.display = "none";
-      render();
-    };
-
-    render();
-  </script>
 </body>
 </html>
