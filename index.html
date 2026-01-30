@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Cronograma | Lalaiá Music</title>
+  <title>Reserva da Van | WayCompanyGG</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
@@ -19,62 +19,87 @@
 
     .card {
       background: #121212;
-      padding: 40px 32px;
-      border-radius: 16px;
-      text-align: center;
+      padding: 32px;
+      border-radius: 18px;
       width: 100%;
-      max-width: 420px;
+      max-width: 460px;
       box-shadow: 0 20px 50px rgba(0,0,0,.6);
     }
 
-    .logo {
-      max-width: 180px;
-      margin-bottom: 24px;
-    }
-
     h1 {
-      font-size: 22px;
+      text-align: center;
       margin-bottom: 8px;
     }
 
     p {
-      font-size: 15px;
-      opacity: 0.85;
-      margin-bottom: 28px;
+      text-align: center;
+      opacity: 0.8;
+      margin-bottom: 20px;
+    }
+
+    .admin-badge {
+      text-align: center;
+      color: #ef4444;
+      font-size: 13px;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    .van {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .seat {
+      background: #2a2a2a;
+      border-radius: 8px;
+      padding: 16px 6px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    .seat:hover {
+      background: #3a3a3a;
+    }
+
+    .seat.reserved {
+      background: #7c3aed;
+      cursor: default;
+    }
+
+    .seat.admin {
+      outline: 2px solid #ef4444;
     }
 
     .btn {
-      display: block;
       width: 100%;
-      padding: 14px;
-      margin-bottom: 14px;
+      padding: 12px;
       border-radius: 10px;
-      font-size: 16px;
+      border: none;
+      font-size: 15px;
       font-weight: bold;
-      text-decoration: none;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+
+    .btn-admin {
+      background: #ef4444;
       color: #fff;
-      transition: transform .15s ease, opacity .15s ease;
     }
 
-    .btn:hover {
-      transform: scale(1.02);
-      opacity: 0.9;
-    }
-
-    .btn-pdf {
-      background: #7c3aed;
-    }
-
-    .btn-whatsapp {
-      background: #25D366;
-    }
-
-    .btn-agenda {
-      background: #2563eb;
+    .btn-exit {
+      background: #374151;
+      color: #fff;
+      display: none;
     }
 
     .footer {
-      margin-top: 18px;
+      margin-top: 16px;
+      text-align: center;
       font-size: 12px;
       opacity: 0.6;
     }
@@ -83,31 +108,96 @@
 
 <body>
   <div class="card">
+    <h1>🚐 Reserva da Van</h1>
+    <p>Escolha seu lugar e informe seu nome</p>
 
-    <img src="logo-lalaia.png" alt="Lalaiá Music" class="logo">
+    <div id="adminBadge" class="admin-badge">👮‍♂️ MODO ADMIN ATIVO</div>
 
-    <h1>Cronograma do Show</h1>
-    <p>Links oficiais da produção</p>
+    <div id="van" class="van"></div>
 
-    <a href="cronograma-matheusinho.pdf" target="_blank" class="btn btn-pdf">
-      📄 Abrir Cronograma (PDF)
-    </a>
+    <button id="adminBtn" class="btn btn-admin">Entrar como Admin</button>
+    <button id="exitAdminBtn" class="btn btn-exit">Sair do Admin</button>
 
-    <a href="https://www.midiasonora.com.br/agenda/lalaia/v2/?cat=all&artista=&grupo=&descart=&obs=Equipe"
-       target="_blank"
-       class="btn btn-agenda">
-      📅 Ver Agenda Oficial
-    </a>
-
-    <a href="https://wa.me/5521983764623" target="_blank" class="btn btn-whatsapp">
-      💬 Falar com Produtor Executivo
-    </a>
-
-    <div class="footer">
-      Desenvolvido por Luke<br>
-      © Lalaiá Music
-    </div>
-
+    <div class="footer">WayCompanyGG ©</div>
   </div>
+
+  <script>
+    const TOTAL_SEATS = 12;
+    const van = document.getElementById("van");
+    const adminBtn = document.getElementById("adminBtn");
+    const exitAdminBtn = document.getElementById("exitAdminBtn");
+    const adminBadge = document.getElementById("adminBadge");
+
+    let isAdmin = false;
+    let seats = JSON.parse(localStorage.getItem("vanSeats")) 
+      || Array(TOTAL_SEATS).fill(null);
+
+    function render() {
+      van.innerHTML = "";
+      seats.forEach((name, index) => {
+        const seat = document.createElement("div");
+        seat.classList.add("seat");
+
+        if (name) {
+          seat.classList.add("reserved");
+          seat.textContent = name;
+          if (isAdmin) seat.classList.add("admin");
+        } else {
+          seat.textContent = `Lugar ${index + 1}`;
+        }
+
+        seat.onclick = () => handleSeatClick(index);
+        van.appendChild(seat);
+      });
+    }
+
+    function handleSeatClick(index) {
+      if (seats[index] && !isAdmin) return;
+
+      if (isAdmin && seats[index]) {
+        if (confirm(`Liberar o lugar de ${seats[index]}?`)) {
+          seats[index] = null;
+          save();
+        }
+        return;
+      }
+
+      if (!seats[index]) {
+        const name = prompt("Digite seu nome para reservar:");
+        if (name) {
+          seats[index] = name;
+          save();
+        }
+      }
+    }
+
+    function save() {
+      localStorage.setItem("vanSeats", JSON.stringify(seats));
+      render();
+    }
+
+    adminBtn.onclick = () => {
+      const senha = prompt("Senha do admin:");
+      if (senha === "1234") {
+        isAdmin = true;
+        adminBadge.style.display = "block";
+        adminBtn.style.display = "none";
+        exitAdminBtn.style.display = "block";
+        render();
+      } else {
+        alert("Senha incorreta");
+      }
+    };
+
+    exitAdminBtn.onclick = () => {
+      isAdmin = false;
+      adminBadge.style.display = "none";
+      adminBtn.style.display = "block";
+      exitAdminBtn.style.display = "none";
+      render();
+    };
+
+    render();
+  </script>
 </body>
 </html>
