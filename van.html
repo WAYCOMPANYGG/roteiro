@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Reserva de Van | Lalaiá</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0f0f, #1b1b1b);
+  font-family: Arial, sans-serif;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  background: #121212;
+  padding: 32px;
+  border-radius: 16px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0,0,0,.6);
+}
+
+.logo {
+  max-width: 160px;
+  margin-bottom: 16px;
+}
+
+h1 {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+p {
+  font-size: 14px;
+  opacity: .85;
+  margin-bottom: 20px;
+}
+
+/* VAN */
+.van {
+  background: #1c1c1c;
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+/* ASSENTOS */
+.seats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.seat {
+  background: #2e2e2e;
+  height: 42px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.seat:hover {
+  background: #3a3a3a;
+}
+
+.seat.reserved {
+  background: #7c3aed;
+  cursor: not-allowed;
+}
+
+/* LEGENDA */
+.legend {
+  display: flex;
+  justify-content: space-around;
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+.legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.box {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+}
+.free { background: #2e2e2e; }
+.busy { background: #7c3aed; }
+
+.footer {
+  font-size: 12px;
+  opacity: .6;
+  margin-top: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <img src="logo-lalaia.png" class="logo" alt="Lalaiá">
+
+  <h1>Reserva de Lugares — Van</h1>
+  <p>Clique em um lugar disponível e informe seu nome</p>
+
+  <div class="van">
+    <div class="seats" id="seats"></div>
+  </div>
+
+  <div class="legend">
+    <span><div class="box free"></div> Livre</span>
+    <span><div class="box busy"></div> Reservado</span>
+  </div>
+
+  <div class="footer">
+    © Lalaiá Music
+  </div>
+</div>
+
+<script>
+const totalSeats = 12; // ajuste aqui
+const seatsContainer = document.getElementById("seats");
+let reservations = JSON.parse(localStorage.getItem("vanSeats")) || {};
+
+function renderSeats() {
+  seatsContainer.innerHTML = "";
+  for (let i = 1; i <= totalSeats; i++) {
+    const seat = document.createElement("div");
+    seat.className = "seat";
+    seat.innerText = i;
+
+    if (reservations[i]) {
+      seat.classList.add("reserved");
+      seat.title = "Reservado por " + reservations[i];
+    } else {
+      seat.onclick = () => reserveSeat(i);
+    }
+
+    seatsContainer.appendChild(seat);
+  }
+}
+
+function reserveSeat(number) {
+  const name = prompt("Digite seu nome para reservar o lugar " + number);
+  if (!name) return;
+
+  reservations[number] = name;
+  localStorage.setItem("vanSeats", JSON.stringify(reservations));
+  renderSeats();
+}
+
+renderSeats();
+</script>
+
+</body>
+</html>
