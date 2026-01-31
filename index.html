@@ -1,105 +1,107 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Editor do Cronograma</title>
+  <meta charset="UTF-8">
+  <title>Lalaiá Music | WayCompanyGG</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
-    body{margin:0;min-height:100vh;display:flex;justify-content:center;align-items:center;background:#0f0f0f;color:#fff;font-family:Arial}
-    .card{width:100%;max-width:520px;background:#121212;border-radius:16px;padding:18px;box-shadow:0 20px 50px rgba(0,0,0,.6)}
-    h1{margin:0 0 10px;text-align:center;font-size:20px}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    label{font-size:12px;opacity:.8}
-    input{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:#0b0b0b;color:#fff}
-    .full{grid-column:1/-1}
-    button{width:100%;padding:12px;border-radius:10px;border:none;font-weight:800;cursor:pointer}
-    .btn-save{background:#2563eb;color:#fff;margin-top:12px}
-    .btn-pdf{background:#16a34a;color:#fff;margin-top:10px}
-    .msg{margin-top:10px;font-size:13px;opacity:.85;text-align:center}
-    a{color:#a78bfa}
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #0f0f0f, #1b1b1b);
+      font-family: Arial, sans-serif;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      background: #121212;
+      padding: 40px 32px;
+      border-radius: 16px;
+      text-align: center;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.6);
+    }
+
+    .logo {
+      max-width: 180px;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      font-size: 15px;
+      opacity: 0.85;
+      margin-bottom: 28px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 14px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      color: #fff;
+      transition: transform .15s ease, opacity .15s ease;
+    }
+
+    .btn:hover {
+      transform: scale(1.02);
+      opacity: 0.9;
+    }
+
+    .btn-pdf { background: #7c3aed; }
+    .btn-whatsapp { background: #25D366; }
+    .btn-van { background: #ef4444; }
+    .btn-ajuste { background: #2563eb; }
+
+    .footer {
+      margin-top: 18px;
+      font-size: 12px;
+      opacity: 0.6;
+    }
   </style>
 </head>
+
 <body>
   <div class="card">
-    <h1>Editor do Cronograma (WayCompanyGG)</h1>
+    <img src="logo-lalaia.png" alt="Lalaiá Music" class="logo">
 
-    <div class="grid">
-      <div>
-        <label>CIDADE</label>
-        <input id="CIDADE" placeholder="Manaus / AM" />
-      </div>
+    <h1>Lalaiá Music</h1>
+    <p>Informações oficiais & produção</p>
 
-      <div>
-        <label>DATA</label>
-        <input id="DATA" placeholder="31/01/25" />
-      </div>
+    <a href="cronograma-matheusinho.pdf" target="_blank" class="btn btn-pdf">
+      📄 Abrir Cronograma (PDF)
+    </a>
 
-      <div class="full">
-        <label>LOCAL</label>
-        <input id="LOCAL" placeholder="Quintal do Pagode" />
-      </div>
+    <a href="https://wa.me/5521983764623" target="_blank" class="btn btn-whatsapp">
+      💬 Falar com Produção
+    </a>
 
-      <div>
-        <label>DIA_SEMANA</label>
-        <input id="DIA_SEMANA" placeholder="SÁBADO" />
-      </div>
+    <a href="van.html" class="btn btn-van">
+      🚐 Reserva de Lugar na Van
+    </a>
 
-      <div>
-        <label>SHOW_TIME</label>
-        <input id="SHOW_TIME" placeholder="22:30" />
-      </div>
+    <!-- NOVO BOTÃO (só equipe) -->
+    <a href="ajustar-cronograma.html" class="btn btn-ajuste">
+      🛠️ Ajustar Cronograma (Equipe)
+    </a>
 
-      <div class="full">
-        <label>BOATE</label>
-        <input id="BOATE" placeholder="BOATE" />
-      </div>
-
-      <div class="full">
-        <label>CLIMA</label>
-        <input id="CLIMA" placeholder="18° | 27° NÃO CHOVE" />
-      </div>
+    <div class="footer">
+      Desenvolvido por WayCompanyGG<br>
+      © Lalaiá Music
     </div>
-
-    <button class="btn-save" onclick="salvar()">💾 Salvar no Sheet</button>
-    <button class="btn-pdf" onclick="pdf()">📄 Gerar PDF</button>
-
-    <div id="msg" class="msg"></div>
   </div>
-
-<script>
-  function getPayload(){
-    // ids = nomes dos Intervalos Nomeados
-    const keys = ["CIDADE","LOCAL","DATA","DIA_SEMANA","SHOW_TIME","BOATE","CLIMA"];
-    const payload = {};
-    keys.forEach(k => payload[k] = document.getElementById(k).value);
-    return payload;
-  }
-
-  function salvar(){
-    document.getElementById("msg").innerText = "Salvando...";
-    google.script.run
-      .withSuccessHandler(() => {
-        document.getElementById("msg").innerText = "✅ Dados salvos na planilha.";
-      })
-      .withFailureHandler(err => {
-        document.getElementById("msg").innerText = "❌ Erro: " + err.message;
-      })
-      .salvarCampos(getPayload());
-  }
-
-  function pdf(){
-    document.getElementById("msg").innerText = "Gerando PDF...";
-    google.script.run
-      .withSuccessHandler((res) => {
-        document.getElementById("msg").innerHTML =
-          `✅ PDF atualizado! <a href="${res.viewUrl}" target="_blank">Abrir</a> | ` +
-          `<a href="${res.downloadUrl}" target="_blank">Baixar</a>`;
-      })
-      .withFailureHandler(err => {
-        document.getElementById("msg").innerText = "❌ Erro: " + err.message;
-      })
-      .gerarPdf();
-  }
-</script>
 </body>
 </html>
