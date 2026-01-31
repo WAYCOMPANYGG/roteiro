@@ -380,31 +380,32 @@
     <!-- APP -->
     <div id="app" style="display:none;">
 
-      <div class="topbar">
-        <div class="leftControls">
-          <button class="btn btn-blue" onclick="addLinha()">➕ Adicionar músico</button>
+  <div class="topbar">
+  <div class="leftControls">
+    <button class="btn btn-blue" onclick="addLinha()">➕ Adicionar músico</button>
 
-          <div class="fieldMini">
-            <label>Presets</label>
-            <select id="presetSelect" onchange="onPresetChange()">
-              <option value="">— Selecionar preset —</option>
-            </select>
-          </div>
+    <div class="fieldMini">
+      <label>Presets</label>
+      <select id="presetSelect" onchange="onPresetChange()">
+        <option value="">— Selecionar preset —</option>
+      </select>
+    </div>
 
-          <button class="btn btn-ghost" onclick="salvarPreset()">💾 Salvar preset</button>
-          <button class="btn btn-ghost" onclick="deletarPreset()">🗑️ Deletar preset</button>
-        </div>
+    <button class="btn btn-ghost" onclick="salvarPreset()">💾 Salvar preset</button>
+    <button class="btn btn-ghost" onclick="deletarPreset()">🗑️ Deletar preset</button>
+  </div>
 
-        <div class="leftControls">
-          <div class="fieldMini">
-            <label>Quantidade de dias</label>
-            <input id="dias" type="number" min="1" step="1" value="1" oninput="onDias()" />
-          </div>
+  <div class="leftControls">
+    <div class="fieldMini" style="min-width:180px;">
+      <label>Quantidade de dias</label>
+      <input id="dias" type="number" min="1" step="1" value="1" oninput="onDias()" />
+    </div>
 
-          <button class="btn btn-ghost" onclick="limpar()">🧹 Limpar</button>
-          <button class="btn btn-ghost" onclick="sair()">🚪 Sair</button>
-        </div>
-      </div>
+    <button class="btn btn-ghost" onclick="limpar()">🧹 Limpar</button>
+    <button class="btn btn-ghost" onclick="sair()">🚪 Sair</button>
+  </div>
+</div>
+
 
       <div class="gridHeader">
         <div>Nome do músico</div>
