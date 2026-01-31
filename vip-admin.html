@@ -1,1 +1,193 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>VIP Admin | Lalaiá</title>
+<style>
+  @font-face{font-family:"Rokiest";src:url("https://waycompanygg.github.io/roteiro/assets/fonts/Rokiest-Extrabold.otf") format("opentype");font-weight:800;font-display:swap;}
+  :root{--bg1:#0b0f19;--bg2:#0f172a;--panel:rgba(11,18,32,.82);--stroke:rgba(255,255,255,.10);--text:#e5e7eb;--muted:rgba(229,231,235,.65);
+  --blue:#2563eb;--green:#22c55e;--red:#ef4444;--amber:#f59e0b;--shadow:0 24px 70px rgba(0,0,0,.65);}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;color:var(--text);
+  background:radial-gradient(900px 520px at 10% 10%, rgba(37,99,235,.20), transparent 60%),radial-gradient(900px 520px at 90% 15%, rgba(245,158,11,.16), transparent 60%),linear-gradient(135deg,var(--bg1),var(--bg2));
+  display:flex;align-items:center;justify-content:center;padding:22px;}
+  .home{position:fixed;top:16px;left:16px;background:rgba(17,24,39,.92);border:1px solid rgba(255,255,255,.12);color:#fff;text-decoration:none;font-weight:900;font-size:14px;padding:10px 12px;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.45);}
+  .wrap{width:min(1100px,100%);background:var(--panel);border:1px solid var(--stroke);border-radius:22px;box-shadow:var(--shadow);padding:18px;backdrop-filter:blur(10px);}
+  h1{font-family:"Rokiest";margin:0;letter-spacing:.8px}
+  .sub{margin:6px 0 14px;color:var(--muted);font-size:13px}
+  .card{background:rgba(255,255,255,.04);border:1px solid var(--stroke);border-radius:18px;padding:14px;}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+  .field{display:flex;flex-direction:column;gap:6px;flex:1 1 220px}
+  label{font-size:12px;color:rgba(229,231,235,.72)}
+  input{height:44px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(2,6,23,.55);color:var(--text);padding:10px 12px;outline:none;}
+  button{height:44px;border-radius:12px;border:0;padding:0 14px;font-weight:900;cursor:pointer;color:#fff;}
+  .b{background:var(--blue)}
+  .g{background:var(--green)}
+  .r{background:rgba(239,68,68,.18);border:1px solid rgba(239,68,68,.35)}
+  .a{background:var(--amber);color:#111827}
+  .table{margin-top:12px;border:1px solid var(--stroke);border-radius:18px;overflow:hidden;background:rgba(2,6,23,.35);}
+  .thead,.trow{display:grid;grid-template-columns: .4fr .7fr 1fr 1fr 1fr .6fr .6fr .8fr .9fr auto;gap:10px;align-items:center;padding:10px 12px;}
+  .thead{background:rgba(255,255,255,.03);color:rgba(229,231,235,.65);font-size:12px;font-weight:900;}
+  .trow{border-top:1px solid rgba(255,255,255,.06);font-size:12px;color:rgba(229,231,235,.85);}
+  .miniBtn{width:44px;height:36px;border-radius:10px;padding:0}
+  .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:rgba(17,24,39,.95);border:1px solid rgba(255,255,255,.12);padding:10px 12px;border-radius:12px;font-weight:900;opacity:0;pointer-events:none;transition:.2s;}
+  .toast.show{opacity:1}
+  .overlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55);backdrop-filter:blur(10px);z-index:99999;}
+  .overlay .box{width:min(520px,92vw);border-radius:18px;border:1px solid rgba(255,255,255,.14);background:rgba(11,18,32,.92);box-shadow:0 20px 70px rgba(0,0,0,.70);padding:16px;text-align:center;}
+  .ring{width:56px;height:56px;border-radius:999px;border:3px solid rgba(255,255,255,.18);border-top-color:rgba(245,158,11,.95);margin:10px auto 12px;animation:spin .9s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @media(max-width:1100px){.thead,.trow{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<a class="home" href="index.html">🏠 Home</a>
 
+<div id="overlay" class="overlay">
+  <div class="box">
+    <div class="ring"></div>
+    <div style="font-family:Rokiest;letter-spacing:.6px;font-size:22px;">Processando…</div>
+    <div style="margin-top:6px;color:rgba(229,231,235,.7);font-size:13px;">Aguarde</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <h1>VIP Admin</h1>
+  <div class="sub">Gerar código temporário, criar slots, bloquear/limpar e ver dados completos.</div>
+
+  <div class="card">
+    <div class="row">
+      <div class="field">
+        <label>Senha Admin</label>
+        <input id="adminPass" type="password" placeholder="Sua senha admin">
+      </div>
+
+      <div class="field" style="flex:0 0 220px;">
+        <label>Slots (quantidade)</label>
+        <input id="slotCount" type="number" min="0" value="50">
+      </div>
+
+      <button class="b" onclick="criarSlots()">Criar/Resetar Slots</button>
+      <button class="g" onclick="carregar()">Atualizar Lista</button>
+    </div>
+
+    <div class="row" style="margin-top:12px;">
+      <div class="field" style="flex:0 0 220px;">
+        <label>Código temporário (minutos)</label>
+        <input id="mins" type="number" min="1" value="60">
+      </div>
+      <button class="a" onclick="gerarCode()">Gerar Código</button>
+      <div class="field" style="flex:1 1 320px;">
+        <label>Código atual (clique para copiar)</label>
+        <input id="codeOut" readonly placeholder="(aparecerá aqui)">
+      </div>
+    </div>
+  </div>
+
+  <div class="table">
+    <div class="thead">
+      <div>Slot</div><div>Status</div><div>Nome</div><div>RG</div><div>CPF</div>
+      <div>Veículo</div><div>Placa</div><div>Cor</div><div>Modelo</div><div>Ações</div>
+    </div>
+    <div id="rows"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast">✅</div>
+
+<script>
+  const API_URL = "COLE_AQUI_SUA_URL_DO_WEBAPP_EXEC";
+
+  function toast(msg){
+    const t=document.getElementById("toast");
+    t.textContent=msg; t.classList.add("show");
+    setTimeout(()=>t.classList.remove("show"),1200);
+  }
+  function overlay(on){ document.getElementById("overlay").style.display = on ? "flex" : "none"; }
+
+  async function api(fn, payload){
+    const res = await fetch(API_URL, { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ fn, payload }) });
+    return await res.json();
+  }
+
+  async function criarSlots(){
+    const adminPass = document.getElementById("adminPass").value||"";
+    const count = document.getElementById("slotCount").value||0;
+    overlay(true);
+    const r = await api("vipAdminSetSlotCount", { adminPass, count });
+    overlay(false);
+    if(!r.ok) return toast("❌ "+r.error);
+    toast("✅ Slots criados");
+    carregar();
+  }
+
+  async function gerarCode(){
+    const adminPass = document.getElementById("adminPass").value||"";
+    const minutes = document.getElementById("mins").value||60;
+    overlay(true);
+    const r = await api("vipAdminCreateTempCode", { adminPass, minutes });
+    overlay(false);
+    if(!r.ok) return toast("❌ "+r.error);
+
+    const out = document.getElementById("codeOut");
+    out.value = r.code + " (expira: " + new Date(r.expiresAt).toLocaleString("pt-BR") + ")";
+    toast("✅ Código gerado");
+  }
+
+  document.getElementById("codeOut").addEventListener("click", async ()=>{
+    const v = document.getElementById("codeOut").value || "";
+    if(!v) return;
+    await navigator.clipboard.writeText(v.split(" ")[0]);
+    toast("📋 Código copiado");
+  });
+
+  async function carregar(){
+    const adminPass = document.getElementById("adminPass").value||"";
+    overlay(true);
+    const r = await api("vipAdminGet", { adminPass });
+    overlay(false);
+    if(!r.ok) return toast("❌ "+r.error);
+
+    const el = document.getElementById("rows");
+    el.innerHTML = r.rows.map(row => `
+      <div class="trow">
+        <div>#${row.slot}</div>
+        <div>${row.status}</div>
+        <div>${row.nome||""}</div>
+        <div>${row.rg||""}</div>
+        <div>${row.cpf||""}</div>
+        <div>${row.veiculo||""}</div>
+        <div>${row.placa||""}</div>
+        <div>${row.cor||""}</div>
+        <div>${row.modelo||""}</div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="miniBtn r" onclick="toggleBlock('${row.slot}')">⛔</button>
+          <button class="miniBtn b" onclick="clearSlot('${row.slot}')">🧹</button>
+        </div>
+      </div>
+    `).join("");
+    toast("✅ Atualizado");
+  }
+
+  async function toggleBlock(slot){
+    const adminPass = document.getElementById("adminPass").value||"";
+    overlay(true);
+    const r = await api("vipAdminToggleBlock", { adminPass, slotId: slot });
+    overlay(false);
+    if(!r.ok) return toast("❌ "+r.error);
+    toast("✅ Alterado");
+    carregar();
+  }
+
+  async function clearSlot(slot){
+    const adminPass = document.getElementById("adminPass").value||"";
+    overlay(true);
+    const r = await api("vipAdminClearSlot", { adminPass, slotId: slot });
+    overlay(false);
+    if(!r.ok) return toast("❌ "+r.error);
+    toast("✅ Slot limpo");
+    carregar();
+  }
+</script>
+</body>
+</html>
