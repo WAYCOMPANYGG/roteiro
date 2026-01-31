@@ -69,7 +69,7 @@
 
     .card{
       width:100%;
-      max-width:860px;
+      max-width:980px;
       background:var(--card);
       border:1px solid var(--stroke);
       border-radius:18px;
@@ -95,13 +95,48 @@
       font-size:13px;
     }
 
-    .row{
+    .topbar{
       display:flex;
       gap:12px;
       flex-wrap:wrap;
-      align-items:center;
+      align-items:end;
       justify-content:space-between;
       margin-top: 10px;
+    }
+
+    .leftControls{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .fieldMini{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      min-width: 160px;
+    }
+
+    label{
+      font-size:12px;
+      color:rgba(229,231,235,.75);
+    }
+
+    input, select{
+      width:100%;
+      padding:12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(2,6,23,.55);
+      color: var(--text);
+      outline:none;
+      transition:.15s;
+    }
+
+    input:focus, select:focus{
+      border-color: rgba(245,158,11,.55);
+      box-shadow: 0 0 0 4px rgba(245,158,11,.18);
     }
 
     .btn{
@@ -118,51 +153,50 @@
       justify-content:center;
       gap:10px;
       transition:.15s;
-      min-width: 180px;
+      min-width: 160px;
     }
     .btn:hover{ transform:translateY(-2px); opacity:.95; }
     .btn:active{ transform:translateY(0); opacity:.9; }
+
     .btn-primary{ background: var(--amber); box-shadow: 0 10px 28px rgba(245,158,11,.28); }
+    .btn-blue{ background: var(--blue); box-shadow: 0 10px 28px rgba(37,99,235,.22); }
     .btn-ghost{
       background: var(--ghost);
       border:1px solid var(--stroke);
       color: rgba(229,231,235,.92);
-      min-width: 160px;
+      min-width: 140px;
     }
-    .btn-blue{ background: var(--blue); box-shadow: 0 10px 28px rgba(37,99,235,.22); }
 
-    .grid{
+    .gridHeader, .gridRow{
       display:grid;
-      grid-template-columns: 1.2fr .8fr auto;
+      grid-template-columns: 1.1fr .6fr .35fr .25fr;
       gap:10px;
-      margin-top: 14px;
       align-items:center;
     }
 
-    .th{
-      font-size:12px;
-      color: rgba(229,231,235,.65);
+    .gridHeader{
+      margin-top: 14px;
       padding: 6px 2px;
+      color: rgba(229,231,235,.65);
+      font-size:12px;
     }
 
-    input{
-      width:100%;
-      padding:12px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(2,6,23,.55);
-      color: var(--text);
-      outline:none;
-      transition:.15s;
-    }
-    input:focus{
-      border-color: rgba(245,158,11,.55);
-      box-shadow: 0 0 0 4px rgba(245,158,11,.18);
-    }
+    .gridRow{ margin-top:10px; }
 
-    .money{
-      font-variant-numeric: tabular-nums;
+    .money{ font-variant-numeric: tabular-nums; }
+
+    .checkWrap{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(2,6,23,.45);
+      user-select:none;
     }
+    .checkWrap input{ width:auto; padding:0; margin:0; box-shadow:none; }
+    .checkWrap span{ font-size:13px; color: rgba(229,231,235,.85); font-weight:900; }
 
     .remove{
       background: rgba(239,68,68,.16);
@@ -185,7 +219,7 @@
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap: 12px;
+      gap: 12px resultado;
       flex-wrap: wrap;
     }
 
@@ -208,6 +242,12 @@
       transform: translateY(-1px);
     }
 
+    .mutedSmall{
+      margin-top: 8px;
+      font-size:12px;
+      color: rgba(229,231,235,.55);
+    }
+
     .toast{
       position: fixed;
       bottom: 18px;
@@ -224,6 +264,7 @@
       pointer-events:none;
       transition: .2s;
       z-index: 9999;
+      text-align:center;
     }
     .toast.show{ opacity: 1; }
 
@@ -295,8 +336,14 @@
       font-size: 13px;
     }
 
-    @media (max-width: 780px){
-      .grid{ grid-template-columns: 1fr; }
+    @media (max-width: 860px){
+      .gridHeader, .gridRow{
+        grid-template-columns: 1fr;
+      }
+      .btn{ min-width: 100%; }
+      .leftControls{ width:100%; }
+      .fieldMini{ min-width: 100%; }
+      .topbar{ justify-content: stretch; }
     }
   </style>
 </head>
@@ -315,37 +362,55 @@
 
   <div class="card">
     <h1>Calculadora de Diária</h1>
-    <p class="sub">Somar diárias por músico e copiar o total em R$ com 1 clique.</p>
+    <p class="sub">Somar diárias por músico, multiplicar por dias e copiar o total com 1 clique.</p>
 
     <!-- LOGIN ADMIN -->
     <div id="loginWrap" class="center">
       <div class="loginCard">
         <p style="margin:0 0 8px; color:rgba(229,231,235,.8); font-weight:900;">🔒 Acesso Admin</p>
         <input id="adminPass" type="password" placeholder="Digite a senha de admin">
-        <div class="row" style="justify-content:center; margin-top:12px;">
+        <div class="topbar" style="justify-content:center; margin-top:12px;">
           <button class="btn btn-primary" onclick="entrar()">🔑 Entrar</button>
           <a class="btn btn-ghost" href="index.html">⬅ Voltar</a>
         </div>
-        <p style="margin:10px 0 0; font-size:12px; color:rgba(229,231,235,.55);">
-          Dica: a sessão fica salva neste navegador.
-        </p>
+        <p class="mutedSmall">Dica: a sessão fica salva neste navegador.</p>
       </div>
     </div>
 
     <!-- APP -->
     <div id="app" style="display:none;">
-      <div class="row">
-        <button class="btn btn-blue" onclick="addLinha()">➕ Adicionar músico</button>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+
+      <div class="topbar">
+        <div class="leftControls">
+          <button class="btn btn-blue" onclick="addLinha()">➕ Adicionar músico</button>
+
+          <div class="fieldMini">
+            <label>Presets</label>
+            <select id="presetSelect" onchange="onPresetChange()">
+              <option value="">— Selecionar preset —</option>
+            </select>
+          </div>
+
+          <button class="btn btn-ghost" onclick="salvarPreset()">💾 Salvar preset</button>
+          <button class="btn btn-ghost" onclick="deletarPreset()">🗑️ Deletar preset</button>
+        </div>
+
+        <div class="leftControls">
+          <div class="fieldMini">
+            <label>Quantidade de dias</label>
+            <input id="dias" type="number" min="1" step="1" value="1" oninput="onDias()" />
+          </div>
+
           <button class="btn btn-ghost" onclick="limpar()">🧹 Limpar</button>
           <button class="btn btn-ghost" onclick="sair()">🚪 Sair</button>
         </div>
       </div>
 
-      <div class="grid" style="margin-top:14px;">
-        <div class="th">Nome do músico</div>
-        <div class="th">Valor (R$)</div>
-        <div class="th">Ação</div>
+      <div class="gridHeader">
+        <div>Nome do músico</div>
+        <div>Valor (R$)</div>
+        <div>Meia diária</div>
+        <div>Ação</div>
       </div>
 
       <div id="linhas"></div>
@@ -353,13 +418,19 @@
       <div class="totalBox">
         <div>
           <div class="totalLabel">Total final</div>
-          <div class="totalLabel" style="font-size:12px; opacity:.75;">Clique no valor para copiar</div>
+          <div class="totalLabel" style="font-size:12px; opacity:.75;">
+            Total = (soma dos músicos) × dias. Clique no valor para copiar.
+          </div>
         </div>
 
         <div id="total" class="totalValue" onclick="copiarTotal()">
-          R$ 0,00
-          <span style="font-size:14px; opacity:.9;">📋</span>
+          R$ 0,00 <span style="font-size:14px; opacity:.9;">📋</span>
         </div>
+      </div>
+
+      <div class="mutedSmall">
+        ✅ “Meia diária” conta metade do valor daquele músico. <br>
+        ✅ Presets salvam nomes + valores + meia diária + dias.
       </div>
     </div>
   </div>
@@ -368,9 +439,11 @@
 
 <script>
   // ===== CONFIG =====
-  const ADMIN_PASSWORD = "1234"; // troque aqui
-  const STORE_KEY = "diaria_musicos_v1";
-  const AUTH_KEY = "diaria_admin_ok";
+  const ADMIN_PASSWORD = "1234"; // <- troque aqui
+  const STORE_KEY = "diaria_musicos_v2";
+  const AUTH_KEY = "diaria_admin_ok_v2";
+  const PRESET_KEY = "diaria_presets_v2";
+  const SETTINGS_KEY = "diaria_settings_v2"; // dias etc
 
   // ===== HELPERS =====
   const brl = (n) => (Number(n)||0).toLocaleString("pt-BR", { style:"currency", currency:"BRL" });
@@ -388,6 +461,19 @@
     setTimeout(()=> el.style.display = "none", ms);
   }
 
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, s => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[s]));
+  }
+
+  function parseMoney(v){
+    const cleaned = String(v ?? "")
+      .replace(/[^\d.,]/g,"")
+      .replace(",", ".");
+    return parseFloat(cleaned) || 0;
+  }
+
   // ===== AUTH =====
   function entrar(){
     const pass = (document.getElementById("adminPass").value || "").trim();
@@ -400,7 +486,7 @@
     setTimeout(()=>{
       document.getElementById("loginWrap").style.display = "none";
       document.getElementById("app").style.display = "block";
-      initApp();
+      bootApp();
       toast("✅ Admin liberado");
     }, 950);
   }
@@ -417,7 +503,7 @@
     return sessionStorage.getItem(AUTH_KEY) === "1";
   }
 
-  // ===== DATA =====
+  // ===== DATA (linhas) =====
   function loadData(){
     try{
       const raw = localStorage.getItem(STORE_KEY);
@@ -431,14 +517,123 @@
     localStorage.setItem(STORE_KEY, JSON.stringify(arr));
   }
 
+  // ===== SETTINGS (dias) =====
+  function loadSettings(){
+    try{
+      const raw = localStorage.getItem(SETTINGS_KEY);
+      if(!raw) return { dias: 1 };
+      const obj = JSON.parse(raw);
+      return obj && typeof obj === "object" ? obj : { dias: 1 };
+    }catch(e){ return { dias: 1 }; }
+  }
+
+  function saveSettings(obj){
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(obj));
+  }
+
+  function onDias(){
+    const d = Math.max(1, parseInt(document.getElementById("dias").value || "1", 10));
+    document.getElementById("dias").value = d;
+    const s = loadSettings();
+    s.dias = d;
+    saveSettings(s);
+    calcTotal();
+  }
+
+  // ===== PRESETS =====
+  function loadPresets(){
+    try{
+      const raw = localStorage.getItem(PRESET_KEY);
+      if(!raw) return {};
+      const obj = JSON.parse(raw);
+      return obj && typeof obj === "object" ? obj : {};
+    }catch(e){ return {}; }
+  }
+
+  function savePresets(obj){
+    localStorage.setItem(PRESET_KEY, JSON.stringify(obj));
+  }
+
+  function refreshPresetDropdown(selectedName=""){
+    const sel = document.getElementById("presetSelect");
+    const presets = loadPresets();
+
+    const names = Object.keys(presets).sort((a,b)=> a.localeCompare(b));
+    sel.innerHTML = `<option value="">— Selecionar preset —</option>` +
+      names.map(n => `<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join("");
+
+    if(selectedName && presets[selectedName]) sel.value = selectedName;
+  }
+
+  function salvarPreset(){
+    const presets = loadPresets();
+    const nome = prompt("Nome do preset (ex: 'Manaus Equipe'):");
+    if(!nome) return;
+
+    const data = loadData();
+    const settings = loadSettings();
+
+    presets[nome] = {
+      dias: settings.dias || 1,
+      linhas: data
+    };
+
+    savePresets(presets);
+    refreshPresetDropdown(nome);
+    toast("✅ Preset salvo");
+  }
+
+  function deletarPreset(){
+    const sel = document.getElementById("presetSelect");
+    const nome = sel.value;
+    if(!nome){
+      toast("Escolha um preset");
+      return;
+    }
+    if(!confirm(`Deletar preset "${nome}"?`)) return;
+
+    const presets = loadPresets();
+    delete presets[nome];
+    savePresets(presets);
+    refreshPresetDropdown("");
+    toast("🗑️ Preset deletado");
+  }
+
+  function onPresetChange(){
+    const sel = document.getElementById("presetSelect");
+    const nome = sel.value;
+    if(!nome) return;
+
+    const presets = loadPresets();
+    const p = presets[nome];
+    if(!p) return;
+
+    // aplica preset
+    saveData(Array.isArray(p.linhas) ? p.linhas : []);
+    const s = loadSettings();
+    s.dias = Math.max(1, parseInt(p.dias || 1, 10));
+    saveSettings(s);
+    document.getElementById("dias").value = s.dias;
+
+    render();
+    toast("📦 Preset carregado");
+  }
+
   // ===== UI =====
   function linhaTemplate(item, idx){
+    const meia = !!item.meia;
     return `
-      <div class="grid" style="margin-top:10px;">
-        <input placeholder="Ex: Batera / Teclado / Fulano" value="${escapeHtml(item.nome||"")}"
+      <div class="gridRow">
+        <input placeholder="Ex: Fulano / Batera / Teclado" value="${escapeHtml(item.nome||"")}"
                oninput="onNome(${idx}, this.value)">
-        <input class="money" placeholder="Ex: 250" value="${item.valor ?? ""}"
+        <input class="money" placeholder="Ex: 250" value="${escapeHtml(item.valor ?? "")}"
                oninput="onValor(${idx}, this.value)">
+
+        <label class="checkWrap" title="Se marcado, conta metade do valor deste músico">
+          <input type="checkbox" ${meia ? "checked" : ""} onchange="onMeia(${idx}, this.checked)">
+          <span>Meia</span>
+        </label>
+
         <button class="remove" onclick="remover(${idx})">🗑️</button>
       </div>
     `;
@@ -451,20 +646,38 @@
     calcTotal();
   }
 
-  function initApp(){
+  function bootApp(){
+    // presets dropdown
+    refreshPresetDropdown("");
+
+    // dias
+    const settings = loadSettings();
+    const d = Math.max(1, parseInt(settings.dias || 1, 10));
+    document.getElementById("dias").value = d;
+
+    // linhas default
     if(loadData().length === 0){
       saveData([
-        { nome:"", valor:"" },
-        { nome:"", valor:"" },
-        { nome:"", valor:"" }
+        { nome:"", valor:"", meia:false },
+        { nome:"", valor:"", meia:false },
+        { nome:"", valor:"", meia:false }
       ]);
+    } else {
+      // garante campos
+      const fixed = loadData().map(x => ({
+        nome: x.nome || "",
+        valor: x.valor ?? "",
+        meia: !!x.meia
+      }));
+      saveData(fixed);
     }
+
     render();
   }
 
   function addLinha(){
     const data = loadData();
-    data.push({ nome:"", valor:"" });
+    data.push({ nome:"", valor:"", meia:false });
     saveData(data);
     render();
   }
@@ -477,7 +690,7 @@
   }
 
   function limpar(){
-    saveData([{ nome:"", valor:"" }]);
+    saveData([{ nome:"", valor:"", meia:false }]);
     render();
     toast("🧹 Limpou");
   }
@@ -496,9 +709,25 @@
     calcTotal();
   }
 
+  function onMeia(i, checked){
+    const data = loadData();
+    data[i].meia = !!checked;
+    saveData(data);
+    calcTotal();
+  }
+
   function calcTotal(){
     const data = loadData();
-    const total = data.reduce((acc, it)=> acc + (parseFloat(it.valor)||0), 0);
+    const settings = loadSettings();
+    const dias = Math.max(1, parseInt(document.getElementById("dias").value || settings.dias || 1, 10));
+
+    const soma = data.reduce((acc, it)=>{
+      const valor = parseMoney(it.valor);
+      const fator = it.meia ? 0.5 : 1;
+      return acc + (valor * fator);
+    }, 0);
+
+    const total = soma * dias;
     document.getElementById("total").firstChild.textContent = brl(total) + " ";
   }
 
@@ -508,7 +737,6 @@
       await navigator.clipboard.writeText(text);
       toast("✅ Copiado: " + text);
     }catch(e){
-      // fallback
       const ta = document.createElement("textarea");
       ta.value = text;
       document.body.appendChild(ta);
@@ -519,21 +747,14 @@
     }
   }
 
-  function escapeHtml(str){
-    return String(str).replace(/[&<>"']/g, s => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-    }[s]));
-  }
-
   // Auto-login se já estiver autenticado
   (function boot(){
     if(isAuthed()){
       document.getElementById("loginWrap").style.display = "none";
       document.getElementById("app").style.display = "block";
-      initApp();
+      bootApp();
     }
   })();
 </script>
 </body>
 </html>
-
