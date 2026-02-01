@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Lista VIP | Lalaiá</title>
+<title>Lista VIP | OFF Company</title>
 
 <style>
   @font-face{
@@ -55,7 +55,6 @@
     animation: in .45s ease both;
   }
   @keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-
   h1{font-family:"Rokiest"; margin:0; letter-spacing:.8px; font-size:34px}
   .sub{margin:6px 0 14px; color:var(--muted); font-size:13px}
 
@@ -65,9 +64,8 @@
     border-radius:18px;
     padding:14px;
   }
-
   .row{display:flex; gap:10px; flex-wrap:wrap}
-  .field{display:flex; flex-direction:column; gap:6px; flex:1 1 240px}
+  .field{display:flex; flex-direction:column; gap:6px; flex:1 1 220px}
   label{font-size:12px; color: rgba(229,231,235,.72)}
   input, select{
     height:44px; width:100%;
@@ -82,7 +80,6 @@
     border-color: rgba(37,99,235,.55);
     box-shadow: 0 0 0 4px rgba(37,99,235,.18);
   }
-
   button{
     height:44px; border-radius:12px; border:0;
     padding:0 14px; font-weight:900; cursor:pointer;
@@ -90,7 +87,6 @@
     transition:.15s;
   }
   button:hover{transform:translateY(-1px); opacity:.95}
-
   .btnBlue{background:var(--blue)}
   .btnGhost{background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.10)}
   .btnRow{display:flex; gap:10px; margin-top:10px; flex-wrap:wrap}
@@ -122,16 +118,15 @@
     padding:6px 10px; border-radius:999px;
     border:1px solid rgba(255,255,255,.12);
     background:rgba(255,255,255,.04);
-    white-space:nowrap;
   }
   .bLivre{ border-color: rgba(34,197,94,.25); background: rgba(34,197,94,.08); }
   .bOcup{ border-color: rgba(245,158,11,.22); background: rgba(245,158,11,.08); }
   .bBloq{ border-color: rgba(239,68,68,.25); background: rgba(239,68,68,.08); }
+  .bConf{ border-color: rgba(34,197,94,.35); background: rgba(34,197,94,.16); }
 
   .name{ margin-top:10px; font-size:13px; color: rgba(229,231,235,.70); }
   .blurName{ filter: blur(5px); opacity:.85; user-select:none; }
 
-  /* Modal */
   .overlay{
     position:fixed; inset:0;
     display:none;
@@ -173,17 +168,8 @@
     opacity:0; pointer-events:none;
     transition:.2s;
     z-index: 100000;
-    max-width: min(92vw, 720px);
-    text-align:center;
   }
   .toast.show{opacity:1}
-
-  .debugBox{
-    margin-top:10px;
-    font-size:12px;
-    color: rgba(229,231,235,.65);
-    display:none;
-  }
 
   @media (max-width: 980px){ .grid{grid-template-columns: repeat(3, 1fr);} }
   @media (max-width: 560px){ .grid{grid-template-columns: repeat(2, 1fr);} }
@@ -195,7 +181,7 @@
 
 <div class="wrap">
   <h1>Lista VIP</h1>
-  <div class="sub">Entre com o código e reserve um slot. Você não vê dados dos outros.</div>
+  <div class="sub">Entre com o código de acesso e reserve um slot.</div>
 
   <div class="card">
     <div class="row">
@@ -205,26 +191,15 @@
       </div>
       <div class="field" style="flex:0 0 180px;">
         <label>&nbsp;</label>
-        <button class="btnBlue" id="btnEntrar">Entrar</button>
+        <button class="btnBlue" onclick="entrar()">Entrar</button>
       </div>
     </div>
 
-    <div id="debug" class="debugBox"></div>
-
-    <!-- estado vazio (SEM flood) -->
-    <div id="emptyState" class="card" style="display:none; margin-top:14px;">
-      <div style="font-weight:900;">Nenhum slot liberado</div>
-      <div style="margin-top:6px; color:rgba(229,231,235,.65); font-size:13px;">
-        Esse código está válido, mas ainda não tem slots criados para ele no VIP Admin.
-      </div>
-    </div>
-
-    <!-- grid -->
-    <div id="grid" class="grid" style="margin-top:14px; display:none;"></div>
+    <div id="grid" class="grid" style="margin-top:14px;"></div>
   </div>
 </div>
 
-<!-- MODAL RESERVA -->
+<!-- MODAL -->
 <div id="overlay" class="overlay">
   <div class="modal">
     <h3 style="margin:0; font-family:Rokiest; letter-spacing:.6px;">
@@ -243,7 +218,7 @@
     <div class="row" style="margin-top:10px;">
       <div class="field" style="flex:0 0 180px;">
         <label>Vai de veículo?</label>
-        <select id="veiculo">
+        <select id="veiculo" onchange="toggleVeiculo()">
           <option value="NAO">Não</option>
           <option value="SIM">Sim</option>
         </select>
@@ -254,8 +229,8 @@
     </div>
 
     <div class="btnRow">
-      <button class="btnGhost" id="btnCancel">Cancelar</button>
-      <button class="btnBlue" id="btnConfirm">Confirmar</button>
+      <button class="btnGhost" onclick="fechar()">Cancelar</button>
+      <button class="btnBlue" onclick="confirmar()">Confirmar</button>
     </div>
   </div>
 </div>
@@ -272,37 +247,33 @@
 <div id="toast" class="toast">✅</div>
 
 <script>
-  // ===============================
-  // CONFIG
-  // ===============================
-  // ✅ TROQUE PELO SEU LINK /exec
-  const API_URL = "https://script.google.com/macros/s/AKfycbyyU0eLff_-CRNBi6G_BfjGZA9G3kEylVHuhM0N9HqNFD2vsR8A2NeF_g0jV921Q4MG/exec";";
+  const API_URL = "https://script.google.com/macros/s/AKfycbyyU0eLff_-CRNBi6G_BfjGZA9G3kEylVHuhM0N9HqNFD2vsR8A2NeF_g0jV921Q4MG/exec";
 
   let currentSlots = [];
   let selectedSlot = null;
   let pollTimer = null;
 
-  const $ = (id)=>document.getElementById(id);
-
   function toast(msg){
-    const t = $("toast");
+    const t = document.getElementById("toast");
     t.textContent = msg;
     t.classList.add("show");
-    setTimeout(()=>t.classList.remove("show"), 1600);
+    setTimeout(()=>t.classList.remove("show"), 1400);
   }
-  function loading(on){ $("loading").style.display = on ? "flex":"none"; }
-  function modal(on){ $("overlay").style.display = on ? "flex":"none"; }
-
+  function loading(on){
+    document.getElementById("loading").style.display = on ? "flex" : "none";
+  }
+  function showOverlay(show){
+    document.getElementById("overlay").style.display = show ? "flex" : "none";
+  }
   function normalizeCode(s){
     s = String(s||"").trim().toUpperCase();
     const m = s.match(/[A-Z0-9]{4,12}/);
     return m ? m[0] : "";
   }
-
-  function toggleVeiculoUI(){
-    const yes = $("veiculo").value === "SIM";
+  function toggleVeiculo(){
+    const yes = document.getElementById("veiculo").value === "SIM";
     ["placa","cor","modelo"].forEach(id=>{
-      const el = $(id);
+      const el = document.getElementById(id);
       el.disabled = !yes;
       if(!yes) el.value = "";
     });
@@ -311,7 +282,6 @@
   async function api(fn, payload){
     const controller = new AbortController();
     const timeout = setTimeout(()=>controller.abort(), 20000);
-
     try{
       const res = await fetch(API_URL, {
         method: "POST",
@@ -319,79 +289,20 @@
         body: JSON.stringify({ fn, payload }),
         signal: controller.signal
       });
-
       const text = await res.text();
       try { return JSON.parse(text); }
-      catch { return { ok:false, error:"API inválida: " + text.slice(0,120) }; }
-
-    }catch(err){
-      return { ok:false, error:(err.name==="AbortError" ? "Timeout da API" : "Falha de conexão") };
-    }finally{
+      catch { return { ok:false, error:"Resposta inválida: " + text.slice(0,160) }; }
+    } catch (err){
+      return { ok:false, error:(err.name==="AbortError" ? "Timeout (20s)" : String(err)) };
+    } finally {
       clearTimeout(timeout);
     }
   }
 
-  function renderGrid(meta){
-    const grid = $("grid");
-    const dbg  = $("debug");
-    const empty = $("emptyState");
-
-    const list = Array.isArray(currentSlots) ? currentSlots : [];
-    const code = normalizeCode($("code").value || "");
-
-    const total   = meta && meta.total   !== undefined ? meta.total   : "—";
-    const matched = meta && meta.matched !== undefined ? meta.matched : list.length;
-
-    dbg.style.display = "block";
-    dbg.textContent = `Código: ${code} | total VIP: ${total} | slots deste código: ${matched}`;
-
-    if(list.length === 0){
-      grid.style.display = "none";
-      grid.innerHTML = "";
-      empty.style.display = "block";
-      return;
-    }
-
-    empty.style.display = "none";
-    grid.style.display = "grid";
-
-    grid.innerHTML = list.map(s=>{
-      const status = String(s.status||"LIVRE").toUpperCase();
-      const cls = status==="LIVRE" ? "bLivre" : (status==="BLOQUEADO" ? "bBloq" : "bOcup");
-      const badge = status==="LIVRE" ? "Livre" : (status==="BLOQUEADO" ? "Bloqueado" : "Ocupado");
-      const name = (status==="OCUPADO" || status==="CONFIRMADO")
-        ? `<div class="name blurName">${s.nomeMasked||"Ocupado"}</div>`
-        : `<div class="name">—</div>`;
-
-      return `
-        <div class="slot ${cls}" data-slot="${s.slot}" data-status="${status}">
-          <div class="topRow">
-            <div class="num">#${s.slot}</div>
-            <div class="badge">${badge}</div>
-          </div>
-          ${name}
-        </div>
-      `;
-    }).join("");
-  }
-
-  function startPolling(){
-    if(pollTimer) clearInterval(pollTimer);
-    pollTimer = setInterval(async ()=>{
-      const code = normalizeCode($("code").value);
-      if(!code) return;
-      const r = await api("vipPublicGet", { code });
-      if(r && r.ok){
-        currentSlots = Array.isArray(r.slots) ? r.slots : [];
-        renderGrid(r.debug || null);
-      }
-    }, 4000);
-  }
-
   async function entrar(){
-    const code = normalizeCode($("code").value);
-    if(!code) return toast("Digite um código válido");
-    $("code").value = code;
+    const code = normalizeCode(document.getElementById("code").value || "");
+    if(!code) return toast("Digite/cole um código válido");
+    document.getElementById("code").value = code;
 
     loading(true);
     const r = await api("vipPublicGet", { code });
@@ -399,41 +310,108 @@
 
     if(!r.ok) return toast("❌ " + r.error);
 
-    currentSlots = Array.isArray(r.slots) ? r.slots : [];
-    renderGrid(r.debug || null);
+    currentSlots = r.slots || [];
+    renderGrid();
+
     toast("✅ Acesso liberado");
-    startPolling();
+
+    if(pollTimer) clearInterval(pollTimer);
+    pollTimer = setInterval(async ()=>{
+      const c = normalizeCode(document.getElementById("code").value || "");
+      if(!c) return;
+      const rr = await api("vipPublicGet", { code: c });
+      if(rr.ok){
+        currentSlots = rr.slots || [];
+        renderGrid(false);
+      }
+    }, 4000);
+  }
+
+  function renderGrid(showEmptyToast=true){
+    const grid = document.getElementById("grid");
+
+    if(!currentSlots || currentSlots.length===0){
+      grid.innerHTML = `<div class="card" style="grid-column:1/-1">
+        <b>Nenhum slot liberado para este código.</b>
+        <div class="sub" style="margin-top:6px">Peça ao admin para atribuir slots do pool a este código.</div>
+      </div>`;
+      if(showEmptyToast) toast("⚠️ Não tem slot liberado");
+      return;
+    }
+
+    grid.innerHTML = currentSlots.map(s=>{
+      const status = String(s.status||"LIVRE").toUpperCase();
+
+      const cls =
+        status==="LIVRE" ? "bLivre" :
+        status==="BLOQUEADO" ? "bBloq" :
+        status==="CONFIRMADO" ? "bConf" : "bOcup";
+
+      const badgeText =
+        status==="LIVRE" ? "Livre" :
+        status==="BLOQUEADO" ? "Bloqueado" :
+        status==="CONFIRMADO" ? "Confirmado" : "Ocupado";
+
+      const codeChip = s.codeTag ? `<span class="badge" style="margin-left:8px; opacity:.95">${s.codeTag}</span>` : "";
+
+      const name =
+        (status==="OCUPADO" || status==="CONFIRMADO")
+          ? `<div class="name blurName">${s.nomeMasked||"Ocupado"}</div>`
+          : `<div class="name">—</div>`;
+
+      return `
+        <div class="slot ${cls}" onclick="clickSlot('${s.slot}','${status}')">
+          <div class="topRow">
+            <div class="num">#${s.slot}</div>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <div class="badge">${badgeText}</div>
+              ${codeChip}
+            </div>
+          </div>
+          ${name}
+        </div>
+      `;
+    }).join("");
   }
 
   function clickSlot(slot, status){
     if(status !== "LIVRE"){
-      return toast(status==="BLOQUEADO" ? "⛔ Slot bloqueado" : "⚠️ Slot ocupado");
+      return toast(
+        status==="BLOQUEADO" ? "⛔ Slot bloqueado" :
+        status==="CONFIRMADO" ? "✅ Slot confirmado" :
+        "⚠️ Slot ocupado"
+      );
     }
     selectedSlot = slot;
-    $("slotNum").textContent = "#" + slot;
-    modal(true);
+    document.getElementById("slotNum").textContent = "#" + slot;
+    showOverlay(true);
+  }
+
+  function fechar(){
+    showOverlay(false);
+    selectedSlot = null;
   }
 
   async function confirmar(){
-    const code = normalizeCode($("code").value);
+    const code = normalizeCode(document.getElementById("code").value || "");
     if(!code) return toast("Código inválido");
     if(!selectedSlot) return toast("Selecione um slot");
 
-    const nome = ($("nome").value||"").trim();
-    const rg   = ($("rg").value||"").trim();
-    const cpf  = ($("cpf").value||"").trim();
+    const nome = (document.getElementById("nome").value||"").trim();
+    const rg   = (document.getElementById("rg").value||"").trim();
+    const cpf  = (document.getElementById("cpf").value||"").trim();
     if(!nome || !rg || !cpf) return toast("Preencha Nome, RG e CPF");
 
-    const veiculo = $("veiculo").value === "SIM";
+    const veiculo = document.getElementById("veiculo").value === "SIM";
 
     const payload = {
       code,
       slot: selectedSlot,
       nome, rg, cpf,
       veiculo,
-      placa: $("placa").value||"",
-      cor: $("cor").value||"",
-      modelo: $("modelo").value||""
+      placa: document.getElementById("placa").value||"",
+      cor: document.getElementById("cor").value||"",
+      modelo: document.getElementById("modelo").value||""
     };
 
     loading(true);
@@ -442,42 +420,28 @@
 
     if(!r.ok) return toast("❌ " + r.error);
 
-    modal(false);
+    showOverlay(false);
     selectedSlot = null;
 
-    // recarrega
+    // recarrega slots
+    loading(true);
     const g = await api("vipPublicGet", { code });
-    if(g.ok){
-      currentSlots = Array.isArray(g.slots) ? g.slots : [];
-      renderGrid(g.debug || null);
-    }
+    loading(false);
 
+    if(g.ok){ currentSlots = g.slots || []; renderGrid(false); }
     toast("✅ Reservado!");
   }
 
-  // ===============================
-  // EVENTS (sem bugs)
-  // ===============================
-  document.addEventListener("DOMContentLoaded", ()=>{
-    $("btnEntrar").addEventListener("click", entrar);
-    $("btnCancel").addEventListener("click", ()=>modal(false));
-    $("btnConfirm").addEventListener("click", confirmar);
-
-    $("veiculo").addEventListener("change", toggleVeiculoUI);
-
-    // click no slot por delegação
-    $("grid").addEventListener("click", (e)=>{
-      const el = e.target.closest(".slot");
-      if(!el) return;
-      clickSlot(el.dataset.slot, el.dataset.status);
-    });
-
-    // fechar modal clicando fora
-    $("overlay").addEventListener("click", (e)=>{
-      if(e.target.id === "overlay") modal(false);
-    });
+  document.getElementById("overlay").addEventListener("click", (e)=>{
+    if(e.target.id==="overlay") fechar();
   });
-</script>
 
+  // expõe
+  window.entrar = entrar;
+  window.clickSlot = clickSlot;
+  window.fechar = fechar;
+  window.confirmar = confirmar;
+  window.toggleVeiculo = toggleVeiculo;
+</script>
 </body>
 </html>
