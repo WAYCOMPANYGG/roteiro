@@ -331,14 +331,45 @@
     toast("✅ Acesso liberado");
   }
 
-  function renderGrid(){
-    const grid = document.getElementById("grid");
-    if(!currentSlots.length){
-      grid.innerHTML = `<div style="grid-column:1/-1; color:rgba(229,231,235,.65); font-weight:900;">
-        Nenhum slot disponível ainda (admin precisa criar/resetar).
-      </div>`;
-      return;
-    }
+function renderGrid(){
+  const grid = document.getElementById("grid");
+
+  grid.innerHTML = currentSlots.map(s=>{
+    const status = (s.status||"LIVRE").toUpperCase();
+
+    const cls =
+      status==="LIVRE" ? "bLivre" :
+      status==="BLOQUEADO" ? "bBloq" :
+      status==="CONFIRMADO" ? "bLivre" : "bOcup";
+
+    const badgeText =
+      status==="LIVRE" ? "Livre" :
+      status==="BLOQUEADO" ? "Bloqueado" :
+      status==="CONFIRMADO" ? "Confirmado" : "Ocupado";
+
+    const codeChip = (s.codeTag && (status==="OCUPADO" || status==="CONFIRMADO"))
+      ? `<span class="badge" style="margin-left:8px; opacity:.95">${s.codeTag}</span>`
+      : "";
+
+    const name =
+      (status==="OCUPADO" || status==="CONFIRMADO")
+        ? `<div class="name blurName">${s.nomeMasked||"Ocupado"}</div>`
+        : `<div class="name">—</div>`;
+
+    return `
+      <div class="slot ${cls}" onclick="clickSlot('${s.slot}','${status}')">
+        <div class="topRow">
+          <div class="num">#${s.slot}</div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <div class="badge">${badgeText}</div>
+            ${codeChip}
+          </div>
+        </div>
+        ${name}
+      </div>
+    `;
+  }).join("");
+}
 setInterval(async ()=>{
   const code = (document.getElementById("code").value||"").trim().toUpperCase();
   if(!code) return;
