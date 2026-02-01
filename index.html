@@ -1,609 +1,88 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Lalaiá Music | WayCompanyGG</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Fonte Rokiest -->
-  <style>
-    @font-face{
-      font-family:"Rokiest";
-      src:url("https://waycompanygg.github.io/roteiro/assets/fonts/Rokiest-Extrabold.otf") format("opentype");
-      font-weight:800;
-      font-display:swap;
-    }
-
-    :root{
-      --bg1:#0b0f19; --bg2:#0f172a;
-      --panel: rgba(11,18,32,.82);
-      --stroke: rgba(255,255,255,.10);
-      --text:#e5e7eb; --muted: rgba(229,231,235,.65);
-      --blue:#2563eb; --green:#22c55e; --red:#ef4444; --amber:#f59e0b; --violet:#7c3aed;
-      --shadow: 0 24px 70px rgba(0,0,0,.65);
-      --radius: 22px;
-    }
-
-    *{ box-sizing:border-box; }
-    body{
-      margin:0;
-      min-height:100vh;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      color: var(--text);
-      background:
-        radial-gradient(900px 520px at 10% 10%, rgba(124,58,237,.18), transparent 60%),
-        radial-gradient(900px 520px at 90% 15%, rgba(37,99,235,.20), transparent 60%),
-        radial-gradient(900px 520px at 50% 95%, rgba(34,197,94,.10), transparent 60%),
-        linear-gradient(135deg, var(--bg1), var(--bg2));
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      padding: 22px;
-    }
-
-    /* Container */
-    .wrap{
-      width: min(980px, 100%);
-      background: var(--panel);
-      border: 1px solid var(--stroke);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 18px;
-      backdrop-filter: blur(10px);
-      animation: in .45s ease both;
-      overflow:hidden;
-      position: relative;
-    }
-    @keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-    /* Header */
-    .header{
-      display:flex;
-      gap:14px;
-      align-items:center;
-      justify-content:space-between;
-      padding: 8px 6px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-    }
-    .brand{
-      display:flex;
-      gap:14px;
-      align-items:center;
-      min-width: 0;
-    }
-    .logo{
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.10);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow:hidden;
-      flex: 0 0 auto;
-    }
-    .logo img{ width:100%; height:100%; object-fit:cover; }
-    .brandText{
-      min-width: 0;
-    }
-    .title{
-      font-family: "Rokiest";
-      margin:0;
-      letter-spacing:.8px;
-      font-size: 34px;
-      line-height: 1.1;
-    }
-    .subtitle{
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .pill{
-      display:flex;
-      gap:8px;
-      align-items:center;
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.10);
-      padding: 10px 12px;
-      border-radius: 999px;
-      font-weight: 900;
-      font-size: 12px;
-      white-space: nowrap;
-    }
-    .dot{
-      width:10px; height:10px; border-radius:999px;
-      background: rgba(34,197,94,.85);
-      box-shadow: 0 0 0 6px rgba(34,197,94,.12);
-    }
-
-    /* Tabs */
-    .tabs{
-      display:flex;
-      gap:10px;
-      padding: 14px 6px 0;
-      flex-wrap: wrap;
-    }
-    .tab{
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      color: var(--text);
-      border-radius: 999px;
-      padding: 10px 12px;
-      font-weight: 900;
-      cursor:pointer;
-      transition:.15s;
-      user-select:none;
-    }
-    .tab:hover{ transform: translateY(-1px); opacity:.95; }
-    .tab.active{
-      background: rgba(37,99,235,.20);
-      border-color: rgba(37,99,235,.30);
-      box-shadow: 0 10px 30px rgba(37,99,235,.12);
-    }
-
-    /* Content */
-    .content{
-      padding: 14px 6px 6px;
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:12px;
-    }
-
-    .card{
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 18px;
-      padding: 14px;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-
-    .btn{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:space-between;
-      width: 100%;
-      padding: 14px 14px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(2,6,23,.45);
-      color: var(--text);
-      text-decoration:none;
-      cursor:pointer;
-      transition: transform .15s ease, opacity .15s ease, border-color .15s ease;
-      user-select:none;
-      min-height: 58px;
-    }
-    .btn:hover{ transform: translateY(-1px); opacity:.95; border-color: rgba(255,255,255,.18); }
-    .btn:active{ transform: translateY(0px); opacity:.90; }
-
-    .btnLeft{
-      display:flex; flex-direction:column; gap:4px; min-width:0;
-    }
-    .btnTitle{
-      font-weight: 900;
-      font-size: 15px;
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
-    .btnDesc{
-      font-size: 12px;
-      color: rgba(229,231,235,.68);
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
-    .chip{
-      font-size: 12px;
-      font-weight: 900;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.04);
-      flex: 0 0 auto;
-    }
-
-    .chip.violet{ border-color: rgba(124,58,237,.30); background: rgba(124,58,237,.15); }
-    .chip.green{ border-color: rgba(34,197,94,.30); background: rgba(34,197,94,.14); }
-    .chip.blue{ border-color: rgba(37,99,235,.30); background: rgba(37,99,235,.15); }
-    .chip.red{ border-color: rgba(239,68,68,.30); background: rgba(239,68,68,.14); }
-    .chip.amber{ border-color: rgba(245,158,11,.30); background: rgba(245,158,11,.14); color:#111827; }
-
-    /* Footer */
-    .footer{
-      margin-top: 10px;
-      text-align:center;
-      color: rgba(229,231,235,.55);
-      font-size: 12px;
-      padding: 8px 6px 4px;
-    }
-
-    /* Overlay / Modal */
-    .overlay{
-      position: fixed;
-      inset: 0;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      background: rgba(0,0,0,.55);
-      backdrop-filter: blur(10px);
-      z-index: 99999;
-      padding: 18px;
-    }
-    .modal{
-      width: min(520px, 100%);
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(11,18,32,.92);
-      box-shadow: 0 20px 70px rgba(0,0,0,.70);
-      padding: 16px;
-      animation: pop .22s ease both;
-    }
-    @keyframes pop{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:scale(1)}}
-
-    .ring{
-      width:56px; height:56px;
-      border-radius:999px;
-      border:3px solid rgba(255,255,255,.18);
-      border-top-color:rgba(37,99,235,.95);
-      margin:10px auto 12px;
-      animation:spin .9s linear infinite;
-    }
-    @keyframes spin{to{transform:rotate(360deg)}}
-
-    .mTitle{
-      font-family: "Rokiest";
-      margin: 0;
-      letter-spacing:.6px;
-      font-size: 24px;
-    }
-    .mSub{
-      margin: 6px 0 0;
-      color: rgba(229,231,235,.70);
-      font-size: 13px;
-    }
-
-    .mRow{
-      display:flex; gap:10px; flex-wrap:wrap;
-      margin-top: 12px;
-      align-items:end;
-    }
-    .field{ flex: 1 1 240px; display:flex; flex-direction:column; gap:6px; }
-    label{ font-size:12px; color: rgba(229,231,235,.72); }
-    input{
-      height:44px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(2,6,23,.55);
-      color: var(--text);
-      padding: 10px 12px;
-      outline:none;
-    }
-    input:focus{
-      border-color: rgba(37,99,235,.55);
-      box-shadow: 0 0 0 4px rgba(37,99,235,.18);
-    }
-
-    .btnRow{
-      display:flex; gap:10px; margin-top: 12px; flex-wrap:wrap;
-    }
-    .mBtn{
-      height:44px;
-      border-radius:12px;
-      border:0;
-      padding: 0 14px;
-      font-weight: 900;
-      cursor:pointer;
-      color:#fff;
-      transition:.15s;
-      flex: 1 1 auto;
-    }
-    .mBtn:hover{ transform: translateY(-1px); opacity:.95; }
-    .mBtn.blue{ background: var(--blue); }
-    .mBtn.ghost{ background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.10); }
-
-    .toast{
-      position:fixed;
-      bottom:18px;
-      left:50%;
-      transform:translateX(-50%);
-      background: rgba(17,24,39,.95);
-      border:1px solid rgba(255,255,255,.12);
-      padding:10px 12px;
-      border-radius:12px;
-      font-weight:900;
-      opacity:0;
-      pointer-events:none;
-      transition:.2s;
-      z-index: 100000;
-    }
-    .toast.show{ opacity:1; }
-
-    @media (max-width: 720px){
-      .title{ font-size: 30px; }
-      .grid{ grid-template-columns: 1fr; }
-      .pill{ display:none; }
-      .logo{ width:52px; height:52px; }
-    }
-  </style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Home | OFF Company</title>
+  <link rel="stylesheet" href="assets/off-ui.css">
 </head>
-
 <body>
-  <div class="wrap">
-    <div class="header">
-      <div class="brand">
-        <div class="logo">
-          <img src="logo-lalaia.png" alt="Lalaiá Music">
-        </div>
-        <div class="brandText">
-          <h1 class="title">Lalaiá Music</h1>
-          <div class="subtitle">Central oficial • Usuário & Equipe</div>
-        </div>
-      </div>
 
-      <div class="pill">
-        <span class="dot"></span>
-        Online
+<div class="off-shell">
+  <aside class="off-side">
+    <div class="off-logo">OFF</div>
+    <div class="off-nav">
+      <a class="off-navbtn active" href="index.html" id="nav-home">🏠<span class="tip">Home</span></a>
+      <a class="off-navbtn" href="vip.html" id="nav-vip">🎟️<span class="tip">Lista VIP</span></a>
+      <a class="off-navbtn" href="vip-admin.html" id="nav-vipadmin">🧠<span class="tip">VIP Admin</span></a>
+      <a class="off-navbtn" href="pix.html" id="nav-pix">💸<span class="tip">PIX</span></a>
+      <a class="off-navbtn" href="pix-admin.html" id="nav-pixadmin">🛡️<span class="tip">PIX Admin</span></a>
+      <a class="off-navbtn" href="pix-cadastro.html" id="nav-pixcad">➕<span class="tip">Cadastro PIX</span></a>
+      <a class="off-navbtn" href="ajustar-cronograma.html" id="nav-crono">🗓️<span class="tip">Cronograma</span></a>
+      <a class="off-navbtn" href="diaria.html" id="nav-diaria">📒<span class="tip">Diária</span></a>
+      <a class="off-navbtn" href="van.html" id="nav-van">🚐<span class="tip">Van</span></a>
+    </div>
+  </aside>
+
+  <main class="off-main">
+    <div class="off-topbar">
+      <div class="off-title">
+        <h1>OFF Company</h1>
+        <div class="off-sub">Central de ferramentas • Desenvolvido por Lucas Santos</div>
+      </div>
+      <div class="off-actions">
+        <span class="off-pill">🚀 Dashboard</span>
       </div>
     </div>
 
-    <div class="tabs">
-      <div id="tabUser" class="tab active">👤 Usuário</div>
-      <div id="tabAdmin" class="tab">🛡️ Admin</div>
+    <section class="off-card">
+      <div class="off-cardTitle">
+        <h2>Área do Usuário</h2>
+        <div class="off-muted">Acessos rápidos</div>
+      </div>
+
+      <div class="off-row">
+        <a class="off-btn purple" href="vip.html" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">🎟️ Lista VIP</a>
+        <a class="off-btn ghost" href="pix.html" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">💸 PIX</a>
+        <a class="off-btn ghost" href="diaria.html" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">📒 Diária</a>
+        <a class="off-btn ghost" href="van.html" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">🚐 Van</a>
+      </div>
+    </section>
+
+    <section class="off-card soft" style="margin-top:14px;">
+      <div class="off-cardTitle">
+        <h2>Área do Admin</h2>
+        <div class="off-muted">Configurações e painéis</div>
+      </div>
+
+      <div class="off-row">
+        <a class="off-btn purple" href="vip-admin.html" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">🧠 VIP Admin</a>
+        <a class="off-btn ghost" href="pix-admin.html" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">🛡️ PIX Admin</a>
+        <a class="off-btn ghost" href="ajustar-cronograma.html" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">🗓️ Ajustar Cronograma</a>
+        <a class="off-btn ghost" href="pix-cadastro.html" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">➕ Cadastro PIX</a>
+      </div>
+
+      <div class="off-muted" style="margin-top:10px;">
+        Dica: você pode colocar senha nesses botões usando o mesmo modal do VIP Admin.
+      </div>
+    </section>
+
+    <div class="off-footer">
+      <div>© OFF Company</div>
+      <div>Desenvolvido por Lucas Santos</div>
     </div>
+  </main>
+</div>
 
-    <!-- USER -->
-    <div id="userArea" class="content">
-      <div class="card">
-        <div style="font-weight:900; margin-bottom:10px;">Acesso rápido</div>
-
-        <div class="grid">
-          <a class="btn" href="cronograma-matheusinho.pdf" target="_blank">
-            <div class="btnLeft">
-              <div class="btnTitle">Cronograma (PDF)</div>
-              <div class="btnDesc">Abrir o cronograma atualizado</div>
-            </div>
-            <span class="chip violet">PDF</span>
-          </a>
-
-          <a class="btn" href="https://wa.me/5521983764623" target="_blank">
-            <div class="btnLeft">
-              <div class="btnTitle">Falar com Produção</div>
-              <div class="btnDesc">WhatsApp oficial</div>
-            </div>
-            <span class="chip green">WhatsApp</span>
-          </a>
-
-          <a class="btn" href="vip.html">
-            <div class="btnLeft">
-              <div class="btnTitle">Lista VIP</div>
-              <div class="btnDesc">Entrar com código e reservar</div>
-            </div>
-            <span class="chip amber">VIP</span>
-          </a>
-
-          <a class="btn" href="pix.html">
-            <div class="btnLeft">
-              <div class="btnTitle">Cadastro de Pix</div>
-              <div class="btnDesc">Favorecido + chave</div>
-            </div>
-            <span class="chip blue">PIX</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="footer">
-        Desenvolvido por WayCompanyGG • © Lalaiá Music
-      </div>
-    </div>
-
-    <!-- ADMIN (bloqueado) -->
-    <div id="adminArea" class="content" style="display:none;">
-      <div class="card">
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
-          <div>
-            <div style="font-weight:900;">Painel da Equipe</div>
-            <div style="color:rgba(229,231,235,.65); font-size:12px; margin-top:4px;">
-              Área restrita. Use a senha para liberar as ferramentas.
-            </div>
-          </div>
-
-          <button id="btnUnlock" class="mBtn blue" style="flex:0 0 auto;">Desbloquear</button>
-        </div>
-
-        <div id="adminLockedHint" style="margin-top:12px; color:rgba(229,231,235,.6); font-size:13px;">
-          🔒 Bloqueado — clique em <b>Desbloquear</b> para acessar.
-        </div>
-
-        <div id="adminTools" style="display:none; margin-top:14px;">
-          <div class="grid">
-            <a class="btn" href="vip-admin.html">
-              <div class="btnLeft">
-                <div class="btnTitle">VIP Admin</div>
-                <div class="btnDesc">Gerenciar códigos/slots</div>
-              </div>
-              <span class="chip amber">Admin</span>
-            </a>
-
-            <a class="btn" href="ajustar-cronograma.html">
-              <div class="btnLeft">
-                <div class="btnTitle">Ajustar Cronograma</div>
-                <div class="btnDesc">Atualizar planilha e PDF</div>
-              </div>
-              <span class="chip violet">Equipe</span>
-            </a>
-
-            <a class="btn" href="diaria.html">
-              <div class="btnLeft">
-                <div class="btnTitle">Calculadora de Diária</div>
-                <div class="btnDesc">Músicos + total copiável</div>
-              </div>
-              <span class="chip blue">R$</span>
-            </a>
-
-            <a class="btn" href="pix-admin.html">
-              <div class="btnLeft">
-                <div class="btnTitle">Pix Admin</div>
-                <div class="btnDesc">Gerenciar favorecidos</div>
-              </div>
-              <span class="chip green">PIX</span>
-            </a>
-          </div>
-
-          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
-            <button id="btnLock" class="mBtn ghost">Bloquear</button>
-            <button id="btnLogout" class="mBtn ghost">Sair (limpar senha)</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="footer">
-        Admin • WayCompanyGG • © Lalaiá Music
-      </div>
-    </div>
+<div class="off-overlay" id="loadingOverlay">
+  <div class="off-modal" style="max-width:520px;text-align:center">
+    <div class="off-loading"></div>
+    <div style="font-family:Rokiest;letter-spacing:.7px;font-size:20px">Carregando…</div>
+    <div class="off-muted" style="margin-top:6px">Aguarde</div>
   </div>
+</div>
+<div class="off-toast" id="toast">✅</div>
 
-  <!-- MODAL SENHA ADMIN -->
-  <div id="overlay" class="overlay">
-    <div class="modal">
-      <h2 class="mTitle">Acesso Admin</h2>
-      <p class="mSub">Digite a senha para liberar as ferramentas da equipe.</p>
-
-      <div class="mRow">
-        <div class="field">
-          <label>Senha</label>
-          <input id="adminPass" type="password" placeholder="Senha admin">
-        </div>
-      </div>
-
-      <div class="btnRow">
-        <button id="btnCancel" class="mBtn ghost">Cancelar</button>
-        <button id="btnEnter" class="mBtn blue">Entrar</button>
-      </div>
-
-      <div style="margin-top:10px; color:rgba(229,231,235,.55); font-size:12px;">
-        *Dica: você pode deixar a senha salva por 24h neste dispositivo.
-      </div>
-    </div>
-  </div>
-
-  <!-- LOADING -->
-  <div id="loading" class="overlay">
-    <div class="modal" style="text-align:center">
-      <div class="ring"></div>
-      <div style="font-family:Rokiest; font-size:22px; letter-spacing:.6px;">Processando…</div>
-      <div style="margin-top:6px; color:rgba(229,231,235,.65); font-size:13px;">Aguarde</div>
-    </div>
-  </div>
-
-  <div id="toast" class="toast">✅</div>
-
-  <script>
-    // ===== helpers
-    const $ = (id)=>document.getElementById(id);
-    function toast(msg){
-      const t=$("toast");
-      t.textContent=msg;
-      t.classList.add("show");
-      setTimeout(()=>t.classList.remove("show"), 1600);
-    }
-    function loading(on){ $("loading").style.display = on ? "flex":"none"; }
-    function modal(on){ $("overlay").style.display = on ? "flex":"none"; }
-
-    // ===== tabs
-    function setTab(tab){
-      $("tabUser").classList.toggle("active", tab==="user");
-      $("tabAdmin").classList.toggle("active", tab==="admin");
-      $("userArea").style.display = tab==="user" ? "block":"none";
-      $("adminArea").style.display = tab==="admin" ? "block":"none";
-    }
-
-    $("tabUser").onclick = ()=>setTab("user");
-    $("tabAdmin").onclick = ()=>setTab("admin");
-
-    // ===== admin lock state
-    const KEY = "lalaia_admin_session_v1";
-
-    function isUnlocked(){
-      try{
-        const raw = localStorage.getItem(KEY);
-        if(!raw) return false;
-        const obj = JSON.parse(raw);
-        return obj && obj.ok === true && Date.now() < obj.expiresAt;
-      }catch{ return false; }
-    }
-
-    function unlockSave(pass){
-      // Aqui você pode trocar por validação via API depois.
-      // Por enquanto, é “local” (não expõe suas páginas se o link for conhecido).
-      const ok = (String(pass||"").trim().length >= 4);
-      if(!ok) return false;
-
-      localStorage.setItem(KEY, JSON.stringify({
-        ok:true,
-        expiresAt: Date.now() + (24*60*60*1000) // 24h
-      }));
-      return true;
-    }
-
-    function lock(){
-      $("adminTools").style.display = "none";
-      $("adminLockedHint").style.display = "block";
-      toast("🔒 Bloqueado");
-    }
-
-    function showTools(){
-      $("adminTools").style.display = "block";
-      $("adminLockedHint").style.display = "none";
-    }
-
-    function refreshAdminUI(){
-      if(isUnlocked()) showTools();
-      else lock();
-    }
-
-    // ===== buttons
-    $("btnUnlock").onclick = ()=>{ modal(true); };
-    $("btnCancel").onclick = ()=>{ modal(false); };
-    $("btnEnter").onclick = ()=>{
-      const pass = $("adminPass").value || "";
-      loading(true);
-      setTimeout(()=>{
-        loading(false);
-        if(unlockSave(pass)){
-          modal(false);
-          $("adminPass").value = "";
-          toast("✅ Admin liberado");
-          showTools();
-        }else{
-          toast("❌ Senha inválida");
-        }
-      }, 550);
-    };
-
-    $("btnLock").onclick = ()=>{
-      lock();
-      toast("🔒 Bloqueado");
-    };
-    $("btnLogout").onclick = ()=>{
-      localStorage.removeItem(KEY);
-      lock();
-      toast("🧹 Sessão limpa");
-    };
-
-    // fechar modal clicando fora
-    $("overlay").onclick = (e)=>{ if(e.target && e.target.id==="overlay") modal(false); };
-
-    // init
-    refreshAdminUI();
-  </script>
+<script src="assets/off-ui.js"></script>
 </body>
 </html>
