@@ -1,482 +1,939 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Reserva da Van | WayCompanyGG</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>VIP Admin | OFF Company</title>
 
   <style>
-    body{
-      margin:0;
-      min-height:100vh;
-      background:linear-gradient(135deg,#0f0f0f,#1b1b1b);
-      font-family:Arial, sans-serif;
-      color:#fff;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      padding:16px;
+    @font-face{
+      font-family:"Rokiest";
+      src:url("https://waycompanygg.github.io/roteiro/assets/fonts/Rokiest-Extrabold.otf") format("opentype");
+      font-weight:800;
+      font-display:swap;
     }
 
-    .card{
-      width:100%;
-      max-width:760px;
-      background:#121212;
-      border-radius:18px;
-      box-shadow:0 20px 50px rgba(0,0,0,.6);
+    :root{
+      --bg1:#050611; --bg2:#0b1220;
+      --panel: rgba(10,16,28,.66);
+      --panel2: rgba(2,6,23,.35);
+      --stroke: rgba(255,255,255,.10);
+      --text:#e5e7eb;
+      --muted: rgba(229,231,235,.62);
+      --shadow: 0 26px 90px rgba(0,0,0,.72);
+
+      --purple:#8b5cf6;
+      --cyan:#06b6d4;
+      --green:#22c55e;
+      --amber:#f59e0b;
+      --red:#ef4444;
+
+      --r: 22px;
+      --r2: 18px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color: var(--text);
+      background:
+        radial-gradient(900px 520px at 14% 12%, rgba(139,92,246,.18), transparent 60%),
+        radial-gradient(900px 520px at 86% 18%, rgba(6,182,212,.14), transparent 60%),
+        radial-gradient(900px 520px at 70% 90%, rgba(34,197,94,.10), transparent 60%),
+        linear-gradient(135deg,var(--bg1),var(--bg2));
+      overflow-x:hidden;
+    }
+
+    .noise{
+      pointer-events:none;
+      position:fixed; inset:0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+      opacity:.18;
+      mix-blend-mode: overlay;
+    }
+
+    .shell{
+      display:flex;
+      min-height:100vh;
+      gap:18px;
       padding:18px;
     }
 
-    h1{ margin:0 0 6px; text-align:center; font-size:22px; }
-    p{ margin:0 0 14px; text-align:center; opacity:.8; font-size:14px; }
-
-    .badge{
-      text-align:center;
-      font-size:12px;
-      color:#ef4444;
-      margin: 8px 0 10px;
-      display:none;
+    /* ===== sidebar ===== */
+    .side{
+      width:84px; flex:0 0 84px;
+      position:sticky; top:18px; align-self:flex-start;
+      height: calc(100vh - 36px);
+      border-radius: 26px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(10,16,28,.42);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 18px 70px rgba(0,0,0,.55);
+      padding:10px;
+      display:flex; flex-direction:column; align-items:center; gap:10px;
+      overflow:hidden;
     }
 
-    .row{
+    .brandMark{
+      width:58px; height:58px;
+      border-radius: 18px;
+      display:grid; place-items:center;
+      font-family:"Rokiest";
+      letter-spacing:.9px;
+      background:
+        radial-gradient(90px 90px at 30% 25%, rgba(139,92,246,.75), transparent 60%),
+        radial-gradient(90px 90px at 78% 70%, rgba(6,182,212,.55), transparent 65%),
+        rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: 0 14px 40px rgba(0,0,0,.55);
+      user-select:none;
+    }
+
+    .nav{
+      width:100%;
+      display:flex; flex-direction:column; gap:10px;
+      align-items:center;
+      margin-top:2px;
+    }
+    .nav a{
+      width:58px; height:58px;
+      border-radius: 20px;
+      display:grid; place-items:center;
+      text-decoration:none;
+      color: rgba(229,231,235,.88);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      transition: .18s;
+      position:relative;
+      overflow:hidden;
+    }
+    .nav a:hover{
+      transform: translateY(-1px);
+      border-color: rgba(139,92,246,.25);
+      background: rgba(139,92,246,.10);
+    }
+    .nav a.active{
+      border-color: rgba(139,92,246,.35);
+      background:
+        radial-gradient(120px 120px at 30% 25%, rgba(139,92,246,.28), transparent 60%),
+        radial-gradient(120px 120px at 80% 70%, rgba(6,182,212,.14), transparent 65%),
+        rgba(255,255,255,.05);
+      box-shadow: 0 18px 60px rgba(139,92,246,.14);
+    }
+
+    /* ===== main ===== */
+    .main{
+      flex:1 1 auto;
+      min-width:0;
+      border-radius: 26px;
+      border:1px solid rgba(255,255,255,.10);
+      background: var(--panel);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      animation: in .45s ease both;
+    }
+    @keyframes in{
+      from{opacity:0; transform: translateY(10px)}
+      to{opacity:1; transform: translateY(0)}
+    }
+
+    .topbar{
+      padding:16px 16px 12px;
       display:flex;
-      gap:10px;
+      justify-content:space-between;
+      gap:14px;
       flex-wrap:wrap;
-      justify-content:center;
-      margin-bottom:14px;
+      align-items:center;
+    }
+    .titleWrap{display:flex; flex-direction:column; gap:6px}
+    .titleWrap h1{
+      margin:0;
+      font-family:"Rokiest";
+      letter-spacing:.9px;
+      font-size:42px;
+      line-height:1;
+    }
+    .subtitle{color:var(--muted); font-size:13px}
+
+    .topRight{display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end}
+    .pill{
+      display:inline-flex; gap:8px; align-items:center;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      color:rgba(229,231,235,.82);
+      font-weight:900;
+      font-size:12px;
+      user-select:none;
+    }
+
+    .content{padding: 0 16px 16px}
+
+    /* cards / layout */
+    .grid2{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap:12px;
+    }
+    @media(max-width:980px){ .grid2{grid-template-columns:1fr} }
+
+    .card{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(2,6,23,.28);
+      border-radius: var(--r);
+      padding:14px;
+      position:relative;
+      overflow:hidden;
+    }
+    .card:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(420px 200px at 10% 0%, rgba(139,92,246,.10), transparent 60%),
+        radial-gradient(420px 200px at 90% 10%, rgba(6,182,212,.08), transparent 62%);
+      pointer-events:none;
+    }
+    .card > *{position:relative}
+
+    .cardHead{
+      display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:center;
+      margin-bottom:10px;
+    }
+    .cardHead h2{margin:0; font-size:16px}
+    .hint{color:rgba(229,231,235,.55); font-size:12px}
+
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:end}
+    .field{display:flex; flex-direction:column; gap:6px; flex:1 1 240px}
+    label{font-size:12px; color:rgba(229,231,235,.72)}
+    input, select{
+      height:46px; width:100%;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(2,6,23,.55);
+      color: var(--text);
+      padding: 10px 12px;
+      outline:none;
+      transition:.15s;
+    }
+    input:focus, select:focus{
+      border-color: rgba(139,92,246,.55);
+      box-shadow: 0 0 0 4px rgba(139,92,246,.18);
     }
 
     .btn{
-      border:none;
-      border-radius:10px;
-      padding:10px 12px;
+      height:46px;
+      border-radius:14px;
+      border:0;
+      padding:0 14px;
+      font-weight:900;
       cursor:pointer;
-      font-weight:800;
-      font-size:14px;
       color:#fff;
-      background:#374151;
-      text-decoration:none;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      min-width: 160px;
+      transition:.18s;
+      white-space:nowrap;
     }
-    .btn:hover{ opacity:.92; }
-    .btn-admin{ background:#ef4444; }
-    .btn-layout{ background:#2563eb; }
-    .btn-save{ background:#16a34a; }
-    .btn-back{ background:#374151; }
+    .btn:hover{transform:translateY(-1px); opacity:.95}
+    .btn:active{transform:translateY(0); opacity:.92}
 
-    .stage{
-      position:relative;
-      width:100%;
-      max-width:720px;
-      margin:0 auto;
-      background:#0b0b0b;
-      border-radius:16px;
+    .btnPurple{
+      background: linear-gradient(135deg, rgba(139,92,246,.95), rgba(6,182,212,.65));
+      box-shadow: 0 16px 50px rgba(139,92,246,.18);
+    }
+    .btnGreen{
+      background: rgba(34,197,94,.22);
+      border: 1px solid rgba(34,197,94,.35);
+    }
+    .btnAmber{
+      background: rgba(245,158,11,.22);
+      border: 1px solid rgba(245,158,11,.35);
+      color:#111827;
+    }
+    .btnRed{
+      background: rgba(239,68,68,.18);
+      border: 1px solid rgba(239,68,68,.35);
+    }
+    .btnGhost{
+      background: rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.10);
+      color:rgba(229,231,235,.90);
+    }
+
+    .divider{height:1px; background:rgba(255,255,255,.08); margin:12px 0}
+
+    /* KPIs */
+    .kpis{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:10px;
+      margin-top:10px;
+    }
+    @media(max-width:980px){ .kpis{grid-template-columns:1fr 1fr} }
+    @media(max-width:560px){ .kpis{grid-template-columns:1fr} }
+
+    .kpi{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(2,6,23,.30);
+      border-radius: 18px;
       padding:12px;
       overflow:hidden;
-    }
-
-    .vanWrap{
       position:relative;
-      width:100%;
-      border-radius:14px;
-      overflow:hidden;
-      background:#0b0b0b;
     }
-
-    .vanImg{
-      width:100%;
-      display:block;
-      user-select:none;
-      -webkit-user-drag:none;
+    .kpi:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(220px 140px at 10% 10%, rgba(139,92,246,.12), transparent 60%),
+        radial-gradient(220px 140px at 90% 80%, rgba(6,182,212,.10), transparent 62%);
       pointer-events:none;
     }
+    .kpi > *{position:relative}
+    .kpi .t{font-size:12px; color:rgba(229,231,235,.65); font-weight:900}
+    .kpi .v{font-size:22px; font-weight:900; margin-top:6px}
 
-    /* Etiqueta frente */
-    .front-label{
-      position:absolute;
-      top:10px;
-      left:50%;
-      transform:translateX(-50%);
-      font-size:11px;
-      opacity:.75;
-      background: rgba(0,0,0,.45);
-      border: 1px solid rgba(255,255,255,.08);
-      padding:6px 10px;
-      border-radius:999px;
-      pointer-events:none;
-      z-index: 2;
+    /* slots grid */
+    .slotsHeader{
+      display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
+      align-items:center;
+      margin-top:12px;
     }
 
-    /* Corredor */
-    .corridor{
-      position:absolute;
-      left:50%;
-      top:8%;
-      width:18%;
-      height:84%;
-      transform:translateX(-50%);
-      border-radius:14px;
-      background: rgba(255,255,255,.035);
-      outline: 1px dashed rgba(255,255,255,.10);
-      pointer-events:none;
-      z-index: 1;
+    .slotsGrid{
+      display:grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap:10px;
+      margin-top:12px;
     }
+    @media(max-width:980px){ .slotsGrid{grid-template-columns: repeat(3, 1fr);} }
+    @media(max-width:560px){ .slotsGrid{grid-template-columns: repeat(2, 1fr);} }
 
-    /* Assentos (com cara de banco) */
-    .seat{
-      position:absolute;
-      width:42px;
-      height:36px;
-      border-radius:10px;
-      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(0,0,0,.15)), #2a2a2a;
-      border: 1px solid rgba(255,255,255,.10);
-      box-shadow: 0 10px 22px rgba(0,0,0,.45);
+    .slot{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(2,6,23,.45);
+      border-radius: 18px;
+      padding:12px;
+      min-height: 160px;
       display:flex;
       flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      gap:2px;
-      cursor:pointer;
-      user-select:none;
-      transform: translate(-50%, -50%);
-      z-index: 3;
-      transition: .12s;
-    }
-    .seat:hover{ opacity:.92; }
-
-    .seat .num{
-      font-size:11px;
-      opacity:.95;
-      font-weight:900;
-      line-height:1;
-    }
-    .seat .name{
-      font-size:10px;
-      opacity:.90;
-      max-width:38px;
+      justify-content:space-between;
+      position:relative;
       overflow:hidden;
-      white-space:nowrap;
-      text-overflow:ellipsis;
-      line-height:1;
+      transition:.18s;
     }
-
-    .seat.reserved{
-      background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(0,0,0,.10)), #7c3aed;
-    }
-    .seat.blocked{
-      background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(0,0,0,.10)), #ef4444;
-      cursor:not-allowed;
-    }
-    .seat.layouting{
-      outline: 2px dashed rgba(255,255,255,.45);
-      cursor: grab;
-    }
-    .seat.layouting:active{ cursor: grabbing; }
-
-    .legend{
-      display:flex;
-      gap:14px;
-      justify-content:center;
-      align-items:center;
-      font-size:12px;
+    .slot:hover{transform:translateY(-2px); border-color: rgba(139,92,246,.22)}
+    .slot:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(240px 160px at 20% 10%, rgba(139,92,246,.14), transparent 60%),
+        radial-gradient(240px 160px at 90% 70%, rgba(6,182,212,.10), transparent 62%);
       opacity:.9;
-      margin-top:12px;
-      flex-wrap:wrap;
+      pointer-events:none;
     }
-    .legend .item{ display:flex; align-items:center; gap:6px; }
-    .box{ width:14px; height:14px; border-radius:4px; }
-    .bfree{ background:#2a2a2a; }
-    .bres{ background:#7c3aed; }
-    .bblk{ background:#ef4444; }
+    .slot > *{position:relative}
 
-    .hint{
-      margin-top:10px;
-      text-align:center;
-      font-size:12px;
-      opacity:.65;
-      line-height:1.35;
+    .topRow{display:flex; justify-content:space-between; align-items:center; gap:8px}
+    .num{font-weight:900; color:rgba(229,231,235,.92)}
+    .badge{
+      font-size:12px; font-weight:900;
+      padding:6px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+      white-space:nowrap;
     }
+    .bLivre{ border-color: rgba(34,197,94,.25); background: rgba(34,197,94,.08); }
+    .bOcup{ border-color: rgba(245,158,11,.22); background: rgba(245,158,11,.08); }
+    .bBloq{ border-color: rgba(239,68,68,.25); background: rgba(239,68,68,.08); }
+    .bConf{ border-color: rgba(34,197,94,.35); background: rgba(34,197,94,.16); }
+
+    .info{ margin-top:8px; font-size:12px; color: rgba(229,231,235,.78); line-height:1.25; }
+    .muted{color: rgba(229,231,235,.55)}
+
+    .miniActions{display:flex; gap:8px; margin-top:10px;}
+    .miniBtn{
+      flex:1 1 auto;
+      height:36px;
+      border-radius:12px;
+      padding:0;
+      font-weight:900;
+      font-size:13px;
+      cursor:pointer;
+      color:rgba(229,231,235,.92);
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      transition:.15s;
+    }
+    .miniBtn:hover{transform:translateY(-1px); opacity:.95}
+    .miniRed{ border-color: rgba(239,68,68,.30); background: rgba(239,68,68,.14); }
+    .miniBlue{ border-color: rgba(139,92,246,.26); background: rgba(139,92,246,.14); }
+    .miniGreen{ border-color: rgba(34,197,94,.30); background: rgba(34,197,94,.14); }
+
+    /* overlays */
+    .overlay{
+      position:fixed; inset:0;
+      display:none;
+      align-items:center; justify-content:center;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(10px);
+      z-index: 99999;
+      padding: 18px;
+    }
+    .modal{
+      width: min(560px, 96vw);
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(11,18,32,.92);
+      box-shadow: 0 20px 70px rgba(0,0,0,.70);
+      padding: 16px;
+      animation: pop .22s ease both;
+      position:relative;
+      overflow:hidden;
+    }
+    .modal:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(420px 220px at 10% 0%, rgba(139,92,246,.14), transparent 60%),
+        radial-gradient(420px 220px at 90% 10%, rgba(6,182,212,.10), transparent 62%);
+      pointer-events:none;
+    }
+    .modal > *{position:relative}
+    @keyframes pop{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:scale(1)}}
+
+    .ring{
+      width:56px; height:56px;
+      border-radius:999px;
+      border:3px solid rgba(255,255,255,.18);
+      border-top-color:rgba(139,92,246,.95);
+      margin:10px auto 12px;
+      animation:spin .9s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .toast{
+      position:fixed; bottom:18px; left:50%;
+      transform:translateX(-50%);
+      background: rgba(17,24,39,.95);
+      border:1px solid rgba(255,255,255,.12);
+      padding:10px 12px;
+      border-radius:12px;
+      font-weight:900;
+      opacity:0; pointer-events:none;
+      transition:.2s;
+      z-index: 100000;
+      box-shadow: 0 12px 30px rgba(0,0,0,.45);
+      max-width: min(92vw, 760px);
+      text-align:center;
+    }
+    .toast.show{opacity:1}
+
+    .footer{
+      padding:14px 16px 16px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      color:rgba(229,231,235,.55);
+      font-size:12px;
+      border-top:1px solid rgba(255,255,255,.06);
+      background: rgba(2,6,23,.12);
+    }
+
+    .empty{
+      grid-column: 1 / -1;
+      border-radius: 18px;
+      border:1px dashed rgba(255,255,255,.16);
+      background: rgba(2,6,23,.22);
+      padding:14px;
+      color:rgba(229,231,235,.72);
+    }
+    .empty b{color:rgba(229,231,235,.92)}
   </style>
 </head>
 
 <body>
-  <div class="card">
-    <h1>🚐 Reserva da Van</h1>
-    <p>Clique em um lugar livre para reservar com seu nome</p>
+  <div class="noise"></div>
 
-    <div id="adminBadge" class="badge">👮‍♂️ MODO ADMIN ATIVO</div>
+  <div class="shell">
+    <aside class="side">
+      <div class="brandMark">OFF</div>
 
-    <div class="row">
-      <button id="adminBtn" class="btn btn-admin">👮‍♂️ Entrar Admin</button>
-      <button id="exitAdminBtn" class="btn btn-back" style="display:none;">Sair Admin</button>
+      <nav class="nav">
+        <a href="index.html" title="Home">🏠</a>
+        <a href="vip.html" title="Lista VIP">🎟️</a>
+        <a class="active" href="vip-admin.html" title="VIP Admin">🧠</a>
+        <a href="pix.html" title="PIX">💸</a>
+        <a href="pix-admin.html" title="PIX Admin">🛡️</a>
+        <a href="pix-cadastro.html" title="Cadastro PIX">➕</a>
+        <a href="ajustar-cronograma.html" title="Cronograma">🗓️</a>
+        <a href="diaria.html" title="Diária">📒</a>
+        <a href="van.html" title="Van">🚐</a>
+      </nav>
+    </aside>
 
-      <button id="layoutBtn" class="btn btn-layout" style="display:none;">🧩 Editar posições</button>
-      <button id="saveLayoutBtn" class="btn btn-save" style="display:none;">💾 Salvar posições</button>
+    <main class="main">
+      <div class="topbar">
+        <div class="titleWrap">
+          <h1>VIP Admin</h1>
+          <div class="subtitle">OFF Company • Pool + Códigos + Slots (sem blur)</div>
+        </div>
 
-      <a href="index.html" class="btn btn-back">⬅ Voltar</a>
-    </div>
-
-    <div class="stage">
-      <div id="vanWrap" class="vanWrap">
-        <img id="vanImg" class="vanImg" src="van.png?v=1" alt="Van" />
-        <div class="front-label">FRENTE</div>
-        <div class="corridor"></div>
-        <!-- assentos inseridos via JS -->
+        <div class="topRight">
+          <div class="pill">🔒 Área restrita</div>
+          <div class="pill" id="pillStatus">🟡 Pronto</div>
+        </div>
       </div>
 
-      <div class="legend">
-        <div class="item"><span class="box bfree"></span> Livre</div>
-        <div class="item"><span class="box bres"></span> Reservado</div>
-        <div class="item"><span class="box bblk"></span> Bloqueado</div>
+      <div class="content">
+        <div class="grid2">
+          <!-- POOL -->
+          <section class="card">
+            <div class="cardHead">
+              <h2>Pool (Slots gerais)</h2>
+              <div class="hint">Define capacidade total disponível (slots sem código).</div>
+            </div>
+
+            <div class="row">
+              <div class="field">
+                <label>Senha Admin</label>
+                <input id="adminPass" type="password" placeholder="Sua senha admin">
+              </div>
+              <div class="field" style="flex:0 0 240px;">
+                <label>Total de slots no Pool</label>
+                <input id="poolTotal" type="number" min="0" value="50">
+              </div>
+              <button class="btn btnPurple" onclick="setPool()">Aplicar Pool</button>
+              <button class="btn btnGhost" onclick="loadAll()">Atualizar Tudo</button>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="kpis">
+              <div class="kpi"><div class="t">Códigos criados</div><div class="v" id="kCodes">0</div></div>
+              <div class="kpi"><div class="t">Σ slotsAllowed</div><div class="v" id="kAllowed">0</div></div>
+              <div class="kpi"><div class="t">Σ slotsAssigned</div><div class="v" id="kAssigned">0</div></div>
+              <div class="kpi"><div class="t">Pool (sem código)</div><div class="v" id="kPool">0</div></div>
+            </div>
+
+            <div class="divider"></div>
+            <div class="row">
+              <button class="btn btnGhost" onclick="refreshCodes()">Atualizar códigos</button>
+              <button class="btn btnGhost" onclick="refreshPoolInfo()">Recarregar pool</button>
+            </div>
+          </section>
+
+          <!-- CÓDIGOS -->
+          <section class="card">
+            <div class="cardHead">
+              <h2>Códigos</h2>
+              <div class="hint">Crie código e atribua slots do pool a ele.</div>
+            </div>
+
+            <div class="row">
+              <div class="field" style="flex:0 0 200px;">
+                <label>Minutos do código</label>
+                <input id="mins" type="number" min="1" value="60">
+              </div>
+              <div class="field" style="flex:0 0 240px;">
+                <label>slotsAllowed</label>
+                <input id="slotsAllowed" type="number" min="1" value="3">
+              </div>
+              <button class="btn btnAmber" onclick="createCode()">Criar código</button>
+            </div>
+
+            <div class="row" style="margin-top:10px;">
+              <div class="field">
+                <label>Código gerado (clique para copiar)</label>
+                <input id="codeOut" readonly placeholder="(vai aparecer aqui)">
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="row">
+              <div class="field" style="flex:1 1 320px;">
+                <label>Selecionar código</label>
+                <select id="codeSelect"></select>
+              </div>
+              <button class="btn btnGreen" onclick="loadSlots()">Ver slots do código</button>
+            </div>
+
+            <div class="row" style="margin-top:10px;">
+              <button class="btn btnPurple" onclick="assignSlots()">Atribuir slots do Pool ➜ Código</button>
+
+              <div class="field" style="flex:0 0 200px;">
+                <label>Devolver pro Pool (livres)</label>
+                <input id="removeCount" type="number" min="1" value="1">
+              </div>
+              <button class="btn btnRed" onclick="unassignSlots()">Devolver</button>
+            </div>
+          </section>
+        </div>
+
+        <div class="slotsHeader">
+          <div>
+            <div style="font-family:Rokiest; letter-spacing:.6px; font-size:18px;">Slots do Código</div>
+            <div class="hint">Ações: limpar / confirmar / excluir</div>
+          </div>
+          <div class="row" style="gap:8px;">
+            <button class="btn btnGhost" onclick="loadSlots()">Atualizar slots</button>
+            <button class="btn btnGhost" onclick="loadAllSlotsPool()">Ver Pool (sem código)</button>
+          </div>
+        </div>
+
+        <div id="slotsGrid" class="slotsGrid"></div>
       </div>
 
-      <div class="hint">
-        Admin: clique em um lugar para <b>Bloquear/Desbloquear</b> ou <b>Liberar</b>.<br/>
-        “Editar posições”: arraste os lugares em cima do PNG e clique “Salvar posições”.
+      <div class="footer">
+        <div>© OFF Company</div>
+        <div>Desenvolvido por Lucas Santos</div>
       </div>
+    </main>
+  </div>
+
+  <!-- LOADER -->
+  <div id="overlay" class="overlay">
+    <div class="modal" style="text-align:center">
+      <div class="ring"></div>
+      <div style="font-family:Rokiest; font-size:22px; letter-spacing:.6px;">Processando…</div>
+      <div style="margin-top:6px; color:rgba(229,231,235,.65); font-size:13px;">Aguarde</div>
     </div>
   </div>
 
-<script>
-  // ===== CONFIG =====
-  const TOTAL_SEATS = 12;
-  const ADMIN_PASSWORD = "1234";
-  const STORAGE_SEATS = "vanSeatsV3";
-  const STORAGE_LAYOUT = "vanLayoutV1";
-  // ==================
+  <div id="toast" class="toast">✅</div>
 
-  const vanWrap = document.getElementById("vanWrap");
-  const adminBtn = document.getElementById("adminBtn");
-  const exitAdminBtn = document.getElementById("exitAdminBtn");
-  const layoutBtn = document.getElementById("layoutBtn");
-  const saveLayoutBtn = document.getElementById("saveLayoutBtn");
-  const adminBadge = document.getElementById("adminBadge");
-  const vanImg = document.getElementById("vanImg");
+  <script>
+    // ========= SUA URL /exec =========
+    const API_URL = "https://script.google.com/macros/s/AKfycbyyU0eLff_-CRNBi6G_BfjGZA9G3kEylVHuhM0N9HqNFD2vsR8A2NeF_g0jV921Q4MG/exec";
 
-  let isAdmin = false;
-  let isLayoutMode = false;
+    let slots = [];
+    let currentView = "CODE"; // CODE | POOL
 
-  // seat: { status: "free"|"reserved"|"blocked", name?: string }
-  let seats = loadSeats();
-  // layout: { x: 0..1, y: 0..1 } relativo ao container
-  let layout = loadLayout();
+    function overlay(on){
+      const el = document.getElementById("overlay");
+      if(el) el.style.display = on ? "flex" : "none";
+    }
 
-  function loadSeats(){
-    const raw = localStorage.getItem(STORAGE_SEATS);
-    if(!raw) return Array.from({length: TOTAL_SEATS}, () => ({status:"free"}));
-    try{
-      const parsed = JSON.parse(raw);
-      if(!Array.isArray(parsed) || parsed.length !== TOTAL_SEATS){
-        return Array.from({length: TOTAL_SEATS}, () => ({status:"free"}));
+    function toast(msg){
+      const t=document.getElementById("toast");
+      if(!t){ alert(msg); return; }
+      t.textContent=msg;
+      t.classList.add("show");
+      setTimeout(()=>t.classList.remove("show"), 1600);
+    }
+
+    function setPill(text){
+      const el = document.getElementById("pillStatus");
+      if(el) el.textContent = text;
+    }
+
+    function adminPass(){ return document.getElementById("adminPass").value || ""; }
+
+    function normalizeCode(s){
+      s = String(s||"").trim().toUpperCase();
+      const m = s.match(/[A-Z0-9]{4,12}/);
+      return m ? m[0] : "";
+    }
+
+    function currentCode(){
+      const sel = document.getElementById("codeSelect");
+      return normalizeCode(sel ? sel.value : "");
+    }
+
+    async function api(fn, payload){
+      const controller = new AbortController();
+      const timeout = setTimeout(()=>controller.abort(), 20000);
+      try{
+        const res = await fetch(API_URL, {
+          method:"POST",
+          cache:"no-store",
+          body: JSON.stringify({ fn, payload }),
+          signal: controller.signal
+        });
+        const text = await res.text();
+        try { return JSON.parse(text); }
+        catch { return { ok:false, error:"Resposta inválida: " + text.slice(0,160) }; }
+      }catch(err){
+        return { ok:false, error:(err.name==="AbortError" ? "Timeout (20s)" : String(err)) };
+      }finally{
+        clearTimeout(timeout);
       }
-      return parsed;
-    }catch{
-      return Array.from({length: TOTAL_SEATS}, () => ({status:"free"}));
-    }
-  }
-
-  function saveSeats(){
-    localStorage.setItem(STORAGE_SEATS, JSON.stringify(seats));
-  }
-
-  function defaultLayout(){
-    // layout inicial em grid (depois você arrasta em cima do PNG)
-    const positions = [];
-    const cols = 4;
-    const rows = Math.ceil(TOTAL_SEATS / cols);
-    for(let i=0;i<TOTAL_SEATS;i++){
-      const c = i % cols;
-      const r = Math.floor(i / cols);
-      const x = (c + 1) / (cols + 1);
-      const y = (r + 1) / (rows + 1);
-      positions.push({x,y});
-    }
-    return positions;
-  }
-
-  function loadLayout(){
-    const raw = localStorage.getItem(STORAGE_LAYOUT);
-    if(!raw) return defaultLayout();
-    try{
-      const parsed = JSON.parse(raw);
-      if(!Array.isArray(parsed) || parsed.length !== TOTAL_SEATS) return defaultLayout();
-      return parsed;
-    }catch{
-      return defaultLayout();
-    }
-  }
-
-  function saveLayout(){
-    localStorage.setItem(STORAGE_LAYOUT, JSON.stringify(layout));
-  }
-
-  function render(){
-    // remove assentos antigos
-    vanWrap.querySelectorAll(".seat").forEach(el => el.remove());
-
-    for(let i=0;i<TOTAL_SEATS;i++){
-      const s = seats[i];
-      const pos = layout[i];
-
-      const seatEl = document.createElement("div");
-      seatEl.className = "seat";
-      seatEl.dataset.index = i;
-
-      if(s.status === "reserved") seatEl.classList.add("reserved");
-      if(s.status === "blocked") seatEl.classList.add("blocked");
-      if(isLayoutMode) seatEl.classList.add("layouting");
-
-      const safeName = (s.status === "reserved" && s.name) ? s.name : "";
-      seatEl.innerHTML = `
-        <div class="num">${i+1}</div>
-        <div class="name">${safeName}</div>
-      `;
-
-      seatEl.style.left = (pos.x * 100) + "%";
-      seatEl.style.top  = (pos.y * 100) + "%";
-
-      seatEl.addEventListener("click", () => {
-        if(isLayoutMode) return;
-        handleSeatClick(i);
-      });
-
-      // drag no layout mode
-      seatEl.addEventListener("pointerdown", (e) => {
-        if(!isLayoutMode) return;
-        seatEl.setPointerCapture(e.pointerId);
-
-        const onMove = (ev) => {
-          const wrapRect = vanWrap.getBoundingClientRect();
-          const x = (ev.clientX - wrapRect.left) / wrapRect.width;
-          const y = (ev.clientY - wrapRect.top) / wrapRect.height;
-
-          layout[i] = {
-            x: Math.min(0.98, Math.max(0.02, x)),
-            y: Math.min(0.98, Math.max(0.02, y))
-          };
-
-          seatEl.style.left = (layout[i].x * 100) + "%";
-          seatEl.style.top  = (layout[i].y * 100) + "%";
-        };
-
-        const onUp = () => {
-          seatEl.removeEventListener("pointermove", onMove);
-          seatEl.removeEventListener("pointerup", onUp);
-          seatEl.removeEventListener("pointercancel", onUp);
-        };
-
-        seatEl.addEventListener("pointermove", onMove);
-        seatEl.addEventListener("pointerup", onUp);
-        seatEl.addEventListener("pointercancel", onUp);
-      });
-
-      vanWrap.appendChild(seatEl);
-    }
-  }
-
-  function handleSeatClick(i){
-    const s = seats[i];
-
-    // usuário normal
-    if(!isAdmin){
-      if(s.status !== "free") return;
-      const name = prompt(`Digite seu nome para reservar o lugar ${i+1}:`);
-      if(!name) return;
-      seats[i] = { status: "reserved", name: name.trim() };
-      saveSeats(); render();
-      return;
     }
 
-    // admin
-    if(s.status === "free"){
-      const action = prompt(
-        `Admin - Lugar ${i+1}\n` +
-        `1 = Reservar (com nome)\n` +
-        `2 = Bloquear (vermelho)\n` +
-        `3 = Cancelar`
-      );
+    // ========= LOADERS =========
+    async function refreshPoolInfo(){
+      overlay(true);
+      setPill("🟡 Carregando pool…");
+      const r = await api("vipAdminPoolInfo", { adminPass: adminPass() });
+      overlay(false);
 
-      if(action === "1"){
-        const name = prompt("Nome para reservar:");
-        if(!name) return;
-        seats[i] = { status:"reserved", name: name.trim() };
-        saveSeats(); render();
-      } else if(action === "2"){
-        seats[i] = { status:"blocked" };
-        saveSeats(); render();
+      if(!r.ok){ setPill("🔴 Erro"); return toast("❌ " + r.error); }
+      document.getElementById("kPool").textContent = String(r.pool ?? 0);
+      setPill("🟢 Pool ok");
+    }
+
+    async function refreshCodes(){
+      overlay(true);
+      setPill("🟡 Carregando códigos…");
+      const r = await api("vipAdminListCodes", { adminPass: adminPass() });
+      overlay(false);
+
+      if(!r.ok){ setPill("🔴 Erro"); return toast("❌ " + r.error); }
+
+      const rows = r.rows || [];
+      const sel = document.getElementById("codeSelect");
+      const keep = sel.value;
+
+      sel.innerHTML = rows.length
+        ? rows.map(x => {
+            const exp = x.expired ? " • EXPIRADO" : "";
+            const active = x.isActive===false ? " • OFF" : "";
+            return `<option value="${escapeHtml(x.code)}">${escapeHtml(x.code)} • allowed:${x.slotsAllowed} • assigned:${x.slotsAssigned}${exp}${active}</option>`;
+          }).join("")
+        : `<option value="">(nenhum código)</option>`;
+
+      if(keep) sel.value = keep;
+
+      document.getElementById("kCodes").textContent = String(rows.length);
+      document.getElementById("kAllowed").textContent = String(r.totalAllowed ?? 0);
+      document.getElementById("kAssigned").textContent = String(r.totalAssigned ?? 0);
+
+      setPill("🟢 Códigos ok");
+    }
+
+    async function loadAll(){
+      await refreshCodes();
+      await refreshPoolInfo();
+      // Se já tiver um código selecionado, carrega slots dele
+      const code = currentCode();
+      if(code) await loadSlots();
+    }
+
+    // ========= POOL =========
+    async function setPool(){
+      const total = Number(document.getElementById("poolTotal").value||0);
+
+      overlay(true);
+      setPill("🟡 Aplicando pool…");
+      const r = await api("vipAdminSetGlobalSlotCount", { adminPass: adminPass(), total });
+      overlay(false);
+
+      if(!r.ok){ setPill("🔴 Erro"); return toast("❌ " + r.error); }
+
+      toast(`✅ Pool aplicado (${r.action || "ok"})`);
+      await refreshPoolInfo();
+    }
+
+    // ========= CÓDIGO =========
+    async function createCode(){
+      const minutes = Number(document.getElementById("mins").value||60);
+      const slotsAllowed = Number(document.getElementById("slotsAllowed").value||1);
+
+      overlay(true);
+      setPill("🟡 Criando código…");
+      const r = await api("vipAdminCreateTempCode", { adminPass: adminPass(), minutes, slotsAllowed });
+      overlay(false);
+
+      if(!r.ok){ setPill("🔴 Erro"); return toast("❌ " + r.error); }
+
+      const out = document.getElementById("codeOut");
+      out.value = `${r.code} (allowed ${r.slotsAllowed}, assigned ${r.slotsAssigned}, expira ${new Date(r.expiresAt).toLocaleString("pt-BR")})`;
+
+      toast("✅ Código criado");
+      setPill("🟢 Pronto");
+      await refreshCodes();
+      await refreshPoolInfo();
+    }
+
+    document.getElementById("codeOut").addEventListener("click", async ()=>{
+      const v = document.getElementById("codeOut").value || "";
+      const code = normalizeCode(v);
+      if(!code) return;
+      try{
+        await navigator.clipboard.writeText(code);
+        toast("📋 Copiado: " + code);
+      }catch{
+        toast("❌ Não deu pra copiar");
       }
-      return;
+    });
+
+    // ========= SLOTS =========
+    async function loadSlots(){
+      const code = currentCode();
+      if(!code) return toast("Selecione um código");
+
+      currentView = "CODE";
+
+      overlay(true);
+      setPill("🟡 Carregando slots…");
+      const r = await api("vipAdminCodeInfo", { adminPass: adminPass(), code });
+      overlay(false);
+
+      if(!r.ok){ setPill("🔴 Erro"); return toast("❌ " + r.error); }
+
+      slots = r.slots || [];
+      renderSlots({ title: `Slots do código #${code}`, showCode: true });
+
+      setPill("🟢 Slots ok");
+      toast("✅ Slots carregados");
     }
 
-    if(s.status === "reserved"){
-      const ok = confirm(`Liberar o lugar reservado por "${s.name || "alguém"}"?`);
-      if(!ok) return;
-      seats[i] = { status:"free" };
-      saveSeats(); render();
-      return;
+    // Mostra pool = slots sem código (apenas LIVRE ou todos sem código)
+    async function loadAllSlotsPool(){
+      currentView = "POOL";
+
+      overlay(true);
+      setPill("🟡 Carregando pool…");
+      const r = await api("vipAdminGet", { adminPass: adminPass() });
+      overlay(false);
+
+      if(!r.ok){ setPill("🔴 Erro"); return toast("❌ " + r.error); }
+
+      const all = r.rows || [];
+      slots = all.filter(x => !String(x.code||"").trim()); // sem código
+      renderSlots({ title: `Pool (slots sem código) • ${slots.length}`, showCode: false });
+
+      setPill("🟢 Pool ok");
+      toast("✅ Pool carregado");
     }
 
-    if(s.status === "blocked"){
-      const ok = confirm("Desbloquear este lugar?");
-      if(!ok) return;
-      seats[i] = { status:"free" };
-      saveSeats(); render();
-      return;
+    async function assignSlots(){
+      // Seu backend atual faz "CreateTempCode" já vinculando do pool automaticamente.
+      // Aqui, como você pediu "atribuir slots ao código que eu quiser",
+      // isso exige endpoint dedicado (não estava no seu GS atual).
+      // Então deixei um aviso claro:
+      toast("⚠️ Ainda falta endpoint de 'atribuir manual'. No GS atual, só vincula ao criar código.", true);
     }
-  }
 
-  adminBtn.onclick = () => {
-    const pass = prompt("Senha do admin:");
-    if(pass === ADMIN_PASSWORD){
-      isAdmin = true;
-      adminBadge.style.display = "block";
-      adminBtn.style.display = "none";
-      exitAdminBtn.style.display = "inline-flex";
-      layoutBtn.style.display = "inline-flex";
-      render();
-    } else {
-      alert("Senha incorreta");
+    async function unassignSlots(){
+      toast("⚠️ Ainda falta endpoint de 'devolver pro pool'.", true);
     }
-  };
 
-  exitAdminBtn.onclick = () => {
-    isAdmin = false;
-    isLayoutMode = false;
-    adminBadge.style.display = "none";
-    adminBtn.style.display = "inline-flex";
-    exitAdminBtn.style.display = "none";
-    layoutBtn.style.display = "none";
-    saveLayoutBtn.style.display = "none";
-    layoutBtn.textContent = "🧩 Editar posições";
-    render();
-  };
+    async function clearSlot(slotId){
+      overlay(true);
+      const r = await api("vipAdminClearSlot", { adminPass: adminPass(), slotId });
+      overlay(false);
+      if(!r.ok) return toast("❌ " + r.error);
 
-  layoutBtn.onclick = () => {
-    isLayoutMode = !isLayoutMode;
-    if(isLayoutMode){
-      layoutBtn.textContent = "🧩 Sair do editar";
-      saveLayoutBtn.style.display = "inline-flex";
-    } else {
-      layoutBtn.textContent = "🧩 Editar posições";
-      saveLayoutBtn.style.display = "none";
+      toast("✅ Slot limpo");
+      // recarrega view atual
+      if(currentView === "POOL") loadAllSlotsPool();
+      else loadSlots();
     }
-    render();
-  };
 
-  saveLayoutBtn.onclick = () => {
-    saveLayout();
-    alert("Posições salvas! ✅");
-  };
+    async function confirmSlot(slotId){
+      overlay(true);
+      const r = await api("vipAdminConfirmSlot", { adminPass: adminPass(), slotId });
+      overlay(false);
+      if(!r.ok) return toast("❌ " + r.error);
 
-  // render inicial e quando imagem carrega
-  render();
-  vanImg.addEventListener("load", () => render());
-  vanImg.addEventListener("error", () => alert("Não achei o PNG van.png. Confere se está no repo e publicado."));
-  window.addEventListener("resize", () => render());
-</script>
+      toast("✅ Confirmado (toggle)");
+      if(currentView === "POOL") loadAllSlotsPool();
+      else loadSlots();
+    }
+
+    async function blockSlot(slotId){
+      overlay(true);
+      const r = await api("vipAdminToggleBlock", { adminPass: adminPass(), slotId });
+      overlay(false);
+      if(!r.ok) return toast("❌ " + r.error);
+
+      toast("✅ Bloqueio alternado");
+      if(currentView === "POOL") loadAllSlotsPool();
+      else loadSlots();
+    }
+
+    function renderSlots({ title, showCode }){
+      const grid = document.getElementById("slotsGrid");
+      if(!grid) return;
+
+      if(!slots.length){
+        grid.innerHTML = `<div class="empty">
+          <b>Nenhum slot encontrado.</b>
+          <div style="margin-top:6px; font-size:12px; color:rgba(229,231,235,.62)">
+            Tente atualizar ou selecionar outro código.
+          </div>
+        </div>`;
+        return;
+      }
+
+      grid.innerHTML = slots.map(s=>{
+        const rawStatus = String(s.status||"LIVRE").toUpperCase();
+        const confirmed = !!s.confirmed || String(s.confirmed||"").toUpperCase()==="TRUE";
+        const status = confirmed ? "CONFIRMADO" : rawStatus;
+
+        const cls =
+          status==="LIVRE" ? "bLivre" :
+          status==="BLOQUEADO" ? "bBloq" :
+          status==="CONFIRMADO" ? "bConf" : "bOcup";
+
+        const badge =
+          status==="LIVRE" ? "Livre" :
+          status==="BLOQUEADO" ? "Bloqueado" :
+          status==="CONFIRMADO" ? "Confirmado" : "Ocupado";
+
+        const line1 = (status==="LIVRE" || status==="BLOQUEADO")
+          ? `<div class="info muted">—</div>`
+          : `<div class="info"><b>${escapeHtml(s.nome||"")}</b><br><span class="muted">RG:</span> ${escapeHtml(s.rg||"")} <span class="muted">CPF:</span> ${escapeHtml(s.cpf||"")}</div>`;
+
+        const line2 = (status==="LIVRE" || status==="BLOQUEADO") ? "" :
+          `<div class="info muted">Veículo: ${escapeHtml(s.veiculo||"NAO")} • Placa: ${escapeHtml(s.placa||"")} • ${escapeHtml(s.cor||"")} • ${escapeHtml(s.modelo||"")}</div>`;
+
+        const codeTag = (showCode && s.code)
+          ? `<div class="info muted">Código: <b>#${escapeHtml(s.code)}</b></div>`
+          : "";
+
+        return `
+          <div class="slot ${cls}">
+            <div>
+              <div class="topRow">
+                <div class="num">#${escapeHtml(s.slot)}</div>
+                <div class="badge">${badge}</div>
+              </div>
+              ${line1}
+              ${line2}
+              ${codeTag}
+            </div>
+            <div class="miniActions">
+              <button class="miniBtn miniBlue" onclick="blockSlot('${escapeJs(s.slot)}')" title="Bloquear/Desbloquear">⛔</button>
+              <button class="miniBtn miniGreen" onclick="confirmSlot('${escapeJs(s.slot)}')" title="Confirmar">✅</button>
+              <button class="miniBtn miniRed" onclick="clearSlot('${escapeJs(s.slot)}')" title="Limpar">🧹</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // helpers
+    function escapeHtml(s){
+      return String(s??"").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
+    }
+    function escapeJs(s){
+      return String(s??"").replace(/['\\]/g, "\\$&");
+    }
+
+    // expose
+    window.setPool = setPool;
+    window.loadAll = loadAll;
+    window.refreshCodes = refreshCodes;
+    window.refreshPoolInfo = refreshPoolInfo;
+    window.createCode = createCode;
+    window.loadSlots = loadSlots;
+    window.loadAllSlotsPool = loadAllSlotsPool;
+    window.assignSlots = assignSlots;
+    window.unassignSlots = unassignSlots;
+
+    window.clearSlot = clearSlot;
+    window.confirmSlot = confirmSlot;
+    window.blockSlot = blockSlot;
+
+    window.addEventListener("DOMContentLoaded", ()=>{
+      // carrega lista de códigos/pool quando abrir
+      refreshCodes();
+      refreshPoolInfo();
+    });
+  </script>
 </body>
 </html>
