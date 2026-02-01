@@ -339,7 +339,13 @@
       </div>`;
       return;
     }
-
+setInterval(async ()=>{
+  const code = (document.getElementById("code").value||"").trim().toUpperCase();
+  if(!code) return;
+  const r = await api("vipPublicGet", { code });
+  if(r.ok){ currentSlots = r.slots; renderGrid(); }
+}, 4000);
+    
     grid.innerHTML = currentSlots.map(s=>{
       const status = String(s.status||"").toUpperCase();
       const cls = status==="LIVRE" ? "bLivre" : (status==="BLOQUEADO" ? "bBloq" : "bOcup");
