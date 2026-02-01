@@ -1,593 +1,630 @@
-// ===================== CONFIG =====================
-const SHEET_VIP   = "VIP";
-const SHEET_CODES = "CODES";
-const ADMIN_PASSWORD = "1234"; // troque
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>VIP Admin | OFF Company</title>
 
-// ===================== Helpers =====================
-function ss_(){ return SpreadsheetApp.getActiveSpreadsheet(); }
-function sh_(name){
-  const sh = ss_().getSheetByName(name);
-  if(!sh) throw new Error("Aba não encontrada: " + name);
-  return sh;
-}
-function json_(obj){
-  return ContentService.createTextOutput(JSON.stringify(obj))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-function now_(){ return new Date(); }
-function toMs_(d){ return new Date(d).getTime(); }
-function isExpired_(expiresAt){ return now_().getTime() > toMs_(expiresAt); }
-
-function randCode_(len=6){
-  const chars = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
-  let out = "";
-  for(let i=0;i<len;i++) out += chars[Math.floor(Math.random()*chars.length)];
-  return out;
-}
-function indexMap_(headers){
-  const map = {};
-  headers.forEach((h,i)=> map[String(h).trim()] = i);
-  return map;
-}
-function ensureHeaders_(sheetName, headers){
-  const sh = sh_(sheetName);
-  if(sh.getLastRow() === 0){
-    sh.getRange(1,1,1,headers.length).setValues([headers]);
-    return;
+<style>
+  @font-face{
+    font-family:"Rokiest";
+    src:url("https://waycompanygg.github.io/roteiro/assets/fonts/Rokiest-Extrabold.otf") format("opentype");
+    font-weight:800; font-display:swap;
   }
-  const first = sh.getRange(1,1,1,sh.getLastColumn()).getValues()[0].map(String);
-  const missing = headers.filter(h => !first.includes(h));
-  if(missing.length){
-    sh.getRange(1, sh.getLastColumn()+1, 1, missing.length).setValues([missing]);
+  :root{
+    --bg1:#060812; --bg2:#0b1220;
+    --panel:rgba(10,16,28,.78);
+    --stroke:rgba(255,255,255,.10);
+    --text:#e5e7eb; --muted:rgba(229,231,235,.62);
+    --blue:#2563eb; --green:#22c55e; --red:#ef4444; --amber:#f59e0b; --cyan:#06b6d4;
+    --shadow:0 24px 80px rgba(0,0,0,.68);
   }
-}
-function vipInit_(){
-  ensureHeaders_(SHEET_CODES, ["code","expiresAt","createdAt","slotsAllowed","slotsAssigned","isActive"]);
-  ensureHeaders_(SHEET_VIP,   ["slot","status","nome","rg","cpf","veiculo","placa","cor","modelo","updatedAt","code","confirmed"]);
-}
-function checkAdmin_(adminPass){
-  if(String(adminPass||"") !== String(ADMIN_PASSWORD)){
-    return { ok:false, error:"Senha admin inválida." };
-  }
-  return { ok:true };
-}
-
-// ===================== doGet =====================
-function doGet(){ return json_({ ok:true, msg:"VIP API online" }); }
-
-// ===================== Code helpers =====================
-function findCodeRow_(code){
-  code = String(code||"").trim().toUpperCase();
-  if(!code) return null;
-
-  const sh = sh_(SHEET_CODES);
-  if(sh.getLastRow() < 2) return null;
-
-  const values = sh.getDataRange().getValues();
-  const headers = values[0].map(String);
-  const idx = indexMap_(headers);
-
-  for(let i=1;i<values.length;i++){
-    const c = String(values[i][idx.code]||"").trim().toUpperCase();
-    if(c === code){
-      return { sh, rowIndex: i+1, headers, idx, row: values[i] };
-    }
-  }
-  return null;
-}
-
-function validateCode_(code){
-  const row = findCodeRow_(code);
-  if(!row) return { ok:false, error:"Código inválido." };
-
-  const exp = row.row[row.idx.expiresAt];
-  if(!exp) return { ok:false, error:"Código inválido (sem validade)." };
-  if(isExpired_(exp)) return { ok:false, error:"Código expirado." };
-
-  const isActive = String(row.row[row.idx.isActive]||"TRUE").toUpperCase() !== "FALSE";
-  if(!isActive) return { ok:false, error:"Código desativado." };
-
-  const slotsAllowed  = Number(row.row[row.idx.slotsAllowed]||0);
-  const slotsAssigned = Number(row.row[row.idx.slotsAssigned]||0);
-
-  return { ok:true, code: String(code).trim().toUpperCase(), slotsAllowed, slotsAssigned };
-}
-
-// ===================== VIP Public =====================
-// Agora o public enxerga SOMENTE slots com code = informado
-function vipPublicGet(code){
-  vipInit_();
-  const chk = validateCode_(code);
-  if(!chk.ok) return chk;
-
-  const vip = sh_(SHEET_VIP);
-  const values = vip.getDataRange().getValues();
-  const headers = values[0].map(String);
-  const idx = indexMap_(headers);
-
-  const slots = [];
-  for(let i=1;i<values.length;i++){
-    const slotCode = String(values[i][idx.code]||"").trim().toUpperCase();
-    if(slotCode !== chk.code) continue;
-
-    const status = String(values[i][idx.status]||"LIVRE").toUpperCase();
-    const nome = String(values[i][idx.nome]||"");
-    const confirmed = String(values[i][idx.confirmed]||"").toUpperCase()==="TRUE";
-
-    slots.push({
-      slot: values[i][idx.slot],
-      status: confirmed ? "CONFIRMADO" : status,
-      nomeMasked: maskName_(nome),
-      codeTag: "#" + chk.code
-    });
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    color:var(--text);
+    background:
+      radial-gradient(900px 520px at 14% 12%, rgba(37,99,235,.18), transparent 60%),
+      radial-gradient(900px 520px at 86% 18%, rgba(6,182,212,.14), transparent 60%),
+      radial-gradient(900px 520px at 70% 90%, rgba(34,197,94,.12), transparent 60%),
+      linear-gradient(135deg,var(--bg1),var(--bg2));
+    display:flex; justify-content:center;
+    padding:22px;
   }
 
-  return { ok:true, slots, code: chk.code };
-}
-
-function vipReserve(code, payload){
-  vipInit_();
-  const chk = validateCode_(code);
-  if(!chk.ok) return chk;
-
-  const vip = sh_(SHEET_VIP);
-  const values = vip.getDataRange().getValues();
-  const headers = values[0].map(String);
-  const idx = indexMap_(headers);
-
-  const slotId = String(payload.slot||"").trim();
-  if(!slotId) return { ok:false, error:"Slot inválido." };
-
-  // achar linha do slot dentro do código
-  let rowIndex = -1;
-  for(let i=1;i<values.length;i++){
-    const slot = String(values[i][idx.slot]);
-    const slotCode = String(values[i][idx.code]||"").trim().toUpperCase();
-    if(slot === slotId && slotCode === chk.code){
-      rowIndex = i+1;
-      break;
-    }
+  .home{
+    position:fixed; top:16px; left:16px;
+    background:rgba(17,24,39,.92);
+    border:1px solid rgba(255,255,255,.12);
+    color:#fff; text-decoration:none;
+    font-weight:900; font-size:14px;
+    padding:10px 12px;
+    border-radius:12px;
+    box-shadow:0 12px 30px rgba(0,0,0,.45);
+    transition:.15s;
+    z-index:10;
   }
-  if(rowIndex<0) return { ok:false, error:"Slot não encontrado para este código." };
+  .home:hover{transform:translateY(-1px); opacity:.92}
 
-  const status = String(vip.getRange(rowIndex, idx.status+1).getValue()||"").toUpperCase();
-  const confirmed = String(vip.getRange(rowIndex, idx.confirmed+1).getValue()||"").toUpperCase()==="TRUE";
+  .wrap{
+    width:min(1200px,100%);
+    background:var(--panel);
+    border:1px solid var(--stroke);
+    border-radius:24px;
+    box-shadow:var(--shadow);
+    padding:18px;
+    backdrop-filter:blur(10px);
+    animation: in .45s ease both;
+  }
+  @keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-  if(confirmed) return { ok:false, error:"Slot já confirmado." };
-  if(status === "BLOQUEADO") return { ok:false, error:"Slot bloqueado." };
-  if(status === "OCUPADO") return { ok:false, error:"Slot já ocupado." };
-
-  vip.getRange(rowIndex, idx.status+1).setValue("OCUPADO");
-  vip.getRange(rowIndex, idx.nome+1).setValue(payload.nome||"");
-  vip.getRange(rowIndex, idx.rg+1).setValue(payload.rg||"");
-  vip.getRange(rowIndex, idx.cpf+1).setValue(payload.cpf||"");
-
-  vip.getRange(rowIndex, idx.veiculo+1).setValue(payload.veiculo ? "SIM":"NAO");
-  vip.getRange(rowIndex, idx.placa+1).setValue(payload.placa||"");
-  vip.getRange(rowIndex, idx.cor+1).setValue(payload.cor||"");
-  vip.getRange(rowIndex, idx.modelo+1).setValue(payload.modelo||"");
-  vip.getRange(rowIndex, idx.updatedAt+1).setValue(now_());
-
-  return { ok:true };
-}
-
-// ===================== Admin: Pool (slots gerais) =====================
-// total = total de slots no pool (code vazio)
-// Aumentar: cria slots novos (code vazio)
-// Diminuir: remove slots do pool livres de trás pra frente
-function vipAdminSetGlobalSlotCount(adminPass, total){
-  vipInit_();
-  const a = checkAdmin_(adminPass); if(!a.ok) return a;
-
-  total = Math.max(0, parseInt(total||0,10));
-
-  const vip = sh_(SHEET_VIP);
-  const values = vip.getDataRange().getValues();
-  const headers = values[0].map(String);
-  const idx = indexMap_(headers);
-
-  // descobrir maior número de slot já usado (global)
-  let maxSlotNum = 0;
-  for(let i=1;i<values.length;i++){
-    const n = Number(values[i][idx.slot]||0);
-    if(n > maxSlotNum) maxSlotNum = n;
+  .topbar{
+    display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    align-items:flex-end;
+    padding:6px 6px 14px;
+  }
+  h1{font-family:"Rokiest"; margin:0; letter-spacing:.9px; font-size:34px}
+  .sub{margin:6px 0 0; color:var(--muted); font-size:13px}
+  .brand{
+    display:flex; flex-direction:column; align-items:flex-end;
+    gap:6px;
+  }
+  .pill{
+    display:inline-flex; gap:8px; align-items:center;
+    padding:8px 10px;
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:999px;
+    background:rgba(255,255,255,.04);
+    color:rgba(229,231,235,.72);
+    font-size:12px; font-weight:900;
   }
 
-  // pool rows
-  const pool = [];
-  for(let i=1;i<values.length;i++){
-    const code = String(values[i][idx.code]||"").trim();
-    if(!code){
-      pool.push({
-        rowIndex: i+1,
-        slot: String(values[i][idx.slot]||""),
-        status: String(values[i][idx.status]||"").toUpperCase()
+  .grid2{
+    display:grid;
+    grid-template-columns: 1.05fr .95fr;
+    gap:12px;
+  }
+  @media(max-width:980px){ .grid2{grid-template-columns:1fr} }
+
+  .card{
+    background:rgba(255,255,255,.04);
+    border:1px solid var(--stroke);
+    border-radius:18px;
+    padding:14px;
+  }
+  .cardTitle{
+    font-family:"Rokiest";
+    letter-spacing:.6px;
+    font-size:18px;
+    margin:0 0 10px;
+  }
+  .row{display:flex; gap:10px; flex-wrap:wrap; align-items:end}
+  .field{display:flex; flex-direction:column; gap:6px; flex:1 1 220px}
+  label{font-size:12px; color:rgba(229,231,235,.72)}
+  input, select{
+    height:44px; border-radius:12px;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(2,6,23,.55);
+    color:var(--text);
+    padding:10px 12px;
+    outline:none;
+    transition:.15s;
+  }
+  input:focus, select:focus{
+    border-color: rgba(37,99,235,.55);
+    box-shadow: 0 0 0 4px rgba(37,99,235,.18);
+  }
+
+  button{
+    height:44px; border-radius:12px; border:0;
+    padding:0 14px; font-weight:900;
+    cursor:pointer; color:#fff;
+    transition:.15s;
+    white-space:nowrap;
+  }
+  button:hover{transform:translateY(-1px); opacity:.95}
+  .b{background:var(--blue); box-shadow:0 10px 26px rgba(37,99,235,.24)}
+  .g{background:var(--green); box-shadow:0 10px 26px rgba(34,197,94,.18)}
+  .a{background:var(--amber); color:#111827; box-shadow:0 10px 26px rgba(245,158,11,.20)}
+  .c{background:rgba(6,182,212,.20); border:1px solid rgba(6,182,212,.35)}
+  .ghost{background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.10)}
+  .danger{background:rgba(239,68,68,.18); border:1px solid rgba(239,68,68,.35)}
+
+  .divider{height:1px; background:rgba(255,255,255,.08); margin:12px 0}
+
+  .kpis{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:10px;
+    margin-top:10px;
+  }
+  .kpi{
+    border:1px solid rgba(255,255,255,.10);
+    background: rgba(2,6,23,.35);
+    border-radius:16px;
+    padding:12px;
+  }
+  .kpi .t{font-size:12px; color:rgba(229,231,235,.65); font-weight:900}
+  .kpi .v{font-size:22px; font-weight:900; margin-top:6px}
+  @media(max-width:980px){ .kpis{grid-template-columns:1fr 1fr} }
+  @media(max-width:560px){ .kpis{grid-template-columns:1fr} }
+
+  /* slots */
+  .slotsHeader{
+    display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    align-items:center;
+    margin-top:12px;
+  }
+  .slotsHeader .hint{color:rgba(229,231,235,.62); font-size:12px}
+
+  .slotsGrid{
+    display:grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap:10px;
+    margin-top:12px;
+  }
+  @media(max-width:980px){ .slotsGrid{grid-template-columns: repeat(3, 1fr);} }
+  @media(max-width:560px){ .slotsGrid{grid-template-columns: repeat(2, 1fr);} }
+
+  .slot{
+    border:1px solid rgba(255,255,255,.10);
+    background: rgba(2,6,23,.45);
+    border-radius:16px;
+    padding:12px;
+    transition:.15s;
+    min-height: 150px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .slot:hover{transform:translateY(-1px); opacity:.98}
+  .topRow{display:flex; justify-content:space-between; align-items:center; gap:8px}
+  .num{font-weight:900; color:rgba(229,231,235,.92)}
+  .badge{
+    font-size:12px; font-weight:900;
+    padding:6px 10px; border-radius:999px;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.04);
+  }
+  .bLivre{ border-color: rgba(34,197,94,.25); background: rgba(34,197,94,.08); }
+  .bOcup{ border-color: rgba(245,158,11,.22); background: rgba(245,158,11,.08); }
+  .bBloq{ border-color: rgba(239,68,68,.25); background: rgba(239,68,68,.08); }
+  .bConf{ border-color: rgba(34,197,94,.35); background: rgba(34,197,94,.16); }
+
+  .info{ margin-top:8px; font-size:12px; color: rgba(229,231,235,.78); line-height:1.25; }
+  .muted{color: rgba(229,231,235,.55)}
+
+  .miniActions{display:flex; gap:8px; margin-top:10px;}
+  .miniBtn{
+    flex:1 1 auto;
+    height:34px;
+    border-radius:10px;
+    padding:0;
+    font-weight:900;
+    font-size:13px;
+  }
+  .miniRed{ background:rgba(239,68,68,.18); border:1px solid rgba(239,68,68,.35); }
+  .miniBlue{ background:rgba(37,99,235,.22); border:1px solid rgba(37,99,235,.35); }
+  .miniGreen{ background:rgba(34,197,94,.20); border:1px solid rgba(34,197,94,.38); }
+
+  /* overlay + toast */
+  .overlay{
+    position:fixed; inset:0;
+    display:none;
+    align-items:center; justify-content:center;
+    background:rgba(0,0,0,.55);
+    backdrop-filter:blur(10px);
+    z-index:99999;
+    padding:18px;
+  }
+  .modal{
+    width:min(520px, 96vw);
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.14);
+    background:rgba(11,18,32,.92);
+    box-shadow:0 20px 70px rgba(0,0,0,.70);
+    padding:16px;
+    text-align:center;
+    animation: pop .22s ease both;
+  }
+  @keyframes pop{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:scale(1)}}
+  .ring{
+    width:56px; height:56px;
+    border-radius:999px;
+    border:3px solid rgba(255,255,255,.18);
+    border-top-color:rgba(245,158,11,.95);
+    margin:10px auto 12px;
+    animation:spin .9s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .toast{
+    position:fixed; bottom:18px; left:50%;
+    transform:translateX(-50%);
+    background:rgba(17,24,39,.95);
+    border:1px solid rgba(255,255,255,.12);
+    padding:10px 12px;
+    border-radius:12px;
+    font-weight:900;
+    opacity:0; pointer-events:none;
+    transition:.2s;
+    z-index: 999999;
+    box-shadow:0 12px 30px rgba(0,0,0,.45);
+  }
+  .toast.show{opacity:1}
+
+  .footer{
+    margin-top:14px;
+    padding:10px 6px 0;
+    color:rgba(229,231,235,.55);
+    font-size:12px;
+    display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
+  }
+</style>
+</head>
+
+<body>
+<a class="home" href="index.html">🏠 Home</a>
+
+<div id="overlay" class="overlay">
+  <div class="modal">
+    <div class="ring"></div>
+    <div style="font-family:Rokiest;letter-spacing:.6px;font-size:22px;">Processando…</div>
+    <div style="margin-top:6px;color:rgba(229,231,235,.7);font-size:13px;">Aguarde</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="topbar">
+    <div>
+      <h1>VIP Admin</h1>
+      <div class="sub">OFF Company • Controle de Pool + Códigos + Slots</div>
+    </div>
+    <div class="brand">
+      <div class="pill">🔒 Área restrita • Admin</div>
+      <div class="pill">⚙️ Sistema OFF Company</div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <!-- POOL -->
+    <div class="card">
+      <div class="cardTitle">Pool (Slots gerais)</div>
+      <div class="sub">Define a capacidade total disponível para distribuir entre códigos.</div>
+
+      <div class="row" style="margin-top:10px;">
+        <div class="field">
+          <label>Senha Admin</label>
+          <input id="adminPass" type="password" placeholder="Sua senha admin">
+        </div>
+        <div class="field" style="flex:0 0 220px;">
+          <label>Total de slots no Pool</label>
+          <input id="poolTotal" type="number" min="0" value="50">
+        </div>
+        <button class="b" onclick="setPool()">Aplicar Pool</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="kpis">
+        <div class="kpi"><div class="t">Códigos criados</div><div class="v" id="kCodes">0</div></div>
+        <div class="kpi"><div class="t">Slots liberados (Σ slotsAllowed)</div><div class="v" id="kAllowed">0</div></div>
+        <div class="kpi"><div class="t">Slots atribuídos (Σ slotsAssigned)</div><div class="v" id="kAssigned">0</div></div>
+        <div class="kpi"><div class="t">Pool recomendado</div><div class="v" id="kPoolHint">—</div></div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="row">
+        <button class="ghost" onclick="refreshCodes()">Atualizar códigos</button>
+        <button class="c" onclick="refreshCodes()">Recalcular KPIs</button>
+      </div>
+    </div>
+
+    <!-- CÓDIGOS -->
+    <div class="card">
+      <div class="cardTitle">Códigos (quantidade por código)</div>
+      <div class="sub">Crie um código com limite e depois atribua slots do pool a ele.</div>
+
+      <div class="row" style="margin-top:10px;">
+        <div class="field" style="flex:0 0 180px;">
+          <label>Minutos do código</label>
+          <input id="mins" type="number" min="1" value="60">
+        </div>
+        <div class="field" style="flex:0 0 220px;">
+          <label>slotsAllowed</label>
+          <input id="slotsAllowed" type="number" min="0" value="3">
+        </div>
+        <button class="a" onclick="createCode()">Criar código</button>
+      </div>
+
+      <div class="row" style="margin-top:10px;">
+        <div class="field">
+          <label>Código gerado (clique para copiar)</label>
+          <input id="codeOut" readonly placeholder="(vai aparecer aqui)">
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="row">
+        <div class="field" style="flex:1 1 280px;">
+          <label>Selecionar código</label>
+          <select id="codeSelect"></select>
+        </div>
+        <button class="g" onclick="loadSlots()">Ver slots do código</button>
+      </div>
+
+      <div class="row" style="margin-top:10px;">
+        <button class="b" onclick="assignSlots()">Atribuir slots do Pool ➜ Código</button>
+        <div class="field" style="flex:0 0 170px;">
+          <label>Tirar do código (livres)</label>
+          <input id="removeCount" type="number" min="0" value="1">
+        </div>
+        <button class="danger" onclick="unassignSlots()">Devolver pro Pool</button>
+      </div>
+
+      <div class="sub" style="margin-top:10px;">
+        Dica: se faltar pool, aumente no bloco “Pool”.
+      </div>
+    </div>
+  </div>
+
+  <div class="slotsHeader">
+    <div>
+      <div class="cardTitle" style="margin:0;">Slots do código</div>
+      <div class="hint">Sem blur. Confirmado fica verde.</div>
+    </div>
+    <button class="ghost" onclick="loadSlots()">Atualizar slots</button>
+  </div>
+
+  <div id="slotsGrid" class="slotsGrid"></div>
+
+  <div class="footer">
+    <div>© OFF Company</div>
+    <div>Desenvolvido por Lucas Santos</div>
+  </div>
+</div>
+
+<div id="toast" class="toast">✅</div>
+
+<script>
+  // ========= COLE SUA URL /exec AQUI =========
+  const API_URL = "COLE_AQUI_SUA_URL_EXEC";
+
+  let slots = [];
+
+  function toast(msg){
+    const t=document.getElementById("toast");
+    t.textContent=msg;
+    t.classList.add("show");
+    setTimeout(()=>t.classList.remove("show"), 1600);
+  }
+  function overlay(on){
+    document.getElementById("overlay").style.display = on ? "flex" : "none";
+  }
+  function adminPass(){ return document.getElementById("adminPass").value || ""; }
+  function normalizeCode(s){
+    s = String(s||"").trim().toUpperCase();
+    const m = s.match(/[A-Z0-9]{4,12}/);
+    return m ? m[0] : "";
+  }
+  function currentCode(){
+    return normalizeCode(document.getElementById("codeSelect").value || "");
+  }
+
+  async function api(fn, payload){
+    const controller = new AbortController();
+    const timeout = setTimeout(()=>controller.abort(), 20000);
+    try{
+      const res = await fetch(API_URL, {
+        method:"POST",
+        cache:"no-store",
+        body: JSON.stringify({ fn, payload }),
+        signal: controller.signal
       });
+      const text = await res.text();
+      try { return JSON.parse(text); }
+      catch { return { ok:false, error:"Resposta inválida: " + text.slice(0,160) }; }
+    }catch(err){
+      return { ok:false, error:(err.name==="AbortError" ? "Timeout (20s)" : String(err)) };
+    }finally{
+      clearTimeout(timeout);
     }
   }
 
-  const current = pool.length;
+  async function refreshCodes(){
+    overlay(true);
+    const r = await api("vipAdminListCodes", { adminPass: adminPass() });
+    overlay(false);
+    if(!r.ok) return toast("❌ " + r.error);
 
-  // aumentar
-  if(total > current){
-    const add = total - current;
-    const data = [];
-    for(let k=1;k<=add;k++){
-      maxSlotNum++;
-      data.push([String(maxSlotNum), "LIVRE","","","","NAO","","","", "", "", "FALSE"]);
+    const rows = r.rows || [];
+    const sel = document.getElementById("codeSelect");
+    const keep = sel.value;
+
+    sel.innerHTML = rows.length
+      ? rows.map(x => `<option value="${x.code}">${x.code} • allowed:${x.slotsAllowed} • assigned:${x.slotsAssigned}${x.expired ? " • EXPIRADO":""}${!x.active?" • OFF":""}</option>`).join("")
+      : `<option value="">(nenhum código)</option>`;
+
+    if(keep) sel.value = keep;
+
+    document.getElementById("kCodes").textContent = String(rows.length);
+    document.getElementById("kAllowed").textContent = String(r.totalAllowed||0);
+    document.getElementById("kAssigned").textContent = String(r.totalCreated||0);
+    document.getElementById("kPoolHint").textContent = String(r.totalAllowed||0);
+  }
+
+  async function setPool(){
+    const total = Number(document.getElementById("poolTotal").value||0);
+    overlay(true);
+    const r = await api("vipAdminSetGlobalSlotCount", { adminPass: adminPass(), total });
+    overlay(false);
+    if(!r.ok) return toast("❌ " + r.error);
+
+    toast("✅ Pool aplicado");
+  }
+
+  async function createCode(){
+    const minutes = Number(document.getElementById("mins").value||60);
+    const slotsAllowed = Number(document.getElementById("slotsAllowed").value||0);
+
+    overlay(true);
+    const r = await api("vipAdminCreateOrUpdateCode", { adminPass: adminPass(), minutes, slotsAllowed });
+    overlay(false);
+    if(!r.ok) return toast("❌ " + r.error);
+
+    const out = document.getElementById("codeOut");
+    out.value = `${r.code} (allowed ${r.slotsAllowed}, expira ${new Date(r.expiresAt).toLocaleString("pt-BR")})`;
+
+    toast("✅ Código criado");
+    await refreshCodes();
+  }
+
+  document.getElementById("codeOut").addEventListener("click", async ()=>{
+    const v = document.getElementById("codeOut").value || "";
+    const code = normalizeCode(v);
+    if(!code) return;
+    try{
+      await navigator.clipboard.writeText(code);
+      toast("📋 Copiado: " + code);
+    }catch{ toast("❌ Não deu pra copiar"); }
+  });
+
+  async function assignSlots(){
+    const code = currentCode();
+    if(!code) return toast("Selecione um código");
+    overlay(true);
+    const r = await api("vipAdminAssignSlotsToCode", { adminPass: adminPass(), code });
+    overlay(false);
+    if(!r.ok) return toast("❌ " + r.error);
+
+    toast(`✅ +${r.added} atribuídos (assigned ${r.assigned}/${r.allowed})`);
+    await refreshCodes();
+    await loadSlots();
+  }
+
+  async function unassignSlots(){
+    const code = currentCode();
+    if(!code) return toast("Selecione um código");
+    const removeCount = Number(document.getElementById("removeCount").value||0);
+    if(!removeCount) return toast("Informe a quantidade");
+
+    overlay(true);
+    const r = await api("vipAdminUnassignSlotsFromCode", { adminPass: adminPass(), code, removeCount });
+    overlay(false);
+    if(!r.ok) return toast("❌ " + r.error);
+
+    toast(`✅ Devolvidos: ${r.removed}`);
+    await refreshCodes();
+    await loadSlots();
+  }
+
+  async function loadSlots(){
+    const code = currentCode();
+    if(!code) return toast("Selecione um código");
+
+    overlay(true);
+    const r = await api("vipAdminGetByCode", { adminPass: adminPass(), code });
+    overlay(false);
+    if(!r.ok) return toast("❌ " + r.error);
+
+    slots = r.rows || [];
+    renderSlots(code);
+    toast("✅ Slots carregados");
+  }
+
+  function renderSlots(code){
+    const grid = document.getElementById("slotsGrid");
+    if(!slots.length){
+      grid.innerHTML = `<div class="card" style="grid-column:1/-1">
+        <b>Nenhum slot nesse código.</b>
+        <div class="sub" style="margin-top:6px">Clique em “Atribuir slots do Pool ➜ Código”.</div>
+      </div>`;
+      return;
     }
-    vip.getRange(vip.getLastRow()+1, 1, data.length, headers.length).setValues(
-      data.map(r => {
-        // map na ordem dos headers existentes
-        const obj = {
-          slot:r[0], status:r[1], nome:r[2], rg:r[3], cpf:r[4], veiculo:r[5],
-          placa:r[6], cor:r[7], modelo:r[8], updatedAt:r[9], code:r[10], confirmed:r[11]
-        };
-        return headers.map(h => (obj[h]!==undefined ? obj[h] : ""));
-      })
-    );
-    return { ok:true, action:"increased", from:current, to:total, added:add };
+
+    grid.innerHTML = slots.map(s=>{
+      const rawStatus = String(s.status||"LIVRE").toUpperCase();
+      const confirmed = !!s.confirmed;
+      const status = confirmed ? "CONFIRMADO" : rawStatus;
+
+      const cls =
+        status==="LIVRE" ? "bLivre" :
+        status==="BLOQUEADO" ? "bBloq" :
+        status==="CONFIRMADO" ? "bConf" : "bOcup";
+
+      const badge =
+        status==="LIVRE" ? "Livre" :
+        status==="BLOQUEADO" ? "Bloqueado" :
+        status==="CONFIRMADO" ? "Confirmado" : "Ocupado";
+
+      const line1 = (status==="LIVRE" || status==="BLOQUEADO")
+        ? `<div class="info muted">—</div>`
+        : `<div class="info"><b>${esc(s.nome||"")}</b><br><span class="muted">RG:</span> ${esc(s.rg||"")} <span class="muted">CPF:</span> ${esc(s.cpf||"")}</div>`;
+
+      const line2 = (status==="LIVRE" || status==="BLOQUEADO") ? "" :
+        `<div class="info muted">Veículo: ${esc(s.veiculo||"NAO")} • Placa: ${esc(s.placa||"")} • ${esc(s.cor||"")} • ${esc(s.modelo||"")}</div>`;
+
+      const codeTag = `<div class="info muted">Código: <b>#${esc(code)}</b></div>`;
+
+      return `
+        <div class="slot ${cls}">
+          <div>
+            <div class="topRow">
+              <div class="num">#${esc(s.slot)}</div>
+              <div class="badge">${badge}</div>
+            </div>
+            ${line1}
+            ${line2}
+            ${codeTag}
+          </div>
+          <div class="miniActions">
+            <button class="miniBtn miniBlue" onclick="clearSlot('${escJS(s.slot)}','${escJS(code)}')">🧹</button>
+            <button class="miniBtn miniGreen" onclick="confirmSlot('${escJS(s.slot)}','${escJS(code)}')">✅</button>
+            <button class="miniBtn miniRed" onclick="deleteSlot('${escJS(s.slot)}','${escJS(code)}')">🗑️</button>
+          </div>
+        </div>
+      `;
+    }).join("");
   }
 
-  // diminuir
-  if(total < current){
-    let remove = current - total;
-
-    // pegar candidatos livres e sem code, de trás pra frente
-    const candidates = pool
-      .filter(p => p.status === "LIVRE")
-      .sort((a,b)=> Number(b.slot)-Number(a.slot));
-
-    if(candidates.length < remove){
-      return { ok:false, error:`Não dá para reduzir: faltam slots livres no pool. Livres: ${candidates.length}, precisa remover: ${remove}.` };
-    }
-
-    // deletar linhas (sempre em ordem decrescente pra não bagunçar index)
-    const rowsToDelete = candidates.slice(0, remove).map(x=>x.rowIndex).sort((a,b)=>b-a);
-    rowsToDelete.forEach(r => vip.deleteRow(r));
-
-    return { ok:true, action:"decreased", from:current, to:total, removed:remove };
+  async function clearSlot(slotId, code){
+    overlay(true);
+    const r = await api("vipAdminClearSlot", { adminPass: adminPass(), code, slotId });
+    overlay(false);
+    if(!r.ok) return toast("❌ " + r.error);
+    toast("✅ Limpo");
+    loadSlots();
   }
 
-  return { ok:true, action:"unchanged", total };
-}
-
-// ===================== Admin: Códigos =====================
-function vipAdminCreateOrUpdateCode(adminPass, minutes, slotsAllowed){
-  vipInit_();
-  const a = checkAdmin_(adminPass); if(!a.ok) return a;
-
-  minutes = Math.max(1, parseInt(minutes||60,10));
-  slotsAllowed = Math.max(0, parseInt(slotsAllowed||0,10));
-
-  const code = randCode_(6);
-  const expiresAt = new Date(now_().getTime() + minutes*60000);
-
-  const sh = sh_(SHEET_CODES);
-  const values = sh.getDataRange().getValues();
-  const headers = values[0].map(String);
-  const idx = indexMap_(headers);
-
-  sh.appendRow([
-    code, expiresAt, now_(), slotsAllowed, 0, "TRUE"
-  ]);
-
-  return { ok:true, code, expiresAt, slotsAllowed };
-}
-
-function vipAdminListCodes(adminPass){
-  vipInit_();
-  const a = checkAdmin_(adminPass); if(!a.ok) return a;
-
-  const sh = sh_(SHEET_CODES);
-  const values = sh.getDataRange().getValues();
-  if(values.length < 2) return { ok:true, rows:[], totalAllowed:0, totalCreated:0 };
-
-  const headers = values[0].map(String);
-  const idx = indexMap_(headers);
-
-  const rows = [];
-  let totalAllowed = 0;
-  let totalCreated = 0;
-
-  for(let i=1;i<values.length;i++){
-    const code = String(values[i][idx.code]||"").trim().toUpperCase();
-    const slotsAllowed  = Number(values[i][idx.slotsAllowed]||0);
-    const slotsAssigned = Number(values[i][idx.slotsAssigned]||0);
-    const expiresAt = values[i][idx.expiresAt];
-    const active = String(values[i][idx.isActive]||"TRUE").toUpperCase() !== "FALSE";
-
-    totalAllowed += slotsAllowed;
-    totalCreated += slotsAssigned;
-
-    rows.push({
-      code,
-      slotsAllowed,
-      slotsAssigned,
-      expiresAt,
-      expired: expiresAt ? isExpired_(expiresAt) : true,
-      active
-    });
+  async function confirmSlot(slotId, code){
+    overlay(true);
+    const r = await api("vipAdminConfirmSlot", { adminPass: adminPass(), code, slotId });
+    overlay(false);
+    if(!r.ok) return toast("❌ " + r.error);
+    toast("✅ Confirmado (toggle)");
+    loadSlots();
   }
 
-  // últimos primeiro
-  rows.reverse();
-
-  return { ok:true, rows, totalAllowed, totalCreated };
-}
-
-// Atribui slots do pool (code vazio) para um código até atingir slotsAllowed.
-// Retorna quantos criou/atribuiu.
-function vipAdminAssignSlotsToCode(adminPass, code){
-  vipInit_();
-  const a = checkAdmin_(adminPass); if(!a.ok) return a;
-
-  code = String(code||"").trim().toUpperCase();
-  const chk = validateCode_(code);
-  if(!chk.ok) return chk;
-
-  const codeRow = findCodeRow_(code);
-  const shC = codeRow.sh;
-  const idxC = codeRow.idx;
-  const rowIndexC = codeRow.rowIndex;
-
-  const allowed = Number(codeRow.row[idxC.slotsAllowed]||0);
-  const assigned = Number(codeRow.row[idxC.slotsAssigned]||0);
-
-  if(assigned >= allowed){
-    return { ok:true, code, allowed, assigned, added:0, msg:"Já está no limite desse código." };
+  async function deleteSlot(slotId, code){
+    overlay(true);
+    const r = await api("vipAdminDeleteSlot", { adminPass: adminPass(), code, slotId });
+    overlay(false);
+    if(!r.ok) return toast("❌ " + r.error);
+    toast("✅ Excluído");
+    refreshCodes();
+    loadSlots();
   }
 
-  const need = allowed - assigned;
-
-  const vip = sh_(SHEET_VIP);
-  const values = vip.getDataRange().getValues();
-  const headers = values[0].map(String);
-  const idx = indexMap_(headers);
-
-  // pool candidates: code vazio
-  const pool = [];
-  for(let i=1;i<values.length;i++){
-    const slotCode = String(values[i][idx.code]||"").trim();
-    if(!slotCode){
-      pool.push(i+1);
-    }
+  function esc(s){
+    return String(s??"").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
+  }
+  function escJS(s){
+    return String(s??"").replace(/['\\]/g, "\\$&");
   }
 
-  if(pool.length < need){
-    return { ok:false, error:`Pool insuficiente. Precisa ${need} slots livres no pool, mas tem ${pool.length}. Aumente os slots gerais.` };
-  }
-
-  // atribui os primeiros "need"
-  for(let k=0;k<need;k++){
-    const r = pool[k];
-    vip.getRange(r, idx.code+1).setValue(code);
-    vip.getRange(r, idx.updatedAt+1).setValue(now_());
-  }
-
-  // atualiza contador do código
-  const newAssigned = assigned + need;
-  shC.getRange(rowIndexC, idxC.slotsAssigned+1).setValue(newAssigned);
-
-  return { ok:true, code, allowed, assigned:newAssigned, added:need };
-}
-
-// Remove X slots do código: devolve pro pool (limpa dados e code="").
-// Só remove slots do código que estejam LIVRE (para não apagar ocupados).
-function vipAdminUnassignSlotsFromCode(adminPass, code, removeCount){
-  vipInit_();
-  const a = checkAdmin_(adminPass); if(!a.ok) return a;
-
-  code = String(code||"").trim().toUpperCase();
-  removeCount = Math.max(0, parseInt(removeCount||0,10));
-  if(!removeCount) return { ok:true, removed:0 };
-
-  const codeRow = findCodeRow_(code);
-  if(!codeRow) return { ok:false, error:"Código não encontrado." };
-
-  const vip = sh_(SHEET_VIP);
-  const values = vip.getDataRange().getValues();
-  const headers = values[0].map(String);
-  const idx = indexMap_(headers);
-
-  const candidates = [];
-  for(let i=1;i<values.length;i++){
-    const slotCode = String(values[i][idx.code]||"").trim().toUpperCase();
-    const status = String(values[i][idx.status]||"").toUpperCase();
-    if(slotCode===code && status==="LIVRE"){
-      candidates.push(i+1);
-    }
-  }
-
-  if(candidates.length < removeCount){
-    return { ok:false, error:`Não dá pra tirar ${removeCount}. Livres nesse código: ${candidates.length}.` };
-  }
-
-  // devolve pro pool (limpa code e dados)
-  for(let k=0;k<removeCount;k++){
-    const r = candidates[candidates.length-1-k]; // de trás
-    // limpa dados do slot
-    vip.getRange(r, idx.status+1).setValue("LIVRE");
-    vip.getRange(r, idx.nome+1, 1, 8).clearContent(); // nome..modelo + updatedAt
-    vip.getRange(r, idx.code+1).setValue("");
-    vip.getRange(r, idx.confirmed+1).setValue("FALSE");
-    vip.getRange(r, idx.veiculo+1).setValue("NAO");
-    vip.getRange(r, idx.updatedAt+1).setValue(now_());
-  }
-
-  // atualiza contador
-  const assigned = Number(codeRow.row[codeRow.idx.slotsAssigned]||0);
-  const newAssigned = Math.max(0, assigned - removeCount);
-  codeRow.sh.getRange(codeRow.rowIndex, codeRow.idx.slotsAssigned+1).setValue(newAssigned);
-
-  return { ok:true, removed:removeCount, assigned:newAssigned };
-}
-
-// ===================== Admin: Slots por código =====================
-function vipAdminGetByCode(adminPass, code){
-  vipInit_();
-  const a = checkAdmin_(adminPass); if(!a.ok) return a;
-
-  code = String(code||"").trim().toUpperCase();
-  const chk = validateCode_(code);
-  if(!chk.ok) return chk;
-
-  const vip = sh_(SHEET_VIP);
-  const values = vip.getDataRange().getValues();
-  const headers = values[0].map(String);
-  const idx = indexMap_(headers);
-
-  const rows = [];
-  for(let i=1;i<values.length;i++){
-    const slotCode = String(values[i][idx.code]||"").trim().toUpperCase();
-    if(slotCode !== code) continue;
-
-    const confirmed = String(values[i][idx.confirmed]||"").toUpperCase()==="TRUE";
-    rows.push({
-      slot: values[i][idx.slot],
-      status: values[i][idx.status],
-      nome: values[i][idx.nome],
-      rg: values[i][idx.rg],
-      cpf: values[i][idx.cpf],
-      veiculo: values[i][idx.veiculo],
-      placa: values[i][idx.placa],
-      cor: values[i][idx.cor],
-      modelo: values[i][idx.modelo],
-      updatedAt: values[i][idx.updatedAt],
-      code: slotCode,
-      confirmed
-    });
-  }
-
-  return { ok:true, rows, code };
-}
-
-function vipAdminClearSlot(adminPass, code, slotId){
-  vipInit_();
-  const a = checkAdmin_(adminPass); if(!a.ok) return a;
-
-  code = String(code||"").trim().toUpperCase();
-  slotId = String(slotId||"").trim();
-
-  const vip = sh_(SHEET_VIP);
-  const values = vip.getDataRange().getValues();
-  const headers = values[0].map(String);
-  const idx = indexMap_(headers);
-
-  let rowIndex=-1;
-  for(let i=1;i<values.length;i++){
-    const s = String(values[i][idx.slot]);
-    const slotCode = String(values[i][idx.code]||"").trim().toUpperCase();
-    if(s===slotId && slotCode===code){ rowIndex=i+1; break; }
-  }
-  if(rowIndex<0) return { ok:false, error:"Slot não encontrado nesse código." };
-
-  vip.getRange(rowIndex, idx.status+1).setValue("LIVRE");
-  vip.getRange(rowIndex, idx.nome+1, 1, 8).clearContent();
-  vip.getRange(rowIndex, idx.veiculo+1).setValue("NAO");
-  vip.getRange(rowIndex, idx.confirmed+1).setValue("FALSE");
-  vip.getRange(rowIndex, idx.updatedAt+1).setValue(now_());
-
-  return { ok:true };
-}
-
-function vipAdminConfirmSlot(adminPass, code, slotId){
-  vipInit_();
-  const a = checkAdmin_(adminPass); if(!a.ok) return a;
-
-  code = String(code||"").trim().toUpperCase();
-  slotId = String(slotId||"").trim();
-
-  const vip = sh_(SHEET_VIP);
-  const values = vip.getDataRange().getValues();
-  const headers = values[0].map(String);
-  const idx = indexMap_(headers);
-
-  let rowIndex=-1;
-  for(let i=1;i<values.length;i++){
-    const s = String(values[i][idx.slot]);
-    const slotCode = String(values[i][idx.code]||"").trim().toUpperCase();
-    if(s===slotId && slotCode===code){ rowIndex=i+1; break; }
-  }
-  if(rowIndex<0) return { ok:false, error:"Slot não encontrado nesse código." };
-
-  const cell = vip.getRange(rowIndex, idx.confirmed+1);
-  const current = String(cell.getValue()||"FALSE").toUpperCase()==="TRUE";
-  cell.setValue(current ? "FALSE" : "TRUE");
-  vip.getRange(rowIndex, idx.updatedAt+1).setValue(now_());
-
-  return { ok:true, confirmed: !current };
-}
-
-// Exclui o slot (remove linha). Também decrementa slotsAssigned do código.
-function vipAdminDeleteSlot(adminPass, code, slotId){
-  vipInit_();
-  const a = checkAdmin_(adminPass); if(!a.ok) return a;
-
-  code = String(code||"").trim().toUpperCase();
-  slotId = String(slotId||"").trim();
-
-  const vip = sh_(SHEET_VIP);
-  const values = vip.getDataRange().getValues();
-  const headers = values[0].map(String);
-  const idx = indexMap_(headers);
-
-  let rowIndex=-1;
-  for(let i=1;i<values.length;i++){
-    const s = String(values[i][idx.slot]);
-    const slotCode = String(values[i][idx.code]||"").trim().toUpperCase();
-    if(s===slotId && slotCode===code){ rowIndex=i+1; break; }
-  }
-  if(rowIndex<0) return { ok:false, error:"Slot não encontrado nesse código." };
-
-  vip.deleteRow(rowIndex);
-
-  const codeRow = findCodeRow_(code);
-  if(codeRow){
-    const assigned = Number(codeRow.row[codeRow.idx.slotsAssigned]||0);
-    codeRow.sh.getRange(codeRow.rowIndex, codeRow.idx.slotsAssigned+1).setValue(Math.max(0, assigned-1));
-  }
-
-  return { ok:true };
-}
-
-// ===================== utils =====================
-function maskName_(name){
-  name = String(name||"").trim();
-  if(!name) return "";
-  return name[0].toUpperCase() + " •••••";
-}
-
-// ===================== Router POST =====================
-function doPost(e){
-  vipInit_();
-
-  let data = {};
-  try { data = JSON.parse((e && e.postData && e.postData.contents) ? e.postData.contents : "{}"); }
-  catch(err){ return json_({ ok:false, error:"JSON inválido" }); }
-
-  const fn = data.fn;
-  const p = data.payload || {};
-
-  try{
-    // public
-    if(fn === "vipPublicGet") return json_(vipPublicGet(p.code));
-    if(fn === "vipReserve")   return json_(vipReserve(p.code, p));
-
-    // admin
-    if(fn === "vipAdminSetGlobalSlotCount") return json_(vipAdminSetGlobalSlotCount(p.adminPass, p.total));
-    if(fn === "vipAdminCreateOrUpdateCode") return json_(vipAdminCreateOrUpdateCode(p.adminPass, p.minutes, p.slotsAllowed));
-    if(fn === "vipAdminListCodes")          return json_(vipAdminListCodes(p.adminPass));
-    if(fn === "vipAdminAssignSlotsToCode")  return json_(vipAdminAssignSlotsToCode(p.adminPass, p.code));
-    if(fn === "vipAdminUnassignSlotsFromCode") return json_(vipAdminUnassignSlotsFromCode(p.adminPass, p.code, p.removeCount));
-    if(fn === "vipAdminGetByCode")          return json_(vipAdminGetByCode(p.adminPass, p.code));
-    if(fn === "vipAdminClearSlot")          return json_(vipAdminClearSlot(p.adminPass, p.code, p.slotId));
-    if(fn === "vipAdminConfirmSlot")        return json_(vipAdminConfirmSlot(p.adminPass, p.code, p.slotId));
-    if(fn === "vipAdminDeleteSlot")         return json_(vipAdminDeleteSlot(p.adminPass, p.code, p.slotId));
-
-    return json_({ ok:false, error:"Função inválida: " + fn });
-
-  }catch(err){
-    return json_({ ok:false, error:String(err && err.message ? err.message : err) });
-  }
-}
+  window.addEventListener("DOMContentLoaded", ()=> refreshCodes());
+</script>
+</body>
+</html>
