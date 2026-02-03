@@ -14,216 +14,247 @@
 
   :root{
     --bg1:#060812; --bg2:#0b1220;
-    --panel:rgba(10,16,28,.76);
+    --panel:rgba(10,16,28,.78);
+    --panel2:rgba(13,20,34,.78);
     --stroke:rgba(255,255,255,.10);
-    --text:#e5e7eb; --muted:rgba(229,231,235,.62);
+    --stroke2:rgba(255,255,255,.06);
+
+    --text:#e5e7eb;
+    --muted:rgba(229,231,235,.62);
 
     --purple:#8b5cf6;
     --purple2:#a78bfa;
     --cyan:#06b6d4;
-    --amber:#f59e0b;
-    --orange:#fb923c;
+    --pink:#ec4899;
     --green:#22c55e;
+    --amber:#f59e0b;
     --red:#ef4444;
 
     --shadow:0 24px 80px rgba(0,0,0,.68);
+    --shadow2:0 18px 50px rgba(0,0,0,.55);
+    --radius:20px;
+    --radius2:14px;
+
+    --drawerW: 420px;
   }
 
   *{box-sizing:border-box}
+  html,body{height:100%}
   body{
-    margin:0; min-height:100vh;
+    margin:0;
     font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
     color:var(--text);
     background:
-      radial-gradient(900px 520px at 14% 12%, rgba(139,92,246,.18), transparent 60%),
-      radial-gradient(900px 520px at 86% 18%, rgba(6,182,212,.12), transparent 60%),
-      radial-gradient(900px 520px at 70% 90%, rgba(245,158,11,.10), transparent 60%),
+      radial-gradient(900px 520px at 14% 12%, rgba(139,92,246,.20), transparent 60%),
+      radial-gradient(900px 520px at 86% 18%, rgba(6,182,212,.15), transparent 60%),
+      radial-gradient(900px 520px at 70% 90%, rgba(236,72,153,.10), transparent 60%),
       linear-gradient(135deg,var(--bg1),var(--bg2));
-    padding:18px;
+    overflow-x:hidden;
   }
 
-  /* Sidebar (mesmo estilo do seu dashboard) */
-  .dock{
-    position:fixed;
-    left:16px; top:16px; bottom:16px;
-    width:64px;
-    border-radius:18px;
-    border:1px solid rgba(255,255,255,.10);
-    background:rgba(10,16,28,.55);
-    backdrop-filter: blur(10px);
-    box-shadow:0 18px 60px rgba(0,0,0,.45);
+  /* ambient glow blobs */
+  .glow{
+    position:fixed; inset:-20%;
+    pointer-events:none;
+    background:
+      radial-gradient(420px 320px at 15% 30%, rgba(139,92,246,.18), transparent 60%),
+      radial-gradient(480px 360px at 75% 20%, rgba(6,182,212,.12), transparent 60%),
+      radial-gradient(520px 420px at 60% 80%, rgba(236,72,153,.10), transparent 60%);
+    filter: blur(20px) saturate(120%);
+    opacity:.9;
+    animation: floatGlow 10s ease-in-out infinite alternate;
+  }
+  @keyframes floatGlow{
+    from{ transform: translate3d(0,0,0) scale(1); }
+    to{ transform: translate3d(10px,-8px,0) scale(1.02); }
+  }
+
+  /* layout shell */
+  .shell{
+    width:min(1320px, 100%);
+    margin:0 auto;
+    padding:18px 18px 40px;
+  }
+
+  /* topbar */
+  .topbar{
     display:flex;
-    flex-direction:column;
     align-items:center;
-    gap:10px;
-    padding:10px 8px;
+    justify-content:space-between;
+    gap:14px;
+    padding:16px 16px;
+    border-radius:var(--radius);
+    border:1px solid var(--stroke);
+    background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow2);
+    position:sticky;
+    top:12px;
     z-index:50;
   }
-  .dock .logo{
+
+  .brand{
+    display:flex; align-items:flex-end; gap:14px; min-width:280px;
+  }
+  .logo{
     width:44px; height:44px;
     border-radius:14px;
-    background:rgba(139,92,246,.16);
-    border:1px solid rgba(139,92,246,.28);
-    display:flex; align-items:center; justify-content:center;
-    font-weight:900; letter-spacing:.5px;
-    box-shadow:0 18px 50px rgba(139,92,246,.18);
+    display:grid; place-items:center;
+    background:linear-gradient(135deg, rgba(139,92,246,.95), rgba(6,182,212,.55));
+    box-shadow: 0 14px 36px rgba(139,92,246,.22);
+    font-weight:900;
+    letter-spacing:.6px;
   }
-  .dock a{
-    width:44px; height:44px;
-    border-radius:14px;
-    border:1px solid rgba(255,255,255,.10);
-    background:rgba(255,255,255,.05);
-    display:flex; align-items:center; justify-content:center;
-    text-decoration:none; color:rgba(229,231,235,.9);
-    transition:.18s;
-    position:relative;
-    overflow:hidden;
-  }
-  .dock a:hover{ transform:translateY(-1px); border-color:rgba(139,92,246,.35) }
-  .dock a.active{
-    background:linear-gradient(135deg, rgba(139,92,246,.88), rgba(6,182,212,.34));
-    border-color:rgba(139,92,246,.40);
-  }
-
-  /* Layout principal */
-  .page{
-    margin-left:92px;
-    max-width:1400px;
-    margin-right:auto;
-  }
-
-  .wrap{
-    background:var(--panel);
-    border:1px solid var(--stroke);
-    border-radius:24px;
-    box-shadow:var(--shadow);
-    backdrop-filter:blur(10px);
-    overflow:hidden;
-  }
-
-  .topbar{
-    display:flex; justify-content:space-between;
-    align-items:center;
-    gap:12px;
-    padding:16px 16px 10px;
-    border-bottom:1px solid rgba(255,255,255,.08);
-  }
-  .title h1{
-    font-family:"Rokiest";
+  .titles{display:flex; flex-direction:column; gap:4px}
+  .titles h1{
     margin:0;
-    letter-spacing:.9px;
-    font-size:32px;
+    font-family:"Rokiest";
+    letter-spacing:.8px;
+    font-size:30px;
+    line-height:1;
   }
-  .title .sub{
-    margin-top:6px;
+  .titles .sub{
+    font-size:12px;
     color:var(--muted);
-    font-size:13px;
   }
 
   .actions{
-    display:flex;
-    gap:10px;
-    align-items:center;
-    flex-wrap:wrap;
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    justify-content:flex-end;
   }
 
   .search{
-    display:flex; align-items:center;
-    gap:10px;
-    background:rgba(2,6,23,.45);
-    border:1px solid rgba(255,255,255,.10);
-    border-radius:14px;
+    display:flex; align-items:center; gap:10px;
     padding:10px 12px;
-    min-width:260px;
+    height:44px;
+    width:min(420px, 48vw);
+    border-radius:999px;
+    border:1px solid var(--stroke2);
+    background:rgba(2,6,23,.40);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
   }
+  .search svg{opacity:.8}
   .search input{
     width:100%;
-    border:0;
-    outline:none;
+    border:0; outline:0;
     background:transparent;
     color:var(--text);
     font-weight:700;
   }
+  .search input::placeholder{color:rgba(229,231,235,.45)}
+
   .btn{
-    height:40px;
-    border-radius:14px;
-    border:1px solid rgba(255,255,255,.10);
+    height:44px;
+    border-radius:999px;
+    border:1px solid var(--stroke2);
     background:rgba(255,255,255,.06);
-    color:#fff;
-    padding:0 12px;
-    font-weight:900;
-    cursor:pointer;
-    transition:.16s;
-    display:inline-flex; align-items:center; gap:8px;
-  }
-  .btn:hover{ transform:translateY(-1px); opacity:.95 }
-  .btn.primary{
-    border-color:rgba(139,92,246,.35);
-    background:linear-gradient(135deg, rgba(139,92,246,.92), rgba(6,182,212,.36));
-    box-shadow:0 18px 55px rgba(139,92,246,.16);
-  }
-  .btn.ghost{ background:rgba(255,255,255,.04) }
-
-  /* Barra de filtros + legenda */
-  .bar{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    gap:12px;
-    padding:12px 16px 14px;
-    flex-wrap:wrap;
-  }
-
-  .filters{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    align-items:center;
-  }
-  select{
-    height:40px;
-    border-radius:14px;
-    border:1px solid rgba(255,255,255,.10);
-    background:rgba(2,6,23,.45);
     color:var(--text);
-    padding:0 12px;
+    font-weight:900;
+    padding:0 14px;
+    cursor:pointer;
+    transition:.16s ease;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    user-select:none;
+  }
+  .btn:hover{transform:translateY(-1px); opacity:.98}
+  .btn:active{transform:translateY(0px); opacity:.92}
+  .btnPrimary{
+    border:0;
+    background:linear-gradient(135deg, rgba(139,92,246,.95), rgba(6,182,212,.55));
+    box-shadow:0 14px 36px rgba(139,92,246,.20);
+  }
+  .btnGhost{
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.10);
+  }
+
+  /* toolbar */
+  .toolbar{
+    margin-top:14px;
+    padding:14px;
+    border-radius:var(--radius);
+    border:1px solid var(--stroke);
+    background:rgba(10,16,28,.66);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow2);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+
+  .leftTools, .rightTools{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  }
+
+  .select{
+    height:44px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.10);
+    background:rgba(2,6,23,.55);
+    color:var(--text);
+    padding:10px 14px;
     outline:none;
     font-weight:900;
+    cursor:pointer;
+    transition:.15s;
+  }
+  .select:focus{
+    border-color: rgba(139,92,246,.55);
+    box-shadow: 0 0 0 4px rgba(139,92,246,.18);
   }
 
   .chips{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
+    display:flex; gap:8px; flex-wrap:wrap;
   }
   .chip{
-    height:34px;
-    padding:0 10px;
+    height:36px;
     border-radius:999px;
     border:1px solid rgba(255,255,255,.10);
     background:rgba(255,255,255,.04);
-    color:rgba(229,231,235,.9);
-    font-weight:900;
-    font-size:12px;
-    cursor:pointer;
-    transition:.16s;
+    padding:0 12px;
     display:inline-flex;
     align-items:center;
     gap:8px;
-  }
-  .chip:hover{ transform:translateY(-1px) }
-  .chip.on{ border-color:rgba(139,92,246,.45); background:rgba(139,92,246,.16); }
-
-  .dot{ width:10px; height:10px; border-radius:999px; }
-
-  .legend{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-    justify-content:flex-end;
-    align-items:center;
-    color:rgba(229,231,235,.7);
+    font-weight:900;
     font-size:12px;
+    cursor:pointer;
+    transition:.16s ease;
+    user-select:none;
+  }
+  .chip:hover{transform:translateY(-1px); opacity:.98}
+  .chip:active{transform:translateY(0px); opacity:.92}
+  .chip .dot{
+    width:10px; height:10px; border-radius:999px;
+    box-shadow:0 0 0 4px rgba(255,255,255,.06);
+  }
+  .chip.active{
+    border-color: rgba(139,92,246,.45);
+    background: rgba(139,92,246,.14);
+    box-shadow: 0 12px 30px rgba(139,92,246,.12);
+  }
+
+  /* month header */
+  .monthHeader{
+    margin-top:14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .monthTitle{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+  }
+  .monthTitle .m{
+    font-family:"Rokiest";
+    letter-spacing:.7px;
+    font-size:22px;
   }
   .pill{
     display:inline-flex;
@@ -233,814 +264,973 @@
     border-radius:999px;
     border:1px solid rgba(255,255,255,.10);
     background:rgba(255,255,255,.04);
+    color:rgba(229,231,235,.75);
     font-weight:900;
+    font-size:12px;
   }
 
-  /* Calendário */
-  .cal{
-    padding:0 16px 16px;
-    display:grid;
-    grid-template-columns: 1fr 360px;
-    gap:12px;
-  }
-  @media(max-width:1100px){ .cal{ grid-template-columns:1fr; } }
-
-  .calendar{
-    border:1px solid rgba(255,255,255,.10);
-    background:rgba(2,6,23,.35);
-    border-radius:18px;
-    overflow:hidden;
-  }
-  .calHeader{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:12px 12px;
-    border-bottom:1px solid rgba(255,255,255,.08);
-    background:rgba(255,255,255,.02);
-    gap:10px;
-    flex-wrap:wrap;
-  }
-  .month{
-    font-family:Rokiest;
-    letter-spacing:.6px;
-    font-size:18px;
-    display:flex;
-    gap:10px;
-    align-items:center;
-  }
-  .nav{
+  .navMonth{
     display:flex; gap:8px; align-items:center;
   }
+  .iconBtn{
+    width:44px; height:44px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.10);
+    background:rgba(255,255,255,.05);
+    display:grid; place-items:center;
+    cursor:pointer;
+    transition:.16s ease;
+  }
+  .iconBtn:hover{transform:translateY(-1px)}
+  .iconBtn:active{transform:translateY(0px); opacity:.92}
 
+  /* calendar */
+  .calendarWrap{
+    margin-top:12px;
+    border-radius:var(--radius);
+    border:1px solid var(--stroke);
+    background:rgba(10,16,28,.66);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow);
+    overflow:hidden;
+  }
   .dow{
     display:grid;
     grid-template-columns: repeat(7, 1fr);
-    padding:10px 10px;
+    background:rgba(255,255,255,.03);
     border-bottom:1px solid rgba(255,255,255,.06);
-    color:rgba(229,231,235,.65);
-    font-weight:900;
+  }
+  .dow div{
+    padding:12px 12px;
     font-size:12px;
+    font-weight:900;
+    color:rgba(229,231,235,.62);
+    letter-spacing:.4px;
     text-transform:lowercase;
   }
-  .dow div{ padding:4px 8px; }
-
   .grid{
     display:grid;
     grid-template-columns: repeat(7, 1fr);
-    gap:0;
+    min-height: 72vh; /* calendário protagonista */
   }
-  .day{
-    min-height:140px; /* retangular com espaço p/ compromissos */
-    border-right:1px solid rgba(255,255,255,.06);
-    border-bottom:1px solid rgba(255,255,255,.06);
-    padding:10px 10px;
-    position:relative;
-    overflow:hidden;
-    transition:.16s;
-  }
-  .day:nth-child(7n){ border-right:0; }
-  .day:hover{ background:rgba(139,92,246,.06); }
 
-  .dayNum{
-    font-weight:900;
-    color:rgba(229,231,235,.85);
-    font-size:12px;
+  .cell{
+    border-right:1px solid rgba(255,255,255,.05);
+    border-bottom:1px solid rgba(255,255,255,.05);
+    padding:10px 10px 10px;
+    position:relative;
+    background:rgba(2,6,23,.20);
+    transition: background .18s ease, transform .18s ease;
+    overflow:hidden;
+  }
+  .cell:nth-child(7n){border-right:0}
+  .cell:hover{
+    background:rgba(139,92,246,.06);
+  }
+  .cellHeader{
     display:flex;
     justify-content:space-between;
     align-items:center;
+    margin-bottom:8px;
   }
-  .tagMini{
-    font-size:11px;
-    color:rgba(229,231,235,.65);
-    border:1px solid rgba(255,255,255,.10);
-    background:rgba(255,255,255,.04);
-    padding:4px 8px;
-    border-radius:999px;
+  .dayNum{
     font-weight:900;
+    color:rgba(229,231,235,.85);
   }
-
-  .cards{
-    margin-top:8px;
+  .tagToday{
+    font-size:11px;
+    font-weight:900;
+    padding:6px 10px;
+    border-radius:999px;
+    border:1px solid rgba(139,92,246,.35);
+    background:rgba(139,92,246,.14);
+    color:rgba(229,231,235,.92);
+  }
+  .mutedDay .dayNum{color:rgba(229,231,235,.35)}
+  .mutedDay{background:rgba(2,6,23,.14)}
+  .cellContent{
     display:flex;
     flex-direction:column;
     gap:8px;
   }
 
   .event{
+    position:relative;
+    border-radius:14px;
     border:1px solid rgba(255,255,255,.10);
     background:rgba(255,255,255,.04);
-    border-radius:14px;
-    padding:8px 9px;
+    padding:10px 10px;
     cursor:pointer;
-    transition:.16s;
-    position:relative;
+    transition:.16s ease;
     overflow:hidden;
   }
-  .event:hover{ transform:translateY(-1px); border-color:rgba(139,92,246,.30); }
-  .event .t{
+  .event:hover{transform:translateY(-1px); border-color: rgba(255,255,255,.16)}
+  .event:active{transform:translateY(0px); opacity:.92}
+
+  .event::before{
+    content:"";
+    position:absolute; left:0; top:0; bottom:0;
+    width:6px;
+    background:var(--accent, rgba(139,92,246,.9));
+    box-shadow: 0 0 0 1px rgba(255,255,255,.04);
+  }
+
+  .eventTop{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:center;
+    margin-bottom:6px;
+  }
+  .eventTitle{
     font-weight:900;
     font-size:12px;
-    line-height:1.1;
-    display:flex; justify-content:space-between; gap:8px;
+    letter-spacing:.2px;
+    max-width: 70%;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
   }
-  .event .m{
-    margin-top:4px;
-    color:rgba(229,231,235,.65);
+  .badge{
     font-size:11px;
-    line-height:1.2;
-  }
-  .event .badge{
-    font-size:11px;
-    padding:4px 8px;
+    font-weight:900;
+    padding:6px 10px;
     border-radius:999px;
     border:1px solid rgba(255,255,255,.10);
     background:rgba(255,255,255,.04);
-    font-weight:900;
+    color:rgba(229,231,235,.82);
     white-space:nowrap;
   }
-
-  /* status colors */
-  .st-confirmado{ border-color:rgba(34,197,94,.28); background:rgba(34,197,94,.10); }
-  .st-reservado{ border-color:rgba(139,92,246,.30); background:rgba(139,92,246,.12); }
-  .st-negociando{ border-color:rgba(245,158,11,.26); background:rgba(245,158,11,.10); }
-  .st-outros{ border-color:rgba(255,255,255,.10); background:rgba(255,255,255,.04); }
-  .st-radio{ border-color:rgba(239,68,68,.25); background:rgba(239,68,68,.10); }
-  .st-lembrete{ border-color:rgba(6,182,212,.25); background:rgba(6,182,212,.10); }
-
-  /* artista colors (borda lateral) */
-  .artistBar{
-    position:absolute; left:0; top:0; bottom:0;
-    width:6px;
-    border-radius:14px 0 0 14px;
+  .meta{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    color:rgba(229,231,235,.65);
+    font-size:11px;
+    font-weight:800;
+  }
+  .meta span{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:6px 8px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.08);
+    background:rgba(2,6,23,.30);
   }
 
-  /* Painel de detalhes */
-  .details{
-    border:1px solid rgba(255,255,255,.10);
-    background:rgba(2,6,23,.35);
-    border-radius:18px;
-    overflow:hidden;
-    position:sticky;
-    top:16px;
-    height:fit-content;
+  /* drawer overlay */
+  .overlay{
+    position:fixed;
+    inset:0;
+    display:none;
+    align-items:stretch;
+    justify-content:flex-end;
+    background:rgba(0,0,0,.50);
+    backdrop-filter: blur(10px);
+    z-index:1000;
   }
-  .detailsHead{
-    padding:14px 14px 12px;
-    border-bottom:1px solid rgba(255,255,255,.08);
+  .overlay.show{display:flex; animation:fadeIn .18s ease both}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+  .drawer{
+    width:var(--drawerW);
+    max-width:92vw;
+    background:rgba(10,16,28,.86);
+    border-left:1px solid rgba(255,255,255,.10);
+    box-shadow: -20px 0 70px rgba(0,0,0,.55);
+    padding:16px;
+    transform:translateX(14px);
+    animation:drawerIn .22s ease both;
+  }
+  @keyframes drawerIn{
+    from{opacity:0; transform:translateX(18px)}
+    to{opacity:1; transform:translateX(0px)}
+  }
+
+  .drawerHeader{
     display:flex;
     justify-content:space-between;
     align-items:center;
     gap:10px;
+    padding-bottom:12px;
+    border-bottom:1px solid rgba(255,255,255,.08);
   }
-  .detailsHead .h{
-    font-family:Rokiest;
+  .drawerHeader .t{
+    font-family:"Rokiest";
     letter-spacing:.6px;
     font-size:18px;
+    margin:0;
   }
-  .detailsBody{
-    padding:14px;
+  .closeX{
+    width:40px; height:40px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,.10);
+    background:rgba(255,255,255,.06);
+    color:var(--text);
+    cursor:pointer;
+    display:grid; place-items:center;
+    transition:.15s ease;
+  }
+  .closeX:hover{transform:translateY(-1px)}
+  .closeX:active{transform:translateY(0px); opacity:.92}
+
+  .drawerBody{
+    padding-top:12px;
     display:flex;
     flex-direction:column;
-    gap:10px;
+    gap:12px;
   }
+
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+  @media(max-width:560px){ .row2{grid-template-columns:1fr} }
+
   .field{
-    display:flex; flex-direction:column;
+    display:flex;
+    flex-direction:column;
     gap:6px;
   }
   .field label{
     font-size:12px;
-    color:rgba(229,231,235,.70);
+    color:rgba(229,231,235,.72);
     font-weight:900;
   }
-  .field input, .field textarea{
+  .inp, .txt{
     border-radius:14px;
     border:1px solid rgba(255,255,255,.10);
-    background:rgba(255,255,255,.04);
-    padding:10px 10px;
+    background:rgba(2,6,23,.55);
     color:var(--text);
+    padding:10px 12px;
     outline:none;
-    font-weight:700;
+    font-weight:800;
+    transition:.15s ease;
   }
-  textarea{ resize:none; min-height:92px; }
+  .inp{height:44px}
+  .txt{min-height:92px; resize:none}
+  .inp:focus, .txt:focus{
+    border-color: rgba(139,92,246,.55);
+    box-shadow: 0 0 0 4px rgba(139,92,246,.18);
+  }
 
-  .row2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-  @media(max-width:1100px){ .row2{ grid-template-columns:1fr; } }
-
-  .toggle{
-    display:flex; align-items:center; justify-content:space-between;
+  .statusRow{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  .miniTag{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 10px;
+    border-radius:999px;
     border:1px solid rgba(255,255,255,.10);
     background:rgba(255,255,255,.04);
-    border-radius:14px;
-    padding:10px 10px;
     font-weight:900;
+    font-size:12px;
   }
+  .miniDot{width:10px;height:10px;border-radius:999px; background:var(--accent)}
   .switch{
-    width:48px; height:28px;
+    margin-top:6px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:12px;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.10);
+    background:rgba(255,255,255,.03);
+  }
+  .switch .sTitle{font-weight:900}
+  .toggle{
+    width:52px; height:30px;
     border-radius:999px;
     border:1px solid rgba(255,255,255,.14);
-    background:rgba(255,255,255,.06);
+    background:rgba(255,255,255,.08);
     position:relative;
     cursor:pointer;
-    transition:.16s;
+    transition:.16s ease;
+    flex:0 0 auto;
   }
-  .knob{
-    width:22px; height:22px; border-radius:999px;
-    background:rgba(229,231,235,.85);
-    position:absolute; top:2px; left:2px;
-    transition:.16s;
+  .toggle::after{
+    content:"";
+    position:absolute;
+    top:50%;
+    left:4px;
+    width:22px; height:22px;
+    border-radius:999px;
+    transform:translateY(-50%);
+    background:rgba(229,231,235,.90);
+    transition:.16s ease;
+    box-shadow:0 10px 20px rgba(0,0,0,.35);
   }
-  .switch.on{
+  .toggle.on{
+    background:rgba(34,197,94,.22);
     border-color:rgba(34,197,94,.35);
-    background:rgba(34,197,94,.18);
   }
-  .switch.on .knob{ left:24px; background:#eafff2; }
+  .toggle.on::after{ left:26px }
 
-  /* Modal criar */
-  .overlay{
-    position:fixed; inset:0;
-    display:none;
-    align-items:center; justify-content:center;
-    background:rgba(0,0,0,.55);
-    backdrop-filter:blur(10px);
-    z-index:9999;
-    padding:18px;
+  .drawerActions{
+    display:flex;
+    gap:10px;
+    margin-top:8px;
   }
-  .modal{
-    width:min(760px, 96vw);
-    border-radius:18px;
-    border:1px solid rgba(255,255,255,.14);
-    background:rgba(11,18,32,.92);
-    box-shadow:0 20px 70px rgba(0,0,0,.70);
-    padding:14px;
-    animation: pop .18s ease both;
+  .btnDanger{
+    border:1px solid rgba(239,68,68,.35);
+    background:rgba(239,68,68,.18);
   }
-  @keyframes pop{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:scale(1)}}
 
-  /* micro animações */
-  .fadeIn{
-    animation: in .35s ease both;
-  }
-  @keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-
+  /* small footer note */
   .note{
-    color:rgba(229,231,235,.6);
+    margin-top:10px;
     font-size:12px;
-    line-height:1.3;
+    color:rgba(229,231,235,.55);
+    line-height:1.35;
+  }
+
+  /* responsive */
+  @media(max-width:980px){
+    .search{width:min(520px, 92vw)}
+    .grid{min-height: 64vh}
+  }
+  @media(max-width:560px){
+    .topbar{position:static}
+    .titles h1{font-size:26px}
+    .brand{min-width:auto}
+    .grid{min-height: 62vh}
+  }
+
+  /* micro animations: pop cards on load */
+  .popIn{
+    animation: popIn .35s ease both;
+  }
+  @keyframes popIn{
+    from{opacity:0; transform:translateY(10px)}
+    to{opacity:1; transform:translateY(0)}
   }
 </style>
 </head>
 
 <body>
+<div class="glow"></div>
 
-<!-- Dock -->
-<nav class="dock">
-  <div class="logo">OFF</div>
-  <a href="index.html" title="Home">🏠</a>
-  <a class="active" href="agenda.html" title="Agenda">🗓️</a>
-  <a href="vip.html" title="VIP">🎟️</a>
-  <a href="pix.html" title="PIX">💸</a>
-  <a href="diaria.html" title="Diária">📒</a>
-  <a href="van.html" title="Van">🚐</a>
-</nav>
-
-<div class="page">
-  <div class="wrap fadeIn">
-    <div class="topbar">
-      <div class="title">
+<div class="shell">
+  <!-- TOPBAR -->
+  <div class="topbar popIn">
+    <div class="brand">
+      <div class="logo">OFF</div>
+      <div class="titles">
         <h1>Agenda</h1>
-        <div class="sub">OFF Company • Calendário mensal com gestão visual de compromissos</div>
-      </div>
-
-      <div class="actions">
-        <div class="search" title="Busca visual (client-side)">
-          🔎 <input id="q" placeholder="Buscar compromisso, local, cidade..." />
-        </div>
-        <button class="btn ghost" id="todayBtn">Hoje</button>
-        <button class="btn primary" id="newBtn">＋ Novo compromisso</button>
+        <div class="sub">OFF Company • Calendário mensal com gestão visual (modo visual)</div>
       </div>
     </div>
 
-    <div class="bar">
-      <div class="filters">
-        <select id="artistFilter">
-          <option value="all">Todos artistas</option>
-        </select>
-
-        <div class="chips" id="statusChips"></div>
+    <div class="actions">
+      <div class="search" title="Buscar por título, local, contratante...">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M10.5 19a8.5 8.5 0 1 1 0-17 8.5 8.5 0 0 1 0 17Z" stroke="currentColor" stroke-width="2" opacity=".85"/>
+          <path d="M16.8 16.8 21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".85"/>
+        </svg>
+        <input id="q" placeholder="Buscar compromisso, local, contratante..." />
       </div>
 
-      <div class="legend">
-        <span class="pill"><span class="dot" style="background:var(--green)"></span> Confirmado</span>
-        <span class="pill"><span class="dot" style="background:var(--purple)"></span> Reservado</span>
-        <span class="pill"><span class="dot" style="background:var(--amber)"></span> Negociando</span>
-        <span class="pill"><span class="dot" style="background:var(--cyan)"></span> Lembrete</span>
-        <span class="pill"><span class="dot" style="background:var(--red)"></span> Rádio/TV</span>
-        <span class="pill"><span class="dot" style="background:rgba(255,255,255,.35)"></span> Outros</span>
+      <button class="btn btnGhost" id="btnToday">Hoje</button>
+      <button class="btn btnPrimary" id="btnNew">＋ Novo compromisso</button>
+      <a class="btn btnGhost" href="index.html" style="text-decoration:none">🏠 Home</a>
+    </div>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar popIn" style="animation-delay:.04s">
+    <div class="leftTools">
+      <select id="artistFilter" class="select" title="Filtrar por artista">
+        <option value="ALL">Todos artistas</option>
+      </select>
+
+      <div class="chips" id="statusChips">
+        <!-- chips injected -->
       </div>
     </div>
 
-    <div class="cal">
-      <!-- Calendar -->
-      <div class="calendar">
-        <div class="calHeader">
-          <div class="month">
-            <span id="monthLabel">—</span>
-            <span class="tagMini" id="monthMeta">—</span>
-          </div>
-          <div class="nav">
-            <button class="btn" id="prevBtn">←</button>
-            <button class="btn" id="nextBtn">→</button>
-          </div>
+    <div class="rightTools">
+      <div class="monthHeader" style="margin:0">
+        <div class="monthTitle">
+          <div class="m" id="monthLabel">—</div>
+          <div class="pill" id="countLabel">0 compromissos</div>
         </div>
-
-        <div class="dow">
-          <div>domingo</div><div>segunda</div><div>terça</div><div>quarta</div><div>quinta</div><div>sexta</div><div>sábado</div>
-        </div>
-
-        <div class="grid" id="grid"></div>
       </div>
 
-      <!-- Details -->
-      <aside class="details">
-        <div class="detailsHead">
-          <div class="h">Detalhes</div>
-          <button class="btn ghost" id="clearSelection">Limpar</button>
-        </div>
-
-        <div class="detailsBody" id="detailsBody">
-          <div class="note">
-            Clique em um compromisso no calendário para ver/editar detalhes (visual).
-          </div>
-        </div>
-      </aside>
+      <div class="navMonth">
+        <div class="iconBtn" id="prevMonth" title="Mês anterior">←</div>
+        <div class="iconBtn" id="nextMonth" title="Próximo mês">→</div>
+      </div>
     </div>
+  </div>
+
+  <!-- CALENDAR -->
+  <div class="calendarWrap popIn" style="animation-delay:.08s">
+    <div class="dow">
+      <div>domingo</div><div>segunda</div><div>terça</div><div>quarta</div><div>quinta</div><div>sexta</div><div>sábado</div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <div class="note">
+    *Tudo aqui é <b>visual</b> (dados ficam no navegador). Depois a gente integra com planilha / Apps Script.
   </div>
 </div>
 
-<!-- Modal Novo -->
-<div class="overlay" id="modal">
-  <div class="modal">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
-      <div style="font-family:Rokiest;letter-spacing:.6px;font-size:18px;">Novo compromisso</div>
-      <button class="btn ghost" id="closeModal">✕</button>
+<!-- DRAWER -->
+<div class="overlay" id="overlay">
+  <div class="drawer" role="dialog" aria-modal="true" aria-label="Detalhes do compromisso">
+    <div class="drawerHeader">
+      <div>
+        <div class="t" id="drawerTitle">Detalhes</div>
+        <div class="sub" id="drawerSub" style="margin-top:6px">—</div>
+      </div>
+      <button class="closeX" id="closeDrawer" title="Fechar">✕</button>
     </div>
 
-    <div style="height:1px;background:rgba(255,255,255,.08);margin:12px 0;"></div>
-
-    <div class="row2">
-      <div class="field">
-        <label>Título</label>
-        <input id="m_title" placeholder="Ex: Show / Evento / Ensaio" />
-      </div>
-      <div class="field">
-        <label>Status</label>
-        <select id="m_status">
-          <option value="CONFIRMADO">CONFIRMADO</option>
-          <option value="RESERVADO">RESERVADO</option>
-          <option value="NEGOCIANDO">NEGOCIANDO</option>
-          <option value="LEMBRETE">LEMBRETE</option>
-          <option value="RADIO/TV">RÁDIO/TV</option>
-          <option value="OUTROS">OUTROS</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="row2">
-      <div class="field">
-        <label>Artista</label>
-        <select id="m_artist"></select>
-      </div>
-      <div class="field">
-        <label>Data</label>
-        <input id="m_date" type="date"/>
-      </div>
-    </div>
-
-    <div class="row2">
-      <div class="field">
-        <label>Hora</label>
-        <input id="m_time" placeholder="Ex: 22:30" />
-      </div>
-      <div class="field">
-        <label>Cidade/Local</label>
-        <input id="m_place" placeholder="Ex: Praça Pública • SP" />
-      </div>
-    </div>
-
-    <div class="field">
-      <label>Observações</label>
-      <textarea id="m_notes" placeholder="Contrato, logística, lembretes..."></textarea>
-    </div>
-
-    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap;">
-      <button class="btn ghost" id="cancelNew">Cancelar</button>
-      <button class="btn primary" id="saveNew">Salvar (visual)</button>
-    </div>
-
-    <div class="note" style="margin-top:10px">
-      *Nesta fase é apenas visual (não salva na planilha). Depois a gente liga com o backend.
-    </div>
-  </div>
-</div>
-
-<script>
-  // ====== Dados mock (visual) ======
-  const ARTISTS = [
-    { id:"ARTISTA X", color:"var(--amber)" },
-    { id:"ARTISTA Y", color:"var(--orange)" },
-    { id:"ARTISTA Z", color:"var(--cyan)" },
-  ];
-
-  const STATUS = [
-    { id:"CONFIRMADO",  color:"var(--green)",   cls:"st-confirmado" },
-    { id:"RESERVADO",   color:"var(--purple)",  cls:"st-reservado" },
-    { id:"NEGOCIANDO",  color:"var(--amber)",   cls:"st-negociando" },
-    { id:"LEMBRETE",    color:"var(--cyan)",    cls:"st-lembrete" },
-    { id:"RADIO/TV",    color:"var(--red)",     cls:"st-radio" },
-    { id:"OUTROS",      color:"rgba(255,255,255,.35)", cls:"st-outros" },
-  ];
-
-  // eventos em memória (visual)
-  let events = [
-    { id: uid(), date: toISO(new Date()), title:"Reunião / Briefing", status:"LEMBRETE", artist:"ARTISTA X", time:"16h", place:"Online", contractor:"—", phone:"—", contractSent:false, address:"—", notes:"" },
-    { id: uid(), date: addDaysISO(2), title:"Show - Camarote", status:"CONFIRMADO", artist:"ARTISTA Y", time:"00:30", place:"Sapucaí • RJ", contractor:"João", phone:"(21) 9xxxx-xxxx", contractSent:true, address:"RJ • Sapucaí", notes:"Chegar 2h antes" },
-    { id: uid(), date: addDaysISO(5), title:"Evento - Pub", status:"NEGOCIANDO", artist:"ARTISTA Z", time:"22:30", place:"Centro • MG", contractor:"—", phone:"—", contractSent:false, address:"—", notes:"Aguardando resposta" },
-  ];
-
-  // ====== Estado ======
-  let view = {
-    year: new Date().getFullYear(),
-    month: new Date().getMonth(),
-    artist: "all",
-    status: new Set(STATUS.map(s=>s.id)),
-    q: "",
-    selectedId: null
-  };
-
-  // ====== Init UI ======
-  const gridEl = document.getElementById("grid");
-  const monthLabel = document.getElementById("monthLabel");
-  const monthMeta = document.getElementById("monthMeta");
-  const artistFilter = document.getElementById("artistFilter");
-  const statusChips = document.getElementById("statusChips");
-  const qEl = document.getElementById("q");
-
-  // populate artists
-  ARTISTS.forEach(a=>{
-    const opt = document.createElement("option");
-    opt.value = a.id;
-    opt.textContent = a.id;
-    artistFilter.appendChild(opt);
-  });
-
-  // populate modal artist
-  const mArtist = document.getElementById("m_artist");
-  ARTISTS.forEach(a=>{
-    const opt = document.createElement("option");
-    opt.value = a.id;
-    opt.textContent = a.id;
-    mArtist.appendChild(opt);
-  });
-
-  // status chips
-  STATUS.forEach(s=>{
-    const b = document.createElement("button");
-    b.className = "chip on";
-    b.dataset.status = s.id;
-    b.innerHTML = `<span class="dot" style="background:${s.color}"></span>${s.id}`;
-    b.onclick = ()=>{
-      if(view.status.has(s.id)){
-        view.status.delete(s.id);
-        b.classList.remove("on");
-      }else{
-        view.status.add(s.id);
-        b.classList.add("on");
-      }
-      render();
-    };
-    statusChips.appendChild(b);
-  });
-
-  // handlers
-  document.getElementById("prevBtn").onclick = ()=>{ shiftMonth(-1); };
-  document.getElementById("nextBtn").onclick = ()=>{ shiftMonth(1); };
-  document.getElementById("todayBtn").onclick = ()=>{
-    const d = new Date();
-    view.year = d.getFullYear();
-    view.month = d.getMonth();
-    render();
-  };
-
-  artistFilter.onchange = (e)=>{ view.artist = e.target.value; render(); };
-
-  qEl.addEventListener("input", ()=>{
-    view.q = (qEl.value||"").trim().toLowerCase();
-    render();
-  });
-
-  document.getElementById("newBtn").onclick = openModal;
-  document.getElementById("closeModal").onclick = closeModal;
-  document.getElementById("cancelNew").onclick = closeModal;
-  document.getElementById("modal").addEventListener("click", (e)=>{
-    if(e.target && e.target.id==="modal") closeModal();
-  });
-
-  document.getElementById("saveNew").onclick = ()=>{
-    const title = (document.getElementById("m_title").value||"").trim();
-    const status = document.getElementById("m_status").value;
-    const artist = document.getElementById("m_artist").value;
-    const date = document.getElementById("m_date").value;
-    const time = (document.getElementById("m_time").value||"").trim();
-    const place = (document.getElementById("m_place").value||"").trim();
-    const notes = (document.getElementById("m_notes").value||"").trim();
-
-    if(!title || !date){ alert("Preencha Título e Data."); return; }
-
-    events.unshift({
-      id: uid(),
-      title, status, artist, date,
-      time: time || "—",
-      place: place || "—",
-      contractor:"—", phone:"—", contractSent:false, address:"—",
-      notes
-    });
-
-    closeModal();
-    render();
-  };
-
-  document.getElementById("clearSelection").onclick = ()=>{
-    view.selectedId = null;
-    renderDetails(null);
-    render();
-  };
-
-  // ====== Render ======
-  function render(){
-    // header
-    const monthName = new Date(view.year, view.month, 1).toLocaleString("pt-BR", { month:"long" });
-    monthLabel.textContent = `${cap(monthName)} • ${view.year}`;
-    monthMeta.textContent = `${countFilteredEvents()} compromissos`;
-
-    // grid days
-    const first = new Date(view.year, view.month, 1);
-    const startDow = first.getDay(); // 0..6
-    const daysInMonth = new Date(view.year, view.month+1, 0).getDate();
-
-    // build 6 weeks
-    const totalCells = 42;
-    const cells = [];
-
-    for(let i=0;i<totalCells;i++){
-      const dayNum = i - startDow + 1;
-      const inMonth = dayNum>=1 && dayNum<=daysInMonth;
-      const dateISO = inMonth ? toISO(new Date(view.year, view.month, dayNum)) : "";
-
-      const dayEvents = inMonth ? getFilteredEventsForDate(dateISO).slice(0,3) : [];
-      const moreCount = inMonth ? Math.max(0, getFilteredEventsForDate(dateISO).length - dayEvents.length) : 0;
-
-      cells.push({ inMonth, dayNum, dateISO, dayEvents, moreCount });
-    }
-
-    gridEl.innerHTML = cells.map(c=>{
-      if(!c.inMonth){
-        return `<div class="day" style="opacity:.35; background:rgba(255,255,255,.02)"></div>`;
-      }
-
-      const isToday = c.dateISO === toISO(new Date());
-      return `
-        <div class="day" data-date="${c.dateISO}">
-          <div class="dayNum">
-            <span>${c.dayNum}</span>
-            ${isToday ? `<span class="tagMini" style="border-color:rgba(139,92,246,.35); background:rgba(139,92,246,.14)">hoje</span>` : ``}
-          </div>
-          <div class="cards">
-            ${c.dayEvents.map(ev => renderEventCard(ev)).join("")}
-            ${c.moreCount ? `<div class="tagMini" style="width:max-content">+${c.moreCount} mais</div>` : ``}
-          </div>
-        </div>
-      `;
-    }).join("");
-
-    // attach clicks
-    gridEl.querySelectorAll(".event").forEach(el=>{
-      el.addEventListener("click", ()=>{
-        const id = el.getAttribute("data-id");
-        view.selectedId = id;
-        const ev = events.find(x=>x.id===id);
-        renderDetails(ev);
-        // highlight by re-render (simple)
-        gridEl.querySelectorAll(".event").forEach(e2=>e2.style.outline="none");
-        el.style.outline = "2px solid rgba(139,92,246,.55)";
-        el.style.outlineOffset = "2px";
-      });
-    });
-
-    // if selection exists, keep details synced
-    if(view.selectedId){
-      const ev = events.find(x=>x.id===view.selectedId);
-      if(ev) renderDetails(ev);
-      else renderDetails(null);
-    }
-  }
-
-  function renderEventCard(ev){
-    const st = STATUS.find(s=>s.id===ev.status) || STATUS[STATUS.length-1];
-    const art = ARTISTS.find(a=>a.id===ev.artist) || ARTISTS[0];
-
-    return `
-      <div class="event ${st.cls}" data-id="${ev.id}">
-        <div class="artistBar" style="background:${art.color}"></div>
-        <div class="t">
-          <span>${esc(ev.title)}</span>
-          <span class="badge">${esc(ev.status)}</span>
-        </div>
-        <div class="m">${esc(ev.time || "—")} • ${esc(ev.place || "—")}</div>
-      </div>
-    `;
-  }
-
-  function renderDetails(ev){
-    const host = document.getElementById("detailsBody");
-
-    if(!ev){
-      host.innerHTML = `<div class="note">Clique em um compromisso no calendário para ver/editar detalhes (visual).</div>`;
-      return;
-    }
-
-    const art = ARTISTS.find(a=>a.id===ev.artist) || ARTISTS[0];
-    const st = STATUS.find(s=>s.id===ev.status) || STATUS[0];
-
-    host.innerHTML = `
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-        <span class="pill"><span class="dot" style="background:${art.color}"></span>${esc(ev.artist)}</span>
-        <span class="pill"><span class="dot" style="background:${st.color}"></span>${esc(ev.status)}</span>
-        <span class="pill">📅 ${fmt(ev.date)}</span>
-      </div>
-
-      <div class="field">
-        <label>Título</label>
-        <input id="d_title" value="${escAttr(ev.title)}">
+    <div class="drawerBody">
+      <div class="statusRow">
+        <span class="miniTag" id="tagArtist"><span class="miniDot" style="--accent:var(--purple)"></span><span>ARTISTA</span></span>
+        <span class="miniTag" id="tagStatus"><span class="miniDot" style="--accent:var(--cyan)"></span><span>STATUS</span></span>
       </div>
 
       <div class="row2">
         <div class="field">
-          <label>Hora do show</label>
-          <input id="d_time" value="${escAttr(ev.time||"")}">
+          <label>Data</label>
+          <input class="inp" id="fDate" type="date" />
         </div>
         <div class="field">
+          <label>Hora do show</label>
+          <input class="inp" id="fTime" type="time" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Título</label>
+        <input class="inp" id="fTitle" placeholder="Ex: Evento - Pub / Camarote / Reunião..." />
+      </div>
+
+      <div class="row2">
+        <div class="field">
           <label>Local / Cidade</label>
-          <input id="d_place" value="${escAttr(ev.place||"")}">
+          <input class="inp" id="fCity" placeholder="Ex: Centro • MG" />
+        </div>
+        <div class="field">
+          <label>Endereço</label>
+          <input class="inp" id="fAddress" placeholder="Ex: Rua X, 123" />
         </div>
       </div>
 
       <div class="row2">
         <div class="field">
           <label>Contratante</label>
-          <input id="d_contractor" value="${escAttr(ev.contractor||"")}">
+          <input class="inp" id="fClient" placeholder="Nome do contratante" />
         </div>
         <div class="field">
           <label>Número</label>
-          <input id="d_phone" value="${escAttr(ev.phone||"")}">
+          <input class="inp" id="fPhone" placeholder="(xx) xxxxx-xxxx" />
         </div>
       </div>
 
-      <div class="field">
-        <label>Endereço</label>
-        <input id="d_address" value="${escAttr(ev.address||"")}">
-      </div>
-
-      <div class="toggle">
-        <span>Contrato enviado?</span>
-        <div class="switch ${ev.contractSent ? "on":""}" id="d_contract">
-          <div class="knob"></div>
+      <div class="switch">
+        <div>
+          <div class="sTitle">Contrato enviado?</div>
+          <div class="sub" style="margin-top:4px">Marque para controle interno</div>
         </div>
+        <div class="toggle" id="fContract"></div>
       </div>
 
       <div class="field">
         <label>Observações</label>
-        <textarea id="d_notes">${esc(ev.notes||"")}</textarea>
+        <textarea class="txt" id="fNotes" placeholder="Ex: aguardando resposta, alinhado cachet, rider, etc."></textarea>
       </div>
 
-      <div style="display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;">
-        <button class="btn ghost" id="d_delete">Excluir (visual)</button>
-        <button class="btn primary" id="d_save">Salvar (visual)</button>
+      <div class="drawerActions">
+        <button class="btn btnDanger" id="btnDelete">Excluir (visual)</button>
+        <button class="btn btnPrimary" id="btnSave">Salvar (visual)</button>
       </div>
+    </div>
+  </div>
+</div>
 
-      <div class="note">
-        *Ainda é só visual. Depois a gente integra com planilha/Apps Script.
-      </div>
+<script>
+  // ====================== MODELO (VISUAL) ======================
+  // artistas com cores de contraste (você pediu X/Y/Z com cores tipo amarelo/laranja etc.)
+  const ARTISTS = [
+    { id:"AX", name:"Artista X", color:"#f59e0b" },   // amarelo/amber
+    { id:"AY", name:"Artista Y", color:"#fb923c" },   // laranja
+    { id:"AZ", name:"Artista Z", color:"#8b5cf6" }    // roxo
+  ];
+
+  const STATUSES = [
+    { id:"CONFIRMADO", label:"Confirmado", color:"#22c55e" },
+    { id:"RESERVADO",  label:"Reservado",  color:"#8b5cf6" },
+    { id:"NEGOCIANDO", label:"Negociando", color:"#f59e0b" },
+    { id:"LEMBRETE",   label:"Lembrete",   color:"#06b6d4" },
+    { id:"RADIO_TV",   label:"Rádio/TV",   color:"#ec4899" },
+    { id:"OUTROS",     label:"Outros",     color:"rgba(229,231,235,.55)" }
+  ];
+
+  // seed visual
+  let events = [
+    {
+      id: cryptoId(),
+      date: "2026-02-02",
+      time: "16:00",
+      title: "Reunião • Briefing",
+      city: "Online",
+      address: "",
+      status: "LEMBRETE",
+      artist: "AY",
+      client: "",
+      phone: "",
+      contractSent: false,
+      notes: ""
+    },
+    {
+      id: cryptoId(),
+      date: "2026-02-04",
+      time: "00:30",
+      title: "Show • Camarote",
+      city: "Sapucaí • RJ",
+      address: "",
+      status: "CONFIRMADO",
+      artist: "AZ",
+      client: "Produtora",
+      phone: "",
+      contractSent: true,
+      notes: "Rider ok"
+    },
+    {
+      id: cryptoId(),
+      date: "2026-02-07",
+      time: "22:30",
+      title: "Evento • Pub",
+      city: "Centro • MG",
+      address: "",
+      status: "NEGOCIANDO",
+      artist: "AX",
+      client: "Contratante",
+      phone: "",
+      contractSent: false,
+      notes: "Aguardando resposta"
+    }
+  ];
+
+  // ====================== STATE ======================
+  const state = {
+    viewDate: new Date(),            // mês atual
+    statusFilter: new Set(),         // vazio = todos
+    artistFilter: "ALL",
+    query: "",
+    selectedId: null,                // evento selecionado (drawer)
+    creatingDate: null               // para criar no dia clicado
+  };
+
+  // ====================== DOM ======================
+  const gridEl = document.getElementById("grid");
+  const monthLabel = document.getElementById("monthLabel");
+  const countLabel = document.getElementById("countLabel");
+  const statusChips = document.getElementById("statusChips");
+  const artistSelect = document.getElementById("artistFilter");
+  const qEl = document.getElementById("q");
+
+  const overlay = document.getElementById("overlay");
+  const closeDrawerBtn = document.getElementById("closeDrawer");
+
+  // drawer fields
+  const tagArtist = document.getElementById("tagArtist");
+  const tagStatus = document.getElementById("tagStatus");
+  const drawerSub = document.getElementById("drawerSub");
+
+  const fDate = document.getElementById("fDate");
+  const fTime = document.getElementById("fTime");
+  const fTitle = document.getElementById("fTitle");
+  const fCity = document.getElementById("fCity");
+  const fAddress = document.getElementById("fAddress");
+  const fClient = document.getElementById("fClient");
+  const fPhone = document.getElementById("fPhone");
+  const fNotes = document.getElementById("fNotes");
+  const fContract = document.getElementById("fContract");
+
+  const btnSave = document.getElementById("btnSave");
+  const btnDelete = document.getElementById("btnDelete");
+
+  // nav
+  document.getElementById("prevMonth").addEventListener("click", ()=> shiftMonth(-1));
+  document.getElementById("nextMonth").addEventListener("click", ()=> shiftMonth(+1));
+  document.getElementById("btnToday").addEventListener("click", ()=> goToday());
+  document.getElementById("btnNew").addEventListener("click", ()=> newEvent());
+
+  // close drawer interactions
+  closeDrawerBtn.addEventListener("click", closeDrawer);
+  overlay.addEventListener("click", (e)=>{ if(e.target.id==="overlay") closeDrawer(); });
+  window.addEventListener("keydown", (e)=>{ if(e.key==="Escape") closeDrawer(); });
+
+  // search
+  qEl.addEventListener("input", ()=>{
+    state.query = (qEl.value||"").trim().toLowerCase();
+    render();
+  });
+
+  // contract toggle
+  fContract.addEventListener("click", ()=>{
+    fContract.classList.toggle("on");
+  });
+
+  btnSave.addEventListener("click", ()=>{
+    if(!state.selectedId) return;
+    const idx = events.findIndex(x=>x.id===state.selectedId);
+    if(idx<0) return;
+
+    events[idx] = {
+      ...events[idx],
+      date: fDate.value || events[idx].date,
+      time: fTime.value || "",
+      title: fTitle.value || "",
+      city: fCity.value || "",
+      address: fAddress.value || "",
+      client: fClient.value || "",
+      phone: fPhone.value || "",
+      notes: fNotes.value || "",
+      contractSent: fContract.classList.contains("on")
+    };
+
+    // se mudou de data pro outro mês, mantém render
+    closeDrawer();
+    render();
+  });
+
+  btnDelete.addEventListener("click", ()=>{
+    if(!state.selectedId) return;
+    events = events.filter(x=>x.id!==state.selectedId);
+    closeDrawer();
+    render();
+  });
+
+  // ====================== INIT UI ======================
+  function init(){
+    // artist dropdown
+    artistSelect.innerHTML = `
+      <option value="ALL">Todos artistas</option>
+      ${ARTISTS.map(a=>`<option value="${a.id}">${escapeHtml(a.name)}</option>`).join("")}
     `;
-
-    // bind
-    const sw = document.getElementById("d_contract");
-    sw.onclick = ()=>{
-      ev.contractSent = !ev.contractSent;
-      sw.classList.toggle("on", ev.contractSent);
-    };
-
-    document.getElementById("d_save").onclick = ()=>{
-      ev.title = document.getElementById("d_title").value || ev.title;
-      ev.time = document.getElementById("d_time").value || "—";
-      ev.place = document.getElementById("d_place").value || "—";
-      ev.contractor = document.getElementById("d_contractor").value || "—";
-      ev.phone = document.getElementById("d_phone").value || "—";
-      ev.address = document.getElementById("d_address").value || "—";
-      ev.notes = document.getElementById("d_notes").value || "";
+    artistSelect.addEventListener("change", ()=>{
+      state.artistFilter = artistSelect.value;
       render();
-    };
+    });
 
-    document.getElementById("d_delete").onclick = ()=>{
-      if(!confirm("Excluir este compromisso? (visual)")) return;
-      events = events.filter(x=>x.id!==ev.id);
-      view.selectedId = null;
-      renderDetails(null);
-      render();
-    };
-  }
+    // chips status
+    statusChips.innerHTML = STATUSES.map(s=>{
+      return `
+        <div class="chip" data-status="${s.id}" title="Filtrar: ${escapeHtml(s.label)}">
+          <span class="dot" style="background:${s.color}"></span>
+          <span>${escapeHtml(s.label)}</span>
+        </div>
+      `;
+    }).join("");
 
-  // ====== Filters ======
-  function getFilteredEventsForDate(dateISO){
-    return events
-      .filter(ev => ev.date === dateISO)
-      .filter(ev => view.artist==="all" ? true : ev.artist === view.artist)
-      .filter(ev => view.status.has(ev.status))
-      .filter(ev => {
-        if(!view.q) return true;
-        const hay = `${ev.title} ${ev.place} ${ev.artist} ${ev.status}`.toLowerCase();
-        return hay.includes(view.q);
+    statusChips.querySelectorAll(".chip").forEach(ch=>{
+      ch.addEventListener("click", ()=>{
+        const st = ch.getAttribute("data-status");
+        if(state.statusFilter.has(st)){
+          state.statusFilter.delete(st);
+          ch.classList.remove("active");
+        }else{
+          state.statusFilter.add(st);
+          ch.classList.add("active");
+        }
+        render();
       });
-  }
+    });
 
-  function countFilteredEvents(){
-    const monthStart = new Date(view.year, view.month, 1);
-    const monthEnd = new Date(view.year, view.month+1, 0);
-    const startISO = toISO(monthStart);
-    const endISO = toISO(monthEnd);
-
-    return events
-      .filter(ev => ev.date >= startISO && ev.date <= endISO)
-      .filter(ev => view.artist==="all" ? true : ev.artist === view.artist)
-      .filter(ev => view.status.has(ev.status))
-      .filter(ev => {
-        if(!view.q) return true;
-        const hay = `${ev.title} ${ev.place} ${ev.artist} ${ev.status}`.toLowerCase();
-        return hay.includes(view.q);
-      }).length;
-  }
-
-  // ====== Modal ======
-  function openModal(){
-    // prefill date with today
-    document.getElementById("m_date").value = toISO(new Date());
-    document.getElementById("modal").style.display="flex";
-  }
-  function closeModal(){
-    document.getElementById("modal").style.display="none";
-    // reset
-    ["m_title","m_time","m_place","m_notes"].forEach(id=>document.getElementById(id).value="");
-    document.getElementById("m_status").value="CONFIRMADO";
-    document.getElementById("m_artist").value=ARTISTS[0].id;
-  }
-
-  // ====== Month nav ======
-  function shiftMonth(delta){
-    const d = new Date(view.year, view.month+delta, 1);
-    view.year = d.getFullYear();
-    view.month = d.getMonth();
     render();
   }
 
-  // ====== Utils ======
-  function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
+  // ====================== RENDER ======================
+  function render(){
+    const view = state.viewDate;
+    const y = view.getFullYear();
+    const m = view.getMonth();
+
+    const monthName = view.toLocaleString("pt-BR", { month:"long" });
+    monthLabel.textContent = cap(monthName) + " • " + y;
+
+    const filteredAll = getFilteredEventsForMonth(y, m);
+    countLabel.textContent = `${filteredAll.length} compromissos`;
+
+    // build calendar matrix (starts on Sunday)
+    const first = new Date(y, m, 1);
+    const startDow = first.getDay(); // 0 Sunday
+    const daysInMonth = new Date(y, m+1, 0).getDate();
+
+    // we render 42 cells (6 weeks)
+    const totalCells = 42;
+    const cells = [];
+
+    for(let i=0;i<totalCells;i++){
+      const dayIndex = i - startDow + 1;
+      const dateObj = new Date(y, m, dayIndex);
+      const inMonth = (dateObj.getMonth()===m);
+      const dateStr = toISO(dateObj);
+
+      const isToday = isSameDay(dateObj, new Date());
+      const dayEvents = getFilteredEventsForDate(dateStr);
+
+      cells.push({
+        dateObj,
+        dateStr,
+        inMonth,
+        isToday,
+        dayEvents
+      });
+    }
+
+    gridEl.innerHTML = cells.map(c=>{
+      const cls = [
+        "cell",
+        (!c.inMonth ? "mutedDay" : "")
+      ].join(" ");
+
+      const dayNum = c.dateObj.getDate();
+
+      const todayTag = c.isToday ? `<span class="tagToday">hoje</span>` : "";
+
+      const eventsHtml = c.dayEvents
+        .slice(0, 3) // limite por célula (p/ não ficar bagunça)
+        .map(ev => renderEventCard(ev))
+        .join("");
+
+      const moreCount = Math.max(0, c.dayEvents.length - 3);
+      const moreHtml = moreCount>0
+        ? `<div class="event" style="--accent:rgba(229,231,235,.35)" data-id="" data-date="${c.dateStr}">
+             <div class="eventTop">
+               <div class="eventTitle">+ ${moreCount} mais</div>
+               <div class="badge">ver</div>
+             </div>
+             <div class="meta"><span>clique</span></div>
+           </div>`
+        : "";
+
+      return `
+        <div class="${cls}" data-date="${c.dateStr}">
+          <div class="cellHeader">
+            <div class="dayNum">${dayNum}</div>
+            ${todayTag}
+          </div>
+          <div class="cellContent">
+            ${eventsHtml}
+            ${moreHtml}
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    // events click handlers
+    gridEl.querySelectorAll(".event").forEach(el=>{
+      el.addEventListener("click", (e)=>{
+        e.stopPropagation();
+        const id = el.getAttribute("data-id");
+        const date = el.getAttribute("data-date");
+        if(id){
+          openDrawer(id);
+        }else{
+          // "+ mais" -> abre primeiro do dia no drawer (ou cria)
+          const dayList = getFilteredEventsForDate(date);
+          if(dayList.length) openDrawer(dayList[0].id);
+          else newEvent(date);
+        }
+      });
+    });
+
+    // click on empty cell -> create event for that date
+    gridEl.querySelectorAll(".cell").forEach(cell=>{
+      cell.addEventListener("click", ()=>{
+        const d = cell.getAttribute("data-date");
+        newEvent(d);
+      });
+    });
+  }
+
+  function renderEventCard(ev){
+    const artist = ARTISTS.find(a=>a.id===ev.artist) || ARTISTS[0];
+    const st = STATUSES.find(s=>s.id===ev.status) || STATUSES[0];
+
+    const t = (ev.time||"").trim();
+    const city = (ev.city||"").trim();
+
+    const metaPieces = [];
+    if(t) metaPieces.push(`<span>⏱ ${escapeHtml(t)}</span>`);
+    if(city) metaPieces.push(`<span>📍 ${escapeHtml(city)}</span>`);
+    metaPieces.push(`<span>🎤 ${escapeHtml(artist.name)}</span>`);
+
+    return `
+      <div class="event" style="--accent:${artist.color}" data-id="${ev.id}">
+        <div class="eventTop">
+          <div class="eventTitle">${escapeHtml(ev.title || "Compromisso")}</div>
+          <div class="badge" style="border-color: rgba(255,255,255,.10);">
+            <span style="display:inline-flex; align-items:center; gap:8px;">
+              <span style="width:8px;height:8px;border-radius:999px;background:${st.color};box-shadow:0 0 0 4px rgba(255,255,255,.04)"></span>
+              ${escapeHtml(st.label)}
+            </span>
+          </div>
+        </div>
+        <div class="meta">
+          ${metaPieces.join("")}
+        </div>
+      </div>
+    `;
+  }
+
+  // ====================== FILTERING ======================
+  function getFilteredEventsForMonth(y, m){
+    return events
+      .filter(ev=>{
+        const d = new Date(ev.date+"T00:00:00");
+        return d.getFullYear()===y && d.getMonth()===m;
+      })
+      .filter(matchesFilters)
+      .sort((a,b)=> (a.date+a.time).localeCompare(b.date+b.time));
+  }
+
+  function getFilteredEventsForDate(dateStr){
+    return events
+      .filter(ev=>ev.date===dateStr)
+      .filter(matchesFilters)
+      .sort((a,b)=> (a.time||"").localeCompare(b.time||""));
+  }
+
+  function matchesFilters(ev){
+    // artist
+    if(state.artistFilter!=="ALL" && ev.artist!==state.artistFilter) return false;
+
+    // status
+    if(state.statusFilter.size>0 && !state.statusFilter.has(ev.status)) return false;
+
+    // query
+    if(state.query){
+      const blob = [
+        ev.title, ev.city, ev.address, ev.client, ev.phone, ev.notes,
+        (ARTISTS.find(a=>a.id===ev.artist)||{}).name,
+        (STATUSES.find(s=>s.id===ev.status)||{}).label
+      ].join(" ").toLowerCase();
+      if(!blob.includes(state.query)) return false;
+    }
+
+    return true;
+  }
+
+  // ====================== DRAWER ======================
+  function openDrawer(id){
+    const ev = events.find(x=>x.id===id);
+    if(!ev) return;
+
+    state.selectedId = id;
+
+    const artist = ARTISTS.find(a=>a.id===ev.artist) || ARTISTS[0];
+    const st = STATUSES.find(s=>s.id===ev.status) || STATUSES[0];
+
+    document.getElementById("drawerTitle").textContent = "Detalhes";
+    drawerSub.textContent = `${artist.name} • ${st.label}`;
+
+    tagArtist.innerHTML = `<span class="miniDot" style="--accent:${artist.color}"></span><span>${escapeHtml(artist.name)}</span>`;
+    tagStatus.innerHTML = `<span class="miniDot" style="--accent:${st.color}"></span><span>${escapeHtml(st.label)}</span>`;
+
+    fDate.value = ev.date || "";
+    fTime.value = ev.time || "";
+    fTitle.value = ev.title || "";
+    fCity.value = ev.city || "";
+    fAddress.value = ev.address || "";
+    fClient.value = ev.client || "";
+    fPhone.value = ev.phone || "";
+    fNotes.value = ev.notes || "";
+
+    fContract.classList.toggle("on", !!ev.contractSent);
+
+    overlay.classList.add("show");
+  }
+
+  function closeDrawer(){
+    overlay.classList.remove("show");
+    state.selectedId = null;
+    state.creatingDate = null;
+  }
+
+  // ====================== ACTIONS ======================
+  function shiftMonth(delta){
+    const d = state.viewDate;
+    state.viewDate = new Date(d.getFullYear(), d.getMonth()+delta, 1);
+    render();
+  }
+
+  function goToday(){
+    state.viewDate = new Date();
+    render();
+    // micro: highlight today by opening create on today? não.
+  }
+
+  function newEvent(dateStr){
+    const baseDate = dateStr || toISO(new Date());
+    const defaultArtist = (state.artistFilter!=="ALL") ? state.artistFilter : ARTISTS[0].id;
+
+    const ev = {
+      id: cryptoId(),
+      date: baseDate,
+      time: "20:00",
+      title: "Novo compromisso",
+      city: "",
+      address: "",
+      status: "RESERVADO",
+      artist: defaultArtist,
+      client: "",
+      phone: "",
+      contractSent: false,
+      notes: ""
+    };
+    events.push(ev);
+
+    // se o evento foi criado num mês diferente do view, muda o view pro mês dele
+    const d = new Date(ev.date+"T00:00:00");
+    state.viewDate = new Date(d.getFullYear(), d.getMonth(), 1);
+
+    render();
+    openDrawer(ev.id);
+  }
+
+  // ====================== UTILS ======================
   function toISO(d){
     const y = d.getFullYear();
     const m = String(d.getMonth()+1).padStart(2,"0");
     const day = String(d.getDate()).padStart(2,"0");
     return `${y}-${m}-${day}`;
   }
-  function addDaysISO(n){
-    const d = new Date();
-    d.setDate(d.getDate()+n);
-    return toISO(d);
+  function isSameDay(a,b){
+    return a.getFullYear()===b.getFullYear()
+      && a.getMonth()===b.getMonth()
+      && a.getDate()===b.getDate();
   }
-  function fmt(iso){
-    try{
-      const [y,m,d] = iso.split("-").map(Number);
-      return new Date(y,m-1,d).toLocaleDateString("pt-BR");
-    }catch{ return iso; }
+  function cap(s){
+    s = String(s||"");
+    return s ? s[0].toUpperCase()+s.slice(1) : s;
   }
-  function cap(s){ return s ? s[0].toUpperCase()+s.slice(1) : s; }
-  function esc(s){
+  function escapeHtml(s){
     return String(s??"").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
   }
-  function escAttr(s){
-    return esc(s).replace(/"/g,"&quot;");
+  function cryptoId(){
+    try{
+      const a = new Uint8Array(8);
+      crypto.getRandomValues(a);
+      return Array.from(a).map(x=>x.toString(16).padStart(2,"0")).join("");
+    }catch{
+      return String(Math.random()).slice(2)+String(Date.now());
+    }
   }
 
-  // initial
-  render();
+  // ====================== START ======================
+  init();
 </script>
 </body>
 </html>
