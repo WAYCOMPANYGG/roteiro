@@ -484,6 +484,243 @@
       user-select:none;
     }
 
+    /* Seat Editor */
+    .seat-editor{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:24px;
+      margin-bottom:40px;
+    }
+
+    .editor-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:20px;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    .editor-tools{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .editor-canvas{
+      background:var(--elevated);
+      border:2px dashed var(--border);
+      border-radius:12px;
+      min-height:600px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .canvas-background{
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%);
+      width:auto;
+      height:90%;
+      opacity:0.3;
+      pointer-events:none;
+      z-index:1;
+    }
+
+    .canvas-placeholder{
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%);
+      color:var(--text-muted);
+      font-size:14px;
+      text-align:center;
+      pointer-events:none;
+      z-index:2;
+    }
+
+    .editor-info{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-top:16px;
+      padding-top:16px;
+      border-top:1px solid var(--border);
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    .info-item{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size:13px;
+    }
+
+    .info-label{
+      color:var(--text-dim);
+      font-weight:600;
+    }
+
+    .info-value{
+      color:var(--primary-light);
+      font-weight:900;
+      font-size:16px;
+    }
+
+    /* Draggable Seat - MENOR */
+    .draggable-seat{
+      position:absolute;
+      width:50px;
+      height:50px;
+      background:linear-gradient(135deg, rgba(167,139,250,.3), rgba(34,211,238,.2));
+      border:2px solid var(--primary);
+      border-radius:8px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:14px;
+      font-weight:900;
+      color:var(--text);
+      cursor:grab;
+      user-select:none;
+      transition:transform .2s, box-shadow .2s;
+      box-shadow:0 4px 20px rgba(167,139,250,.3);
+      z-index:10;
+    }
+
+    .draggable-seat:hover{
+      transform:scale(1.1);
+      border-color:var(--primary-light);
+      box-shadow:0 8px 30px rgba(167,139,250,.5);
+      z-index:100;
+    }
+
+    .draggable-seat.dragging{
+      cursor:grabbing;
+      opacity:0.9;
+      transform:scale(1.2);
+      z-index:1000;
+      box-shadow:0 12px 40px rgba(167,139,250,.7);
+    }
+
+    .draggable-seat .delete-btn{
+      position:absolute;
+      top:-8px;
+      right:-8px;
+      width:20px;
+      height:20px;
+      background:var(--danger);
+      border:2px solid var(--surface);
+      border-radius:50%;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      font-size:10px;
+      cursor:pointer;
+      color:#fff;
+      z-index:10;
+    }
+
+    .draggable-seat:hover .delete-btn{
+      display:flex;
+    }
+
+    /* Esconder overlays da imagem PNG quando editor estiver ativo */
+    .seat-overlay{
+      pointer-events:none;
+    }
+
+    /* Seats List */
+    .seats-list{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .seat-item{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:16px 20px;
+      display:flex;
+      align-items:center;
+      gap:16px;
+      transition:all .2s;
+      cursor:pointer;
+    }
+
+    .seat-item:hover{
+      border-color:var(--border-hover);
+      transform:translateX(4px);
+      box-shadow:0 4px 20px rgba(0,0,0,.3);
+    }
+
+    .seat-item.ocupado{
+      border-left:4px solid var(--warning);
+    }
+
+    .seat-item.livre{
+      border-left:4px solid var(--success);
+    }
+
+    .seat-item-number{
+      font-size:24px;
+      font-weight:900;
+      color:var(--primary-light);
+      min-width:50px;
+      text-align:center;
+    }
+
+    .seat-item-info{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+
+    .seat-item-name{
+      font-size:16px;
+      font-weight:700;
+      color:var(--text);
+    }
+
+    .seat-item-detail{
+      font-size:12px;
+      color:var(--text-muted);
+      font-weight:600;
+    }
+
+    .seat-item-status{
+      padding:8px 16px;
+      border-radius:20px;
+      font-size:11px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      white-space:nowrap;
+    }
+
+    .status-livre{
+      background:rgba(16,185,129,.15);
+      border:1px solid rgba(16,185,129,.3);
+      color:var(--success);
+    }
+
+    .status-ocupado{
+      background:rgba(245,158,11,.15);
+      border:1px solid rgba(245,158,11,.3);
+      color:var(--warning);
+    }
+
+    .status-confirmado{
+      background:rgba(16,185,129,.25);
+      border:1px solid rgba(16,185,129,.4);
+      color:var(--success);
+    }
+
     /* Legend */
     .legend{
       display:flex;
@@ -835,8 +1072,8 @@
     </div>
 
     <div class="van-container">
-      <!-- Vista Superior - APENAS A IMAGEM PNG -->
-      <div style="margin-bottom:40px">
+      <!-- Vista Superior - ESCONDIDA QUANDO USANDO EDITOR -->
+      <div style="margin-bottom:40px; display:none">
         <h3 style="text-align:center; font-size:16px; margin-bottom:20px; color:var(--text-dim); font-weight:700; text-transform:uppercase; letter-spacing:1px">SELECIONE SEU ASSENTO</h3>
         <div style="max-width:450px; margin:0 auto; position:relative">
           <img src="folder/van.png" alt="Vista superior da van" style="width:100%; height:auto; border-radius:16px; box-shadow:0 30px 80px rgba(0,0,0,.9)">
@@ -887,11 +1124,182 @@
         </div>
       </div>
 
+      <!-- EDITOR DE MAPA DE ASSENTOS -->
+      <div class="seat-editor">
+        <div class="editor-header">
+          <h3 style="margin:0; font-size:18px">EDITOR DE MAPA</h3>
+          <div class="editor-tools">
+            <button class="btn btn-primary" onclick="addSeat()">➕ Adicionar Assento</button>
+            <button class="btn" onclick="clearMap()">🗑️ Limpar Tudo</button>
+            <button class="btn btn-success" onclick="saveMap()">💾 Salvar Mapa</button>
+          </div>
+        </div>
+
+        <div class="editor-canvas" id="editorCanvas">
+          <!-- Imagem da van como fundo -->
+          <img src="assets/images/van.png" alt="Van" class="canvas-background">
+          <div class="canvas-placeholder">
+            Clique em "Adicionar Assento" e arraste para posicionar
+          </div>
+        </div>
+
+        <div class="editor-info">
+          <div class="info-item">
+            <span class="info-label">Total de assentos:</span>
+            <span class="info-value" id="totalSeatsEditor">0</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Duplo clique no assento para editar</span>
+          </div>
+        </div>
+      </div>
+
       <!-- Área para você criar o mapa de assentos -->
-      <h3 style="text-align:center; font-size:16px; margin-bottom:20px; color:var(--text-dim); font-weight:700; text-transform:uppercase; letter-spacing:1px">DETALHES DOS ASSENTOS</h3>
+      <h3 style="text-align:center; font-size:16px; margin:40px 0 20px; color:var(--text-dim); font-weight:700; text-transform:uppercase; letter-spacing:1px">DETALHES DOS ASSENTOS</h3>
       
-      <div id="seats-map" style="max-width:900px; margin:0 auto 40px">
-        <!-- Você cria seus cards de assentos aqui -->
+      <div id="seats-map" style="max-width:700px; margin:0 auto 40px">
+        <!-- Lista de assentos -->
+        <div class="seats-list">
+          <!-- Assentos da frente -->
+          <div class="seat-item livre">
+            <div class="seat-item-number">F1</div>
+            <div class="seat-item-info">
+              <div class="seat-item-name">Livre</div>
+              <div class="seat-item-detail">Assento da frente - Disponível</div>
+            </div>
+            <div class="seat-item-status status-livre">DISPONÍVEL</div>
+          </div>
+
+          <div class="seat-item ocupado">
+            <div class="seat-item-number">F2</div>
+            <div class="seat-item-info">
+              <div class="seat-item-name">Carlos R•••••</div>
+              <div class="seat-item-detail">Assento da frente - Reservado</div>
+            </div>
+            <div class="seat-item-status status-ocupado">OCUPADO</div>
+          </div>
+
+          <!-- Fila 1 -->
+          <div class="seat-item livre">
+            <div class="seat-item-number">1</div>
+            <div class="seat-item-info">
+              <div class="seat-item-name">Livre</div>
+              <div class="seat-item-detail">Janela esquerda - Disponível</div>
+            </div>
+            <div class="seat-item-status status-livre">DISPONÍVEL</div>
+          </div>
+
+          <div class="seat-item livre">
+            <div class="seat-item-number">2</div>
+            <div class="seat-item-info">
+              <div class="seat-item-name">Livre</div>
+              <div class="seat-item-detail">Centro - Disponível</div>
+            </div>
+            <div class="seat-item-status status-livre">DISPONÍVEL</div>
+          </div>
+
+          <div class="seat-item ocupado">
+            <div class="seat-item-number">3</div>
+            <div class="seat-item-info">
+              <div class="seat-item-name">Ana S•••••</div>
+              <div class="seat-item-detail">Janela direita - Confirmado</div>
+            </div>
+            <div class="seat-item-status status-confirmado">CONFIRMADO</div>
+          </div>
+
+          <!-- Fila 2 -->
+          <div class="seat-item livre">
+            <div class="seat-item-number">4</div>
+            <div class="seat-item-info">
+              <div class="seat-item-name">Livre</div>
+              <div class="seat-item-detail">Janela esquerda - Disponível</div>
+            </div>
+            <div class="seat-item-status status-livre">DISPONÍVEL</div>
+          </div>
+
+          <div class="seat-item livre">
+            <div class="seat-item-number">5</div>
+            <div class="seat-item-info">
+              <div class="seat-item-name">Livre</div>
+              <div class="seat-item-detail">Corredor esquerdo - Disponível</div>
+            </div>
+            <div class="seat-item-status status-livre">DISPONÍVEL</div>
+          </div>
+
+          <div class="seat-item ocupado">
+            <div class="seat-item-number">6</div>
+            <div class="seat-item-info">
+              <div class="seat-item-name">João M•••••</div>
+              <div class="seat-item-detail">Janela direita - Reservado</div>
+            </div>
+            <div class="seat-item-status status-ocupado">OCUPADO</div>
+          </div>
+
+          <!-- Fila 3 -->
+          <div class="seat-item livre">
+            <div class="seat-item-number">7</div>
+            <div class="seat-item-info">
+              <div class="seat-item-name">Livre</div>
+              <div class="seat-item-detail">Janela esquerda - Disponível</div>
+            </div>
+            <div class="seat-item-status status-livre">DISPONÍVEL</div>
+          </div>
+
+          <div class="seat-item livre">
+            <div class="seat-item-number">8</div>
+            <div class="seat-item-info">
+              <div class="seat-item-name">Livre</div>
+              <div class="seat-item-detail">Corredor esquerdo - Disponível</div>
+            </div>
+            <div class="seat-item-status status-livre">DISPONÍVEL</div>
+          </div>
+
+          <div class="seat-item livre">
+            <div class="seat-item-number">9</div>
+            <div class="seat-item-info">
+              <div class="seat-item-name">Livre</div>
+              <div class="seat-item-detail">Janela direita - Disponível</div>
+            </div>
+            <div class="seat-item-status status-livre">DISPONÍVEL</div>
+          </div>
+
+          <!-- Fila 4 -->
+          <div class="seat-item livre">
+            <div class="seat-item-number">10</div>
+            <div class="seat-item-info">
+              <div class="seat-item-name">Livre</div>
+              <div class="seat-item-detail">Janela esquerda - Disponível</div>
+            </div>
+            <div class="seat-item-status status-livre">DISPONÍVEL</div>
+          </div>
+
+          <div class="seat-item livre">
+            <div class="seat-item-number">11</div>
+            <div class="seat-item-info">
+              <div class="seat-item-name">Livre</div>
+              <div class="seat-item-detail">Centro esquerdo - Disponível</div>
+            </div>
+            <div class="seat-item-status status-livre">DISPONÍVEL</div>
+          </div>
+
+          <div class="seat-item livre">
+            <div class="seat-item-number">12</div>
+            <div class="seat-item-info">
+              <div class="seat-item-name">Livre</div>
+              <div class="seat-item-detail">Centro direito - Disponível</div>
+            </div>
+            <div class="seat-item-status status-livre">DISPONÍVEL</div>
+          </div>
+
+          <div class="seat-item ocupado">
+            <div class="seat-item-number">13</div>
+            <div class="seat-item-info">
+              <div class="seat-item-name">Maria L•••••</div>
+              <div class="seat-item-detail">Janela direita - Confirmado</div>
+            </div>
+            <div class="seat-item-status status-confirmado">CONFIRMADO</div>
+          </div>
+        </div>
       </div>
 
       <div class="legend">
@@ -930,6 +1338,9 @@
 <div id="toast" class="toast">✅ Sucesso</div>
 
 <script>
+  let seatCounter = 1;
+  let seats = [];
+
   function toast(msg){
     const t = document.getElementById("toast");
     t.textContent = msg;
@@ -945,9 +1356,226 @@
     document.getElementById("modalOverlay").style.display = "none";
   }
 
+  // Add seat to canvas
+  function addSeat(){
+    const canvas = document.getElementById("editorCanvas");
+    const placeholder = canvas.querySelector(".canvas-placeholder");
+    if(placeholder) placeholder.style.display = "none";
+
+    const seat = document.createElement("div");
+    seat.className = "draggable-seat";
+    seat.id = `seat-${seatCounter}`;
+    seat.innerHTML = `
+      #${seatCounter}
+      <div class="delete-btn" onclick="deleteSeat('${seat.id}')">✕</div>
+    `;
+    
+    // Random initial position
+    seat.style.left = `${Math.random() * 60 + 20}%`;
+    seat.style.top = `${Math.random() * 60 + 20}%`;
+
+    makeDraggable(seat);
+    canvas.appendChild(seat);
+
+    seats.push({
+      id: seat.id,
+      number: seatCounter,
+      x: seat.style.left,
+      y: seat.style.top
+    });
+
+    seatCounter++;
+    updateSeatCount();
+    toast(`✅ Assento #${seatCounter - 1} adicionado`);
+  }
+
+  // Make element draggable
+  function makeDraggable(element){
+    let isDragging = false;
+    let currentX;
+    let currentY;
+    let initialX;
+    let initialY;
+    let xOffset = 0;
+    let yOffset = 0;
+
+    element.addEventListener("mousedown", dragStart);
+    document.addEventListener("mousemove", drag);
+    document.addEventListener("mouseup", dragEnd);
+
+    function dragStart(e){
+      if(e.target.classList.contains("delete-btn")) return;
+
+      const rect = element.getBoundingClientRect();
+      const canvas = document.getElementById("editorCanvas");
+      const canvasRect = canvas.getBoundingClientRect();
+
+      initialX = e.clientX - canvasRect.left - rect.width / 2;
+      initialY = e.clientY - canvasRect.top - rect.height / 2;
+
+      if(e.target === element || element.contains(e.target)){
+        isDragging = true;
+        element.classList.add("dragging");
+      }
+    }
+
+    function drag(e){
+      if(isDragging){
+        e.preventDefault();
+
+        const canvas = document.getElementById("editorCanvas");
+        const canvasRect = canvas.getBoundingClientRect();
+
+        currentX = e.clientX - canvasRect.left - element.offsetWidth / 2;
+        currentY = e.clientY - canvasRect.top - element.offsetHeight / 2;
+
+        // Keep within bounds
+        currentX = Math.max(0, Math.min(currentX, canvasRect.width - element.offsetWidth));
+        currentY = Math.max(0, Math.min(currentY, canvasRect.height - element.offsetHeight));
+
+        element.style.left = currentX + "px";
+        element.style.top = currentY + "px";
+      }
+    }
+
+    function dragEnd(e){
+      if(isDragging){
+        initialX = currentX;
+        initialY = currentY;
+
+        isDragging = false;
+        element.classList.remove("dragging");
+
+        // Update seat position in array
+        const seatData = seats.find(s => s.id === element.id);
+        if(seatData){
+          seatData.x = element.style.left;
+          seatData.y = element.style.top;
+        }
+      }
+    }
+
+    // Double click to edit
+    element.addEventListener("dblclick", function(){
+      const newNumber = prompt("Digite o novo número do assento:", element.textContent.trim().replace('#', '').replace('✕', '').trim());
+      if(newNumber){
+        const deleteBtn = element.querySelector('.delete-btn');
+        element.textContent = `#${newNumber}`;
+        if(deleteBtn) element.appendChild(deleteBtn);
+        
+        const seatData = seats.find(s => s.id === element.id);
+        if(seatData) seatData.number = newNumber;
+        toast(`✅ Assento renomeado para #${newNumber}`);
+      }
+    });
+  }
+
+  // Delete seat
+  function deleteSeat(seatId){
+    const seat = document.getElementById(seatId);
+    if(seat){
+      seat.remove();
+      seats = seats.filter(s => s.id !== seatId);
+      updateSeatCount();
+      toast("🗑️ Assento removido");
+
+      // Show placeholder if empty
+      const canvas = document.getElementById("editorCanvas");
+      if(canvas.querySelectorAll(".draggable-seat").length === 0){
+        const placeholder = canvas.querySelector(".canvas-placeholder");
+        if(placeholder) placeholder.style.display = "block";
+      }
+    }
+  }
+
+  // Clear all seats
+  function clearMap(){
+    if(!confirm("Tem certeza que deseja limpar todos os assentos?")) return;
+    
+    const canvas = document.getElementById("editorCanvas");
+    const seatsElements = canvas.querySelectorAll(".draggable-seat");
+    seatsElements.forEach(s => s.remove());
+    
+    seats = [];
+    seatCounter = 1;
+    updateSeatCount();
+    
+    const placeholder = canvas.querySelector(".canvas-placeholder");
+    if(placeholder) placeholder.style.display = "block";
+    
+    toast("🗑️ Mapa limpo");
+  }
+
+  // Save map
+  function saveMap(){
+    if(seats.length === 0){
+      toast("⚠️ Adicione assentos primeiro");
+      return;
+    }
+
+    const mapData = {
+      seats: seats,
+      timestamp: new Date().toISOString()
+    };
+
+    console.log("Mapa salvo:", mapData);
+    
+    // Save to localStorage
+    localStorage.setItem("vanSeatMap", JSON.stringify(mapData));
+    
+    toast("💾 Mapa salvo com sucesso!");
+  }
+
+  // Load saved map
+  function loadSavedMap(){
+    const saved = localStorage.getItem("vanSeatMap");
+    if(!saved) return;
+
+    try{
+      const mapData = JSON.parse(saved);
+      const canvas = document.getElementById("editorCanvas");
+      const placeholder = canvas.querySelector(".canvas-placeholder");
+      
+      mapData.seats.forEach(seatData => {
+        const seat = document.createElement("div");
+        seat.className = "draggable-seat";
+        seat.id = seatData.id;
+        seat.innerHTML = `
+          #${seatData.number}
+          <div class="delete-btn" onclick="deleteSeat('${seatData.id}')">✕</div>
+        `;
+        seat.style.left = seatData.x;
+        seat.style.top = seatData.y;
+        
+        makeDraggable(seat);
+        canvas.appendChild(seat);
+      });
+
+      seats = mapData.seats;
+      seatCounter = Math.max(...seats.map(s => parseInt(s.number))) + 1;
+      
+      if(placeholder) placeholder.style.display = "none";
+      updateSeatCount();
+      
+      toast("✅ Mapa carregado");
+    }catch(e){
+      console.error("Erro ao carregar mapa:", e);
+    }
+  }
+
+  // Update seat count
+  function updateSeatCount(){
+    document.getElementById("totalSeatsEditor").textContent = seats.length;
+  }
+
   // Close modal when clicking outside
   document.getElementById("modalOverlay").addEventListener("click", (e) => {
     if(e.target.id === "modalOverlay") closeModal();
+  });
+
+  // Load saved map on page load
+  window.addEventListener("DOMContentLoaded", () => {
+    loadSavedMap();
   });
 
 </script>
