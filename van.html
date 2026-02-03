@@ -1139,12 +1139,42 @@
         </div>
 
         <div class="editor-canvas" id="editorCanvas">
-          <!-- Imagem da van como fundo -->
-          <img src="folder/van.png" alt="Van" class="canvas-background" onerror="console.error('Erro ao carregar van.png. Caminho:', this.src); this.style.display='none';" onload="console.log('Van carregada com sucesso!');">
-          <div class="canvas-placeholder">
+          <!-- Imagem da van como fundo - Teste múltiplos caminhos -->
+          <img src="folder/van.png" alt="Van" class="canvas-background" id="vanBg">
+          
+          <div class="canvas-placeholder" id="canvasPlaceholder">
             Clique em "Adicionar Assento" e arraste para posicionar
           </div>
         </div>
+        
+        <script>
+          // Debug: Testar carregamento da imagem
+          const vanImg = document.getElementById('vanBg');
+          const paths = [
+            'folder/van.png',
+            './folder/van.png',
+            'van.png',
+            '../folder/van.png'
+          ];
+          
+          let currentPath = 0;
+          
+          vanImg.onerror = function() {
+            console.error('❌ Falha ao carregar:', vanImg.src);
+            currentPath++;
+            if(currentPath < paths.length) {
+              console.log('🔄 Tentando:', paths[currentPath]);
+              vanImg.src = paths[currentPath];
+            } else {
+              console.error('❌ Nenhum caminho funcionou!');
+              vanImg.style.display = 'none';
+            }
+          };
+          
+          vanImg.onload = function() {
+            console.log('✅ Van carregada com sucesso:', vanImg.src);
+          };
+        </script>
 
         <div class="editor-info">
           <div class="info-item">
