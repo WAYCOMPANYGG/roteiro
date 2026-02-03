@@ -415,7 +415,7 @@
       border:2px solid var(--accent);
       border-radius:12px;
       padding:12px;
-      min-height:80px;
+      min-height:70px;
       display:flex;
       flex-direction:column;
       justify-content:space-between;
@@ -521,11 +521,11 @@
       position:absolute;
       top:50%;
       left:50%;
-      transform:translate(-50%, -50%) rotate(90deg);
-      max-width:200%;   ← Van 2x maior
-      max-width:90%;
-      max-height:200%;  ← Van 2x maior
-      max-height:95%;
+      transform:translate(-50%, -50%) rotate(360deg);
+      max-width:90%;   ← Van 2x maior
+      max-width:500%;
+      max-height:100%;  ← Van 2x maior
+      max-height:150%;
       opacity:0.5;
       pointer-events:none;
       z-index:1;
@@ -576,11 +576,11 @@
     /* Draggable Seat - MENOR */
     .draggable-seat{
       position:absolute;
-      width:50px;
-      height:50px;
+      width:45px;
+      height:69px;
       background:linear-gradient(135deg, rgba(167,139,250,.3), rgba(34,211,238,.2));
       border:2px solid var(--primary);
-      border-radius:8px;
+      border-radius:3px;
       display:flex;
       align-items:center;
       justify-content:center;
