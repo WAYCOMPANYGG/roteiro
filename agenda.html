@@ -910,8 +910,14 @@
     gap:16px;
   }
 
+  .row3{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:12px;
+  }
+
   @media(max-width:560px){
-    .row2{
+    .row2, .row3{
       grid-template-columns:1fr;
     }
   }
@@ -928,6 +934,243 @@
     font-weight:800;
     letter-spacing:.3px;
     text-transform:uppercase;
+  }
+
+  /* Section Containers */
+  .section{
+    padding:24px;
+    border-radius:var(--radius-lg);
+    border:1px solid var(--glass-border);
+    background:rgba(255,255,255,.02);
+    position:relative;
+    overflow:hidden;
+    transition:all .3s cubic-bezier(.4,0,.2,1);
+  }
+
+  .section::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:3px;
+    background:linear-gradient(90deg, var(--purple), var(--cyan));
+    opacity:0;
+    transition:opacity .3s;
+  }
+
+  .section:hover{
+    border-color:rgba(167,139,250,.3);
+    background:rgba(255,255,255,.04);
+  }
+
+  .section:hover::before{
+    opacity:1;
+  }
+
+  .sectionTitle{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:20px;
+    font-size:16px;
+    font-weight:800;
+    color:var(--text-primary);
+    letter-spacing:.4px;
+  }
+
+  .sectionIcon{
+    font-size:24px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:40px;
+    height:40px;
+    border-radius:var(--radius-sm);
+    background:linear-gradient(135deg, rgba(167,139,250,.15), rgba(34,211,238,.15));
+    border:1px solid rgba(167,139,250,.3);
+  }
+
+  .inpLarge{
+    font-size:16px !important;
+    font-weight:800 !important;
+    height:56px !important;
+  }
+
+  .radioGroup{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));
+    gap:10px;
+    margin-top:8px;
+  }
+
+  .radioCard{
+    position:relative;
+    cursor:pointer;
+  }
+
+  .radioCard input[type="radio"]{
+    position:absolute;
+    opacity:0;
+    pointer-events:none;
+  }
+
+  .radioContent{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    padding:16px 12px;
+    border-radius:var(--radius-md);
+    border:2px solid var(--glass-border);
+    background:rgba(255,255,255,.03);
+    transition:all .3s cubic-bezier(.4,0,.2,1);
+    font-weight:700;
+    font-size:12px;
+    text-align:center;
+  }
+
+  .radioIcon{
+    font-size:28px;
+    transition:transform .3s cubic-bezier(.4,0,.2,1);
+  }
+
+  .radioCard:hover .radioContent{
+    border-color:rgba(167,139,250,.4);
+    background:rgba(167,139,250,.08);
+    transform:translateY(-2px);
+  }
+
+  .radioCard:hover .radioIcon{
+    transform:scale(1.15);
+  }
+
+  .radioCard input:checked + .radioContent{
+    border-color:var(--purple);
+    background:rgba(167,139,250,.15);
+    box-shadow:0 0 0 3px rgba(167,139,250,.15), 0 8px 24px rgba(167,139,250,.2);
+  }
+
+  .radioCard input:checked + .radioContent .radioIcon{
+    animation:iconBounce .5s cubic-bezier(.4,0,.2,1);
+  }
+
+  @keyframes iconBounce{
+    0%, 100%{ transform:scale(1); }
+    50%{ transform:scale(1.25); }
+  }
+
+  .prioritySection, .detailsSection, .contactSection, .additionalSection{
+    padding:20px;
+    border-radius:var(--radius-lg);
+    border:1px solid var(--glass-border);
+    background:rgba(255,255,255,.02);
+    position:relative;
+    overflow:hidden;
+  }
+
+  .prioritySection{
+    background:rgba(167,139,250,.05);
+    border-color:rgba(167,139,250,.2);
+  }
+
+  .detailsSection{
+    background:rgba(34,211,238,.03);
+    border-color:rgba(34,211,238,.15);
+  }
+
+  .contactSection{
+    background:rgba(251,146,60,.03);
+    border-color:rgba(251,146,60,.15);
+  }
+
+  .additionalSection{
+    background:rgba(74,222,128,.03);
+    border-color:rgba(74,222,128,.15);
+  }
+
+  .sectionLabel{
+    font-size:14px;
+    font-weight:800;
+    color:var(--text-primary);
+    margin-bottom:16px;
+    letter-spacing:.5px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+
+  .fieldHighlight{
+    position:relative;
+  }
+
+  .fieldHighlight .inp{
+    border-color:rgba(167,139,250,.3);
+    background:rgba(167,139,250,.08);
+  }
+
+  .fieldHighlight .inp:focus{
+    background:rgba(167,139,250,.12);
+  }
+    border-color:rgba(167,139,250,.2);
+  }
+
+  .prioritySection::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:3px;
+    background:linear-gradient(90deg, var(--purple), var(--cyan));
+    opacity:.6;
+  }
+
+  .detailsSection{
+    background:rgba(34,211,238,.03);
+    border-color:rgba(34,211,238,.15);
+  }
+
+  .contactSection{
+    background:rgba(244,114,182,.03);
+    border-color:rgba(244,114,182,.15);
+  }
+
+  .additionalSection{
+    background:rgba(251,191,36,.03);
+    border-color:rgba(251,191,36,.15);
+  }
+
+  .sectionLabel{
+    font-size:14px;
+    font-weight:900;
+    letter-spacing:.5px;
+    color:var(--text-primary);
+    margin-bottom:16px;
+    padding-bottom:12px;
+    border-bottom:1px solid rgba(255,255,255,.08);
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+
+  /* Highlight important fields */
+  .fieldHighlight .inp{
+    border-color:rgba(167,139,250,.3);
+    background:rgba(167,139,250,.08);
+    font-weight:700;
+    font-size:15px;
+  }
+
+  .fieldHighlight .inp:focus{
+    border-color:var(--purple);
+    box-shadow:0 0 0 4px rgba(167,139,250,.25), 0 8px 32px rgba(167,139,250,.2);
+    background:rgba(167,139,250,.12);
+  }
+
+  .fieldHighlight label{
+    color:var(--purple-bright);
+    font-size:12px;
   }
 
   .inp, .txt{
@@ -1074,6 +1317,10 @@
   .drawerActions .btn{
     position:relative;
     overflow:hidden;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
   }
 
   .drawerActions .btn::after{
@@ -1102,9 +1349,35 @@
   .btnDanger:hover{
     box-shadow:0 8px 24px rgba(248,113,113,.4);
     transform:translateY(-3px);
+    background:rgba(248,113,113,.22);
   }
 
   .btnDanger:active{
+    transform:translateY(-1px) scale(0.98);
+  }
+
+  .btnSecondary{
+    border:1px solid rgba(34,211,238,.3);
+    background:rgba(34,211,238,.12);
+  }
+
+  .btnSecondary:hover{
+    box-shadow:0 8px 24px rgba(34,211,238,.3);
+    transform:translateY(-3px);
+    background:rgba(34,211,238,.18);
+  }
+
+  .btnSecondary{
+    border:1px solid rgba(34,211,238,.4);
+    background:rgba(34,211,238,.15);
+  }
+
+  .btnSecondary:hover{
+    box-shadow:0 8px 24px rgba(34,211,238,.4);
+    transform:translateY(-3px);
+  }
+
+  .btnSecondary:active{
     transform:translateY(-1px) scale(0.98);
   }
 
@@ -1291,65 +1564,169 @@
     </div>
 
     <div class="drawerBody">
-      <div class="statusRow">
-        <span class="miniTag" id="tagArtist"><span class="miniDot" style="--accent:var(--purple)"></span><span>ARTISTA</span></span>
-        <span class="miniTag" id="tagStatus"><span class="miniDot" style="--accent:var(--cyan)"></span><span>STATUS</span></span>
-      </div>
+      <!-- Priority Section: Date, Time, Location -->
+      <div class="prioritySection">
+        <div class="sectionLabel">📍 Informações Principais</div>
+        <div class="row3">
+          <div class="field fieldHighlight">
+            <label>📅 Data</label>
+            <input class="inp" id="fDate" type="date" />
+          </div>
+          <div class="field fieldHighlight">
+            <label>⏰ Início</label>
+            <input class="inp" id="fTimeStart" type="time" />
+          </div>
+          <div class="field fieldHighlight">
+            <label>⏱️ Fim</label>
+            <input class="inp" id="fTimeEnd" type="time" />
+          </div>
+        </div>
 
-      <div class="row2">
-        <div class="field">
-          <label>Data</label>
-          <input class="inp" id="fDate" type="date" />
+        <div class="row2">
+          <div class="field fieldHighlight">
+            <label>🏙️ Cidade</label>
+            <input class="inp" id="fCity" placeholder="Ex: Rio de Janeiro" />
+          </div>
+          <div class="field fieldHighlight">
+            <label>📌 Estado</label>
+            <input class="inp" id="fState" placeholder="RJ" maxlength="2" style="text-transform:uppercase" />
+          </div>
         </div>
-        <div class="field">
-          <label>Hora do show</label>
-          <input class="inp" id="fTime" type="time" />
-        </div>
-      </div>
 
-      <div class="field">
-        <label>Título</label>
-        <input class="inp" id="fTitle" placeholder="Ex: Evento - Pub / Camarote / Reunião..." />
-      </div>
-
-      <div class="row2">
-        <div class="field">
-          <label>Local / Cidade</label>
-          <input class="inp" id="fCity" placeholder="Ex: Centro • MG" />
-        </div>
-        <div class="field">
-          <label>Endereço</label>
-          <input class="inp" id="fAddress" placeholder="Ex: Rua X, 123" />
-        </div>
-      </div>
-
-      <div class="row2">
-        <div class="field">
-          <label>Contratante</label>
-          <input class="inp" id="fClient" placeholder="Nome do contratante" />
-        </div>
-        <div class="field">
-          <label>Número</label>
-          <input class="inp" id="fPhone" placeholder="(xx) xxxxx-xxxx" />
+        <div class="field fieldHighlight">
+          <label>📍 Local do Evento</label>
+          <input class="inp" id="fVenue" placeholder="Ex: CAMAROTE FAVELA" />
         </div>
       </div>
 
-      <div class="switch">
-        <div>
-          <div class="sTitle">Contrato enviado?</div>
-          <div class="sub" style="margin-top:6px">Marque para controle interno</div>
+      <!-- Event Details Section -->
+      <div class="detailsSection">
+        <div class="sectionLabel">🎤 Detalhes do Evento</div>
+        
+        <div class="field">
+          <label>Nome do Evento</label>
+          <input class="inp" id="fTitle" placeholder="Ex: Show • Camarote / Evento • Pub" />
         </div>
-        <div class="toggle" id="fContract"></div>
+
+        <div class="row2">
+          <div class="field">
+            <label>Tipo de Evento</label>
+            <select class="inp" id="fEventType">
+              <option value="">Selecione...</option>
+              <option value="show_cenario">Show c/ Cenário</option>
+              <option value="show">Show</option>
+              <option value="participacao">Participação</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Tipo de Ingresso</label>
+            <select class="inp" id="fTicketType">
+              <option value="">Selecione...</option>
+              <option value="bilheteria">Bilheteria</option>
+              <option value="cache">Cachê</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label>Artista</label>
+            <select class="inp" id="fArtistSelect">
+              <option value="AX">Artista X</option>
+              <option value="AY">Artista Y</option>
+              <option value="AZ">Artista Z</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Status</label>
+            <select class="inp" id="fStatusSelect">
+              <option value="CONFIRMADO">Confirmado</option>
+              <option value="RESERVADO">Reservado</option>
+              <option value="NEGOCIANDO">Negociando</option>
+              <option value="LEMBRETE">Lembrete</option>
+              <option value="RADIO_TV">Rádio/TV</option>
+              <option value="OUTROS">Outros</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label>⏱️ Destaque (duração)</label>
+            <input class="inp" id="fDuration" placeholder="Ex: 00:30h" />
+          </div>
+          <div class="field">
+            <label>💰 Cachê</label>
+            <input class="inp" id="fCache" placeholder="Ex: 15K" />
+          </div>
+        </div>
       </div>
 
-      <div class="field">
-        <label>Observações</label>
-        <textarea class="txt" id="fNotes" placeholder="Ex: aguardando resposta, alinhado cachet, rider, etc."></textarea>
+      <!-- Contact Section -->
+      <div class="contactSection">
+        <div class="sectionLabel">👥 Contatos</div>
+        
+        <div class="field">
+          <label>Empresa</label>
+          <input class="inp" id="fCompany" placeholder="Nome da empresa" />
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label>Contratante</label>
+            <input class="inp" id="fClient" placeholder="Nome do contratante" />
+          </div>
+          <div class="field">
+            <label>Contato</label>
+            <input class="inp" id="fContact" placeholder="Nome do contato" />
+          </div>
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label>📞 Telefone</label>
+            <input class="inp" id="fPhone" placeholder="(xx) xxxxx-xxxx" />
+          </div>
+          <div class="field">
+            <label>📧 E-mail</label>
+            <input class="inp" id="fEmail" placeholder="email@exemplo.com" type="email" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Info Section -->
+      <div class="additionalSection">
+        <div class="sectionLabel">📋 Informações Adicionais</div>
+
+        <div class="row2">
+          <div class="field">
+            <label>Vendedor</label>
+            <input class="inp" id="fSeller" placeholder="Nome do vendedor" />
+          </div>
+          <div class="field">
+            <label>Despesas</label>
+            <input class="inp" id="fExpenses" placeholder="Ex: transporte, hospedagem..." />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Observações (OBS.)</label>
+          <textarea class="txt" id="fNotes" placeholder="Ex: aguardando resposta, rider ok, alinhado cachet, etc."></textarea>
+        </div>
+
+        <div class="switch">
+          <div>
+            <div class="sTitle">📄 Contrato enviado?</div>
+            <div class="sub" style="margin-top:6px">Marque quando o contrato for enviado</div>
+          </div>
+          <div class="toggle" id="fContract"></div>
+        </div>
       </div>
 
       <div class="drawerActions">
-        <button class="btn btnDanger" id="btnDelete">Excluir</button>
-        <button class="btn btnPrimary" id="btnSave" style="flex:1">Salvar</button>
+        <button class="btn btnDanger" id="btnDelete">🗑️ Deletar</button>
+        <button class="btn btnSecondary" id="btnCopy">📋 Copiar</button>
+        <button class="btn btnPrimary" id="btnSave" style="flex:1">💾 Salvar Alterações</button>
       </div>
     </div>
   </div>
@@ -1376,42 +1753,75 @@
     {
       id: cryptoId(),
       date: "2026-02-02",
-      time: "16:00",
+      timeStart: "16:00",
+      timeEnd: "17:00",
       title: "Reunião • Briefing",
       city: "Online",
-      address: "",
+      state: "",
+      venue: "",
+      eventType: "",
+      ticketType: "",
       status: "LEMBRETE",
       artist: "AY",
+      duration: "",
+      cache: "",
+      company: "",
       client: "",
+      contact: "",
       phone: "",
+      email: "",
+      seller: "",
+      expenses: "",
       contractSent: false,
       notes: ""
     },
     {
       id: cryptoId(),
       date: "2026-02-04",
-      time: "00:30",
+      timeStart: "00:30",
+      timeEnd: "02:00",
       title: "Show • Camarote",
-      city: "Sapucaí • RJ",
-      address: "",
+      city: "Rio de Janeiro",
+      state: "RJ",
+      venue: "Sapucaí",
+      eventType: "show_cenario",
+      ticketType: "cache",
       status: "CONFIRMADO",
       artist: "AZ",
+      duration: "00:30h",
+      cache: "15K",
+      company: "Produtora XYZ",
       client: "Produtora",
+      contact: "",
       phone: "",
+      email: "",
+      seller: "",
+      expenses: "",
       contractSent: true,
       notes: "Rider ok"
     },
     {
       id: cryptoId(),
       date: "2026-02-07",
-      time: "22:30",
+      timeStart: "22:30",
+      timeEnd: "23:30",
       title: "Evento • Pub",
-      city: "Centro • MG",
-      address: "",
+      city: "Centro",
+      state: "MG",
+      venue: "Pub Central",
+      eventType: "show",
+      ticketType: "bilheteria",
       status: "NEGOCIANDO",
       artist: "AX",
+      duration: "01:00h",
+      cache: "",
+      company: "",
       client: "Contratante",
+      contact: "",
       phone: "",
+      email: "",
+      seller: "",
+      expenses: "",
       contractSent: false,
       notes: "Aguardando resposta"
     }
@@ -1435,20 +1845,31 @@
   const overlay = document.getElementById("overlay");
   const closeDrawerBtn = document.getElementById("closeDrawer");
 
-  const tagArtist = document.getElementById("tagArtist");
-  const tagStatus = document.getElementById("tagStatus");
-  const drawerSub = document.getElementById("drawerSub");
   const fDate = document.getElementById("fDate");
-  const fTime = document.getElementById("fTime");
-  const fTitle = document.getElementById("fTitle");
+  const fTimeStart = document.getElementById("fTimeStart");
+  const fTimeEnd = document.getElementById("fTimeEnd");
   const fCity = document.getElementById("fCity");
-  const fAddress = document.getElementById("fAddress");
+  const fState = document.getElementById("fState");
+  const fVenue = document.getElementById("fVenue");
+  const fTitle = document.getElementById("fTitle");
+  const fEventType = document.getElementById("fEventType");
+  const fTicketType = document.getElementById("fTicketType");
+  const fArtistSelect = document.getElementById("fArtistSelect");
+  const fStatusSelect = document.getElementById("fStatusSelect");
+  const fDuration = document.getElementById("fDuration");
+  const fCache = document.getElementById("fCache");
+  const fCompany = document.getElementById("fCompany");
   const fClient = document.getElementById("fClient");
+  const fContact = document.getElementById("fContact");
   const fPhone = document.getElementById("fPhone");
+  const fEmail = document.getElementById("fEmail");
+  const fSeller = document.getElementById("fSeller");
+  const fExpenses = document.getElementById("fExpenses");
   const fNotes = document.getElementById("fNotes");
   const fContract = document.getElementById("fContract");
   const btnSave = document.getElementById("btnSave");
   const btnDelete = document.getElementById("btnDelete");
+  const btnCopy = document.getElementById("btnCopy");
 
   document.getElementById("prevMonth").addEventListener("click", ()=> shiftMonth(-1));
   document.getElementById("nextMonth").addEventListener("click", ()=> shiftMonth(+1));
@@ -1476,12 +1897,25 @@
     events[idx] = {
       ...events[idx],
       date: fDate.value || events[idx].date,
-      time: fTime.value || "",
+      timeStart: fTimeStart.value || "",
+      timeEnd: fTimeEnd.value || "",
       title: fTitle.value || "",
       city: fCity.value || "",
-      address: fAddress.value || "",
+      state: fState.value || "",
+      venue: fVenue.value || "",
+      eventType: fEventType.value || "",
+      ticketType: fTicketType.value || "",
+      artist: fArtistSelect.value || events[idx].artist,
+      status: fStatusSelect.value || events[idx].status,
+      duration: fDuration.value || "",
+      cache: fCache.value || "",
+      company: fCompany.value || "",
       client: fClient.value || "",
+      contact: fContact.value || "",
       phone: fPhone.value || "",
+      email: fEmail.value || "",
+      seller: fSeller.value || "",
+      expenses: fExpenses.value || "",
       notes: fNotes.value || "",
       contractSent: fContract.classList.contains("on")
     };
@@ -1495,6 +1929,23 @@
     events = events.filter(x=>x.id!==state.selectedId);
     closeDrawer();
     render();
+  });
+
+  btnCopy.addEventListener("click", ()=>{
+    if(!state.selectedId) return;
+    const ev = events.find(x=>x.id===state.selectedId);
+    if(!ev) return;
+
+    const newEvent = {
+      ...ev,
+      id: cryptoId(),
+      title: ev.title + " (Cópia)"
+    };
+    events.push(newEvent);
+    
+    closeDrawer();
+    render();
+    setTimeout(()=> openDrawer(newEvent.id), 300);
   });
 
   function init(){
@@ -1621,18 +2072,18 @@
   function renderEventCard(ev){
     const artist = ARTISTS.find(a=>a.id===ev.artist) || ARTISTS[0];
     const st = STATUSES.find(s=>s.id===ev.status) || STATUSES[0];
-    const t = (ev.time||"").trim();
-    const city = (ev.city||"").trim();
+    const t = (ev.timeStart||"").trim();
+    const location = [ev.venue, ev.city, ev.state].filter(x=>x).join(" • ");
 
     const metaPieces = [];
     if(t) metaPieces.push(`<span>⏱ ${escapeHtml(t)}</span>`);
-    if(city) metaPieces.push(`<span>📍 ${escapeHtml(city)}</span>`);
+    if(location) metaPieces.push(`<span>📍 ${escapeHtml(location)}</span>`);
     metaPieces.push(`<span>🎤 ${escapeHtml(artist.name)}</span>`);
 
     return `
       <div class="event" style="--accent:${artist.color}" data-id="${ev.id}">
         <div class="eventTop">
-          <div class="eventTitle">${escapeHtml(ev.title || "Compromisso")}</div>
+          <div class="eventTitle">${escapeHtml(ev.title || "Evento")}</div>
           <div class="badge" style="border-color: rgba(255,255,255,.12);">
             <span style="display:inline-flex; align-items:center; gap:8px;">
               <span style="width:8px;height:8px;border-radius:999px;background:${st.color};box-shadow:0 0 8px ${st.color}"></span>
@@ -1654,14 +2105,14 @@
         return d.getFullYear()===y && d.getMonth()===m;
       })
       .filter(matchesFilters)
-      .sort((a,b)=> (a.date+a.time).localeCompare(b.date+b.time));
+      .sort((a,b)=> (a.date+(a.timeStart||"")).localeCompare(b.date+(b.timeStart||"")));
   }
 
   function getFilteredEventsForDate(dateStr){
     return events
       .filter(ev=>ev.date===dateStr)
       .filter(matchesFilters)
-      .sort((a,b)=> (a.time||"").localeCompare(b.time||""));
+      .sort((a,b)=> (a.timeStart||"").localeCompare(b.timeStart||""));
   }
 
   function matchesFilters(ev){
@@ -1686,19 +2137,36 @@
     const artist = ARTISTS.find(a=>a.id===ev.artist) || ARTISTS[0];
     const st = STATUSES.find(s=>s.id===ev.status) || STATUSES[0];
 
-    document.getElementById("drawerTitle").textContent = "Detalhes";
-    drawerSub.textContent = `${artist.name} • ${st.label}`;
+    document.getElementById("drawerTitle").textContent = ev.title || "Novo Evento";
+    document.getElementById("drawerSub").textContent = `${artist.name} • ${st.label}`;
 
-    tagArtist.innerHTML = `<span class="miniDot" style="--accent:${artist.color}"></span><span>${escapeHtml(artist.name)}</span>`;
-    tagStatus.innerHTML = `<span class="miniDot" style="--accent:${st.color}"></span><span>${escapeHtml(st.label)}</span>`;
-
+    // Priority fields
     fDate.value = ev.date || "";
-    fTime.value = ev.time || "";
-    fTitle.value = ev.title || "";
+    fTimeStart.value = ev.timeStart || "";
+    fTimeEnd.value = ev.timeEnd || "";
     fCity.value = ev.city || "";
-    fAddress.value = ev.address || "";
+    fState.value = ev.state || "";
+    fVenue.value = ev.venue || "";
+
+    // Event details
+    fTitle.value = ev.title || "";
+    fEventType.value = ev.eventType || "";
+    fTicketType.value = ev.ticketType || "";
+    fArtistSelect.value = ev.artist || ARTISTS[0].id;
+    fStatusSelect.value = ev.status || "RESERVADO";
+    fDuration.value = ev.duration || "";
+    fCache.value = ev.cache || "";
+
+    // Contact info
+    fCompany.value = ev.company || "";
     fClient.value = ev.client || "";
+    fContact.value = ev.contact || "";
     fPhone.value = ev.phone || "";
+    fEmail.value = ev.email || "";
+
+    // Additional
+    fSeller.value = ev.seller || "";
+    fExpenses.value = ev.expenses || "";
     fNotes.value = ev.notes || "";
     fContract.classList.toggle("on", !!ev.contractSent);
 
@@ -1729,14 +2197,25 @@
     const ev = {
       id: cryptoId(),
       date: baseDate,
-      time: "20:00",
-      title: "Novo compromisso",
+      timeStart: "20:00",
+      timeEnd: "22:00",
+      title: "Novo Evento",
       city: "",
-      address: "",
+      state: "",
+      venue: "",
+      eventType: "",
+      ticketType: "",
       status: "RESERVADO",
       artist: defaultArtist,
+      duration: "",
+      cache: "",
+      company: "",
       client: "",
+      contact: "",
       phone: "",
+      email: "",
+      seller: "",
+      expenses: "",
       contractSent: false,
       notes: ""
     };
