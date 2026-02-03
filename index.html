@@ -3,449 +3,398 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Dashboard | OFF Company</title>
+  <title>Dashboard | Nobreak Company</title>
 
   <style>
     /* ===== FONT ===== */
     @font-face{
       font-family:"Rokiest";
-      src:url("https://waycompanygg.github.io/roteiro/assets/fonts/Rokiest-Extrabold.otf") format("opentype");
+      src:url("https://raw.githubusercontent.com/WAYCOMPANYGG/roteiro/main/assets/fonts/Rokiest-Extrabold.otf") format("opentype");
       font-weight:800;
       font-display:swap;
     }
 
-    /* ===== THEME (mantendo paleta atual) ===== */
+    /* ===== THEME ===== */
     :root{
-      --bg1:#050611; --bg2:#0b1220;
-      --panel: rgba(10,16,28,.66);
-      --panel2: rgba(2,6,23,.35);
-      --stroke: rgba(255,255,255,.10);
-      --text:#e5e7eb;
-      --muted: rgba(229,231,235,.62);
-      --shadow: 0 26px 90px rgba(0,0,0,.72);
-
-      --purple:#8b5cf6;
-      --cyan:#06b6d4;
-      --green:#22c55e;
-      --amber:#f59e0b;
-      --red:#ef4444;
-
-      --r: 22px;
-      --r2: 18px;
+      --bg-dark:#020614;
+      --bg-medium:#0a0f1e;
+      --bg-light:#121829;
+      
+      --glass-bg:rgba(15,23,42,.65);
+      --glass-border:rgba(255,255,255,.08);
+      
+      --text-primary:#f8fafc;
+      --text-secondary:#cbd5e1;
+      --text-muted:#64748b;
+      
+      --purple:#a78bfa;
+      --purple-bright:#c4b5fd;
+      --cyan:#22d3ee;
+      --amber:#fbbf24;
+      --green:#4ade80;
+      
+      --glow-purple:rgba(167,139,250,.4);
+      --glow-cyan:rgba(34,211,238,.35);
+      --glow-pink:rgba(244,114,182,.3);
+      
+      --r:24px;
     }
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      color: var(--text);
-      background:
-        radial-gradient(900px 520px at 14% 12%, rgba(139,92,246,.18), transparent 60%),
-        radial-gradient(900px 520px at 86% 18%, rgba(6,182,212,.14), transparent 60%),
-        radial-gradient(900px 520px at 70% 90%, rgba(34,197,94,.10), transparent 60%),
-        linear-gradient(135deg,var(--bg1),var(--bg2));
+    *{box-sizing:border-box; margin:0; padding:0}
+    
+    html,body{
+      height:100%;
+      font-family:'Rokiest','Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+      color:var(--text-primary);
+      background:var(--bg-dark);
       overflow-x:hidden;
     }
 
-    /* ===== subtle noise ===== */
-    .noise{
-      pointer-events:none;
-      position:fixed; inset:0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
-      opacity:.18;
-      mix-blend-mode: overlay;
+    body::before{
+      content:'';
+      position:fixed;
+      inset:0;
+      background:
+        radial-gradient(ellipse 1000px 600px at 10% 20%, var(--glow-purple), transparent 50%),
+        radial-gradient(ellipse 1000px 600px at 90% 10%, var(--glow-cyan), transparent 50%),
+        radial-gradient(ellipse 1000px 700px at 50% 90%, var(--glow-pink), transparent 50%),
+        linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-medium) 50%, var(--bg-light) 100%);
+      animation:bgShift 15s ease-in-out infinite alternate;
+      z-index:-1;
     }
 
-    /* ===== layout ===== */
+    @keyframes bgShift{
+      0%{ opacity:.85; filter:hue-rotate(0deg) blur(80px); }
+      100%{ opacity:1; filter:hue-rotate(10deg) blur(100px); }
+    }
+
     .shell{
       display:flex;
       min-height:100vh;
-      gap:18px;
-      padding:18px;
+      gap:20px;
+      padding:20px;
     }
 
-    /* ===== sidebar ===== */
     .side{
-      width:84px; flex:0 0 84px;
-      position:sticky; top:18px; align-self:flex-start;
-      height: calc(100vh - 36px);
-      border-radius: 26px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(10,16,28,.42);
-      backdrop-filter: blur(14px);
-      box-shadow: 0 18px 70px rgba(0,0,0,.55);
-      padding:10px;
-      display:flex; flex-direction:column; align-items:center; gap:10px;
-      overflow:hidden;
+      width:90px; 
+      flex:0 0 90px;
+      position:sticky; 
+      top:20px; 
+      align-self:flex-start;
+      height:calc(100vh - 40px);
+      border-radius:var(--r);
+      border:1px solid var(--glass-border);
+      background:var(--glass-bg);
+      backdrop-filter:blur(40px);
+      box-shadow:0 25px 50px -12px rgba(0,0,0,.8);
+      padding:12px;
+      display:flex; 
+      flex-direction:column; 
+      gap:12px;
     }
 
     .brandMark{
-      width:58px; height:58px;
-      border-radius: 18px;
-      display:grid; place-items:center;
-      font-family:"Rokiest";
-      letter-spacing:.9px;
-      background:
-        radial-gradient(90px 90px at 30% 25%, rgba(139,92,246,.75), transparent 60%),
-        radial-gradient(90px 90px at 78% 70%, rgba(6,182,212,.55), transparent 65%),
-        rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow: 0 14px 40px rgba(0,0,0,.55);
-      user-select:none;
+      display:flex;
+      align-items:center;
+      gap:1px;
+      padding:6px 8px;
+      font-size:13px;
+      letter-spacing:-0.5px;
+      height:50px;
+      margin-bottom:8px;
+      color:var(--text-primary);
+      text-shadow:0 2px 8px rgba(0,0,0,.3);
+    }
+
+    .logo-k-side{
+      position:relative;
+      margin-right:-3px;
+    }
+
+    .logo-lightning-side{
+      position:absolute;
+      right:-5px;
+      top:50%;
+      transform:translateY(-50%);
+      width:14px;
+      filter:drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
     }
 
     .nav{
       width:100%;
-      display:flex; flex-direction:column; gap:10px;
-      align-items:center;
-      margin-top:2px;
+      display:flex; 
+      flex-direction:column; 
+      gap:10px;
     }
+
     .nav a{
-      width:58px; height:58px;
-      border-radius: 20px;
-      display:grid; place-items:center;
+      width:100%; 
+      height:64px;
+      border-radius:16px;
+      display:grid; 
+      place-items:center;
       text-decoration:none;
-      color: rgba(229,231,235,.88);
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      transition: .18s;
-      position:relative;
-      overflow:hidden;
+      font-size:24px;
+      border:1px solid var(--glass-border);
+      background:rgba(255,255,255,.04);
+      transition:all .3s;
     }
+
     .nav a:hover{
-      transform: translateY(-1px);
-      border-color: rgba(139,92,246,.25);
-      background: rgba(139,92,246,.10);
+      transform:translateY(-3px);
+      border-color:var(--purple);
+      background:rgba(167,139,250,.1);
+      box-shadow:0 12px 32px rgba(167,139,250,.3);
     }
+
     .nav a.active{
-      border-color: rgba(139,92,246,.35);
-      background:
-        radial-gradient(120px 120px at 30% 25%, rgba(139,92,246,.28), transparent 60%),
-        radial-gradient(120px 120px at 80% 70%, rgba(6,182,212,.14), transparent 65%),
-        rgba(255,255,255,.05);
-      box-shadow: 0 18px 60px rgba(139,92,246,.14);
+      border-color:var(--purple);
+      background:rgba(167,139,250,.15);
+      box-shadow:0 0 0 3px rgba(167,139,250,.15);
     }
 
-    /* ===== main ===== */
     .main{
-      flex:1 1 auto;
-      min-width:0;
-      border-radius: 26px;
-      border:1px solid rgba(255,255,255,.10);
-      background: var(--panel);
-      backdrop-filter: blur(14px);
-      box-shadow: var(--shadow);
+      flex:1;
+      border-radius:var(--r);
+      border:1px solid var(--glass-border);
+      background:var(--glass-bg);
+      backdrop-filter:blur(40px);
+      box-shadow:0 25px 50px -12px rgba(0,0,0,.8);
       overflow:hidden;
-      animation: in .45s ease both;
-    }
-    @keyframes in{
-      from{opacity:0; transform: translateY(10px)}
-      to{opacity:1; transform: translateY(0)}
     }
 
-    /* ===== topbar ===== */
     .topbar{
-      padding:16px 16px 10px;
+      padding:24px 28px;
       display:flex;
       justify-content:space-between;
-      gap:14px;
+      gap:20px;
       flex-wrap:wrap;
-      align-items:center;
-      position:relative;
+      border-bottom:1px solid var(--glass-border);
     }
 
-    .titleWrap{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-    }
     .titleWrap h1{
-      margin:0;
-      font-family:"Rokiest";
-      letter-spacing:.9px;
-      font-size:44px;
+      font-size:48px;
       line-height:1;
+      margin-bottom:8px;
+      letter-spacing:1px;
     }
+
     .subtitle{
-      color: var(--muted);
+      color:var(--text-muted);
       font-size:13px;
+      font-weight:700;
     }
 
     .topRight{
       display:flex;
-      gap:10px;
-      align-items:center;
+      gap:12px;
       flex-wrap:wrap;
-      justify-content:flex-end;
     }
 
     .pill{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      padding:10px 12px;
+      padding:10px 16px;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      color:rgba(229,231,235,.82);
-      font-weight:900;
+      border:1px solid var(--glass-border);
+      background:rgba(255,255,255,.06);
       font-size:12px;
-      user-select:none;
+      font-weight:700;
     }
 
-    /* ===== tabs ===== */
     .tabs{
-      padding:0 16px 14px;
+      padding:16px 28px;
       display:flex;
       gap:10px;
-      align-items:center;
       flex-wrap:wrap;
     }
+
     .tab{
-      height:40px;
-      padding:0 12px;
+      height:44px;
+      padding:0 20px;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      color:rgba(229,231,235,.86);
-      font-weight:900;
-      font-size:12px;
+      border:1px solid var(--glass-border);
+      background:rgba(255,255,255,.04);
+      font-size:13px;
+      font-weight:700;
       cursor:pointer;
-      transition:.18s;
-      position:relative;
-      overflow:hidden;
-    }
-    .tab:hover{transform: translateY(-1px); opacity:.95}
-    .tab.active{
-      border-color: rgba(139,92,246,.35);
-      background:
-        radial-gradient(140px 80px at 20% 30%, rgba(139,92,246,.35), transparent 60%),
-        rgba(255,255,255,.05);
-      box-shadow: 0 18px 50px rgba(139,92,246,.12);
+      transition:all .3s;
     }
 
-    /* ===== content ===== */
-    .content{
-      padding: 0 16px 16px;
+    .tab:hover{
+      transform:translateY(-2px);
+      border-color:var(--purple);
     }
+
+    .tab.active{
+      border-color:var(--purple);
+      background:rgba(167,139,250,.15);
+      box-shadow:0 0 0 3px rgba(167,139,250,.15);
+    }
+
+    .content{padding:28px}
 
     .grid{
       display:grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap:12px;
+      grid-template-columns:1.2fr .8fr;
+      gap:20px;
     }
-    @media(max-width:1100px){ .grid{grid-template-columns:1fr} }
+
+    @media(max-width:1100px){.grid{grid-template-columns:1fr}}
 
     .card{
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(2,6,23,.28);
-      border-radius: var(--r);
-      padding:14px;
-      position:relative;
-      overflow:hidden;
+      border:1px solid var(--glass-border);
+      background:rgba(2,6,23,.3);
+      border-radius:20px;
+      padding:24px;
     }
-    .card:before{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        radial-gradient(420px 200px at 10% 0%, rgba(139,92,246,.10), transparent 60%),
-        radial-gradient(420px 200px at 90% 10%, rgba(6,182,212,.08), transparent 62%);
-      pointer-events:none;
-    }
-    .card > *{position:relative}
 
     .cardHead{
       display:flex;
       justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-      align-items:center;
-      margin-bottom:12px;
-    }
-    .cardHead h2{
-      margin:0;
-      font-size:16px;
-      letter-spacing:.2px;
-    }
-    .hint{
-      color: rgba(229,231,235,.55);
-      font-size:12px;
+      gap:16px;
+      margin-bottom:20px;
+      padding-bottom:16px;
+      border-bottom:1px solid var(--glass-border);
     }
 
-    /* ===== big menu tiles ===== */
+    .cardHead h2{font-size:20px}
+    .hint{color:var(--text-muted); font-size:12px; font-weight:700}
+
     .tiles{
       display:grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap:10px;
+      grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));
+      gap:16px;
     }
-    @media(max-width:1100px){ .tiles{grid-template-columns: repeat(3, 1fr);} }
-    @media(max-width:820px){ .tiles{grid-template-columns: repeat(2, 1fr);} }
-    @media(max-width:520px){ .tiles{grid-template-columns: 1fr;} }
+
+    @media(max-width:520px){.tiles{grid-template-columns:1fr}}
 
     .tile{
-      border-radius: 20px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      padding:14px;
-      min-height: 120px;
+      border-radius:20px;
+      border:1px solid var(--glass-border);
+      background:rgba(255,255,255,.04);
+      padding:20px;
+      min-height:140px;
       display:flex;
       flex-direction:column;
       justify-content:space-between;
-      gap:12px;
+      gap:14px;
       text-decoration:none;
-      color: var(--text);
-      position:relative;
-      overflow:hidden;
-      transform: translateZ(0);
-      transition: .18s;
-    }
-    .tile:hover{transform: translateY(-2px); border-color: rgba(139,92,246,.22)}
-    .tile:before{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        radial-gradient(220px 160px at 20% 10%, rgba(139,92,246,.22), transparent 60%),
-        radial-gradient(220px 160px at 90% 60%, rgba(6,182,212,.14), transparent 62%);
-      opacity:.9;
-      pointer-events:none;
-    }
-    .tile:after{
-      content:"";
-      position:absolute;
-      inset:-60px -80px auto auto;
-      width:160px;height:160px;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.14), transparent 55%);
-      transform: rotate(18deg);
-      opacity:.55;
-      pointer-events:none;
+      color:var(--text-primary);
+      transition:all .3s;
     }
 
-    .tileTop{display:flex; justify-content:space-between; align-items:flex-start; gap:10px}
+    .tile:hover{
+      transform:translateY(-4px);
+      border-color:var(--purple);
+      box-shadow:0 16px 40px rgba(167,139,250,.2);
+    }
+
+    .tileTop{display:flex; justify-content:space-between; gap:12px}
+
     .tileIcon{
-      width:42px; height:42px;
+      width:48px; 
+      height:48px;
       border-radius:14px;
-      display:grid; place-items:center;
-      background: rgba(2,6,23,.45);
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow: 0 14px 40px rgba(0,0,0,.35);
-      font-size:18px;
-    }
-    .tileTag{
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      font-size:12px;
-      font-weight:900;
-      color: rgba(229,231,235,.75);
-      white-space:nowrap;
-    }
-    .tileTitle{
-      font-weight:900;
-      font-size:16px;
-      letter-spacing:.2px;
-    }
-    .tileDesc{
-      color: rgba(229,231,235,.62);
-      font-size:12px;
-      line-height:1.3;
+      display:grid; 
+      place-items:center;
+      background:rgba(2,6,23,.6);
+      border:1px solid var(--glass-border);
+      font-size:22px;
     }
 
-    /* ===== stat chips ===== */
+    .tileTag{
+      padding:6px 12px;
+      border-radius:999px;
+      border:1px solid var(--glass-border);
+      background:rgba(255,255,255,.05);
+      font-size:11px;
+      font-weight:700;
+    }
+
+    .tileTitle{font-weight:900; font-size:16px}
+    .tileDesc{color:var(--text-secondary); font-size:12px; font-weight:600}
+
     .stats{
       display:grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap:10px;
+      grid-template-columns:repeat(2, 1fr);
+      gap:14px;
     }
-    @media(max-width:520px){ .stats{grid-template-columns:1fr;} }
+
+    @media(max-width:520px){.stats{grid-template-columns:1fr}}
 
     .stat{
-      border-radius: 18px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(2,6,23,.25);
-      padding:12px;
-      transition:.18s;
+      border-radius:20px;
+      border:1px solid var(--glass-border);
+      background:rgba(2,6,23,.3);
+      padding:16px;
+      transition:all .3s;
     }
-    .stat:hover{transform: translateY(-1px)}
-    .stat .k{font-size:12px; color: rgba(229,231,235,.62); font-weight:900}
-    .stat .v{margin-top:6px; font-size:20px; font-weight:900}
-    .green{color: var(--green)}
-    .purple{color: var(--purple)}
-    .cyan{color: var(--cyan)}
-    .amber{color: var(--amber)}
 
-    /* ===== animations (shimmer) ===== */
-    .shimmer{
-      position:relative;
-      overflow:hidden;
-    }
-    .shimmer:before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background: linear-gradient(120deg, transparent, rgba(255,255,255,.08), transparent);
-      transform: translateX(-120%);
-      animation: shimmer 3.5s ease-in-out infinite;
-      pointer-events:none;
-      opacity:.55;
-    }
-    @keyframes shimmer{
-      0%{transform: translateX(-140%)}
-      45%{transform: translateX(140%)}
-      100%{transform: translateX(140%)}
-    }
+    .stat:hover{transform:translateY(-2px)}
+    .stat .k{font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase}
+    .stat .v{margin-top:8px; font-size:24px; font-weight:900}
+
+    .green{color:var(--green)}
+    .purple{color:var(--purple)}
+    .cyan{color:var(--cyan)}
+    .amber{color:var(--amber)}
 
     .footer{
-      padding:14px 16px 16px;
+      padding:20px 28px;
       display:flex;
       justify-content:space-between;
-      gap:10px;
+      gap:16px;
       flex-wrap:wrap;
-      color:rgba(229,231,235,.55);
+      color:var(--text-muted);
       font-size:12px;
-      border-top:1px solid rgba(255,255,255,.06);
-      background: rgba(2,6,23,.12);
+      font-weight:700;
+      border-top:1px solid var(--glass-border);
     }
 
-    /* ===== hide sections by tab ===== */
     [data-view]{display:none}
     [data-view].show{display:block}
 
+    @media(max-width:768px){
+      .shell{flex-direction:column; gap:16px; padding:16px}
+      .side{width:100%; height:auto; flex-direction:row; position:static; overflow-x:auto}
+      .nav{flex-direction:row}
+      .titleWrap h1{font-size:36px}
+    }
   </style>
 </head>
 
 <body>
-  <div class="noise"></div>
-
   <div class="shell">
     <aside class="side">
-      <div class="brandMark">OFF</div>
+      <div class="brandMark">
+        <span>NOBREA</span>
+        <span class="logo-k-side">
+          K
+          <svg class="logo-lightning-side" viewBox="0 0 100 180" fill="none">
+            <path d="M50 0L14 90H40L25 180L75 63H50L65 18L50 0Z" fill="#ffd700"/>
+          </svg>
+        </span>
+      </div>
 
       <nav class="nav">
-        <a class="active" href="index.html" title="Home">🏠</a>
-        <a href="vip.html" title="Lista VIP">🎟️</a>
-        <a href="vip-admin.html" title="VIP Admin">🧠</a>
-        <a href="pix.html" title="PIX">💸</a>
-        <a href="pix-admin.html" title="PIX Admin">🛡️</a>
-        <a href="pix-cadastro.html" title="Cadastro PIX">➕</a>
-        <a href="ajustar-cronograma.html" title="Cronograma">🗓️</a>
-        <a href="diaria.html" title="Diária">📒</a>
-        <a href="van.html" title="Van">🚐</a>
-        <a class="appBtn" href="agenda.html">
-  <span class="i">📅</span>
-  <span class="t">Agenda</span>
-</a>
+        <a class="active" href="index.html">🏠</a>
+        <a href="vip.html">🎟️</a>
+        <a href="vip-admin.html">🧠</a>
+        <a href="pix.html">💸</a>
+        <a href="pix-admin.html">🛡️</a>
+        <a href="pix-cadastro.html">➕</a>
+        <a href="ajustar-cronograma.html">🗓️</a>
+        <a href="diaria.html">📒</a>
+        <a href="van.html">🚐</a>
+        <a href="agenda-fixed.html">📅</a>
       </nav>
     </aside>
 
     <main class="main">
       <div class="topbar">
         <div class="titleWrap">
-          <h1>Dashboard</h1>
-          <div class="subtitle">OFF Company • Central de Controle</div>
+          <h1>DASHBOARD</h1>
+          <div class="subtitle">Nobreak Company • Central de Controle Premium</div>
         </div>
-
         <div class="topRight">
           <div class="pill">⚙️ Sistema</div>
           <div class="pill">🟢 Online</div>
@@ -453,22 +402,19 @@
       </div>
 
       <div class="tabs">
-        <button class="tab active" data-tab="overview">Overview</button>
-        <button class="tab" data-tab="user">Área do Usuário</button>
-        <button class="tab" data-tab="admin">Área Admin</button>
+        <button class="tab active" data-tab="overview">OVERVIEW</button>
+        <button class="tab" data-tab="user">ÁREA DO USUÁRIO</button>
+        <button class="tab" data-tab="admin">ÁREA ADMIN</button>
       </div>
 
       <div class="content">
         <div class="grid">
-
-          <!-- LEFT -->
-          <section class="card shimmer">
+          <section class="card">
             <div class="cardHead">
-              <h2>Menu Inicial</h2>
+              <h2>MENU INICIAL</h2>
               <div class="hint">Acesso rápido por área</div>
             </div>
 
-            <!-- OVERVIEW -->
             <div data-view="overview" class="show">
               <div class="tiles">
                 <a class="tile" href="vip.html">
@@ -478,7 +424,7 @@
                   </div>
                   <div>
                     <div class="tileTitle">Lista VIP</div>
-                    <div class="tileDesc">Entrar com código e reservar slot.</div>
+                    <div class="tileDesc">Entrar com código e reservar slot</div>
                   </div>
                 </a>
 
@@ -489,7 +435,7 @@
                   </div>
                   <div>
                     <div class="tileTitle">PIX</div>
-                    <div class="tileDesc">Acesso à área PIX e informações.</div>
+                    <div class="tileDesc">Acesso à área PIX</div>
                   </div>
                 </a>
 
@@ -500,7 +446,7 @@
                   </div>
                   <div>
                     <div class="tileTitle">Diária</div>
-                    <div class="tileDesc">Consulta e controle de diária.</div>
+                    <div class="tileDesc">Consulta e controle</div>
                   </div>
                 </a>
 
@@ -511,7 +457,18 @@
                   </div>
                   <div>
                     <div class="tileTitle">Van</div>
-                    <div class="tileDesc">Acesso ao módulo da van.</div>
+                    <div class="tileDesc">Módulo da van</div>
+                  </div>
+                </a>
+
+                <a class="tile" href="agenda-fixed.html">
+                  <div class="tileTop">
+                    <div class="tileIcon">📅</div>
+                    <div class="tileTag">Destaque</div>
+                  </div>
+                  <div>
+                    <div class="tileTitle">Agenda</div>
+                    <div class="tileDesc">Calendário premium</div>
                   </div>
                 </a>
 
@@ -522,7 +479,7 @@
                   </div>
                   <div>
                     <div class="tileTitle">VIP Admin</div>
-                    <div class="tileDesc">Pool, códigos, slots e confirmações.</div>
+                    <div class="tileDesc">Pool e confirmações</div>
                   </div>
                 </a>
 
@@ -533,7 +490,7 @@
                   </div>
                   <div>
                     <div class="tileTitle">PIX Admin</div>
-                    <div class="tileDesc">Gestão de favorecidos e dados.</div>
+                    <div class="tileDesc">Gestão de dados</div>
                   </div>
                 </a>
 
@@ -544,7 +501,7 @@
                   </div>
                   <div>
                     <div class="tileTitle">Cadastro PIX</div>
-                    <div class="tileDesc">Cadastrar PIX com favorecido.</div>
+                    <div class="tileDesc">Cadastrar favorecido</div>
                   </div>
                 </a>
 
@@ -554,122 +511,114 @@
                     <div class="tileTag">Admin</div>
                   </div>
                   <div>
-                    <div class="tileTitle">Ajustar Cronograma</div>
-                    <div class="tileDesc">Atualizar topo e gerar PDF.</div>
+                    <div class="tileTitle">Cronograma</div>
+                    <div class="tileDesc">Gerar PDF</div>
                   </div>
                 </a>
               </div>
             </div>
 
-            <!-- USER -->
             <div data-view="user">
               <div class="tiles">
                 <a class="tile" href="vip.html">
-                  <div class="tileTop"><div class="tileIcon">🎟️</div><div class="tileTag">VIP</div></div>
-                  <div><div class="tileTitle">Lista VIP</div><div class="tileDesc">Reservas via código.</div></div>
+                  <div class="tileTop"><div class="tileIcon">🎟️</div></div>
+                  <div><div class="tileTitle">Lista VIP</div></div>
                 </a>
                 <a class="tile" href="pix.html">
-                  <div class="tileTop"><div class="tileIcon">💸</div><div class="tileTag">PIX</div></div>
-                  <div><div class="tileTitle">PIX</div><div class="tileDesc">Área de pagamentos.</div></div>
+                  <div class="tileTop"><div class="tileIcon">💸</div></div>
+                  <div><div class="tileTitle">PIX</div></div>
                 </a>
                 <a class="tile" href="diaria.html">
-                  <div class="tileTop"><div class="tileIcon">📒</div><div class="tileTag">Diária</div></div>
-                  <div><div class="tileTitle">Diária</div><div class="tileDesc">Controle e consulta.</div></div>
+                  <div class="tileTop"><div class="tileIcon">📒</div></div>
+                  <div><div class="tileTitle">Diária</div></div>
                 </a>
                 <a class="tile" href="van.html">
-                  <div class="tileTop"><div class="tileIcon">🚐</div><div class="tileTag">Van</div></div>
-                  <div><div class="tileTitle">Van</div><div class="tileDesc">Módulo da van.</div></div>
+                  <div class="tileTop"><div class="tileIcon">🚐</div></div>
+                  <div><div class="tileTitle">Van</div></div>
+                </a>
+                <a class="tile" href="agenda-fixed.html">
+                  <div class="tileTop"><div class="tileIcon">📅</div></div>
+                  <div><div class="tileTitle">Agenda</div></div>
                 </a>
               </div>
             </div>
 
-            <!-- ADMIN -->
             <div data-view="admin">
               <div class="tiles">
                 <a class="tile" href="vip-admin.html">
-                  <div class="tileTop"><div class="tileIcon">🧠</div><div class="tileTag">VIP</div></div>
-                  <div><div class="tileTitle">VIP Admin</div><div class="tileDesc">Pool, códigos e slots.</div></div>
+                  <div class="tileTop"><div class="tileIcon">🧠</div></div>
+                  <div><div class="tileTitle">VIP Admin</div></div>
                 </a>
                 <a class="tile" href="pix-admin.html">
-                  <div class="tileTop"><div class="tileIcon">🛡️</div><div class="tileTag">PIX</div></div>
-                  <div><div class="tileTitle">PIX Admin</div><div class="tileDesc">Gestão de favorecidos.</div></div>
+                  <div class="tileTop"><div class="tileIcon">🛡️</div></div>
+                  <div><div class="tileTitle">PIX Admin</div></div>
                 </a>
                 <a class="tile" href="pix-cadastro.html">
-                  <div class="tileTop"><div class="tileIcon">➕</div><div class="tileTag">PIX</div></div>
-                  <div><div class="tileTitle">Cadastro PIX</div><div class="tileDesc">Cadastro de chaves.</div></div>
+                  <div class="tileTop"><div class="tileIcon">➕</div></div>
+                  <div><div class="tileTitle">Cadastro PIX</div></div>
                 </a>
                 <a class="tile" href="ajustar-cronograma.html">
-                  <div class="tileTop"><div class="tileIcon">🗓️</div><div class="tileTag">PDF</div></div>
-                  <div><div class="tileTitle">Ajustar Cronograma</div><div class="tileDesc">Editar e gerar arquivo.</div></div>
+                  <div class="tileTop"><div class="tileIcon">🗓️</div></div>
+                  <div><div class="tileTitle">Cronograma</div></div>
                 </a>
               </div>
             </div>
-
           </section>
 
-          <!-- RIGHT -->
           <section class="card">
             <div class="cardHead">
-              <h2>Status do Sistema</h2>
-              <div class="hint">Resumo rápido</div>
+              <h2>STATUS</h2>
+              <div class="hint">Resumo</div>
             </div>
 
             <div class="stats">
               <div class="stat">
                 <div class="k">Sistema</div>
-                <div class="v green">Online</div>
+                <div class="v green">ONLINE</div>
               </div>
               <div class="stat">
                 <div class="k">VIP</div>
-                <div class="v purple">Ativo</div>
+                <div class="v purple">ATIVO</div>
               </div>
               <div class="stat">
                 <div class="k">PIX</div>
-                <div class="v cyan">Disponível</div>
+                <div class="v cyan">OK</div>
               </div>
               <div class="stat">
                 <div class="k">Versão</div>
-                <div class="v amber">OFF v1.0</div>
+                <div class="v amber">v2.0</div>
               </div>
             </div>
 
-            <div style="margin-top:12px; border-top:1px solid rgba(255,255,255,.06); padding-top:12px;">
-              <div class="hint" style="margin-bottom:8px;">Acesso rápido</div>
+            <div style="margin-top:20px; border-top:1px solid var(--glass-border); padding-top:20px;">
+              <div class="hint" style="margin-bottom:12px;">ACESSO RÁPIDO</div>
               <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                <span class="pill">🎟️ VIP</span>
-                <span class="pill">💸 PIX</span>
-                <span class="pill">🧠 Admin</span>
+                <a href="vip.html" class="pill" style="text-decoration:none; color:inherit;">🎟️ VIP</a>
+                <a href="pix.html" class="pill" style="text-decoration:none; color:inherit;">💸 PIX</a>
+                <a href="agenda-fixed.html" class="pill" style="text-decoration:none; color:inherit;">📅 Agenda</a>
               </div>
             </div>
           </section>
-
         </div>
       </div>
 
       <div class="footer">
-        <div>© OFF Company</div>
+        <div>© Nobreak Company</div>
         <div>Desenvolvido por Lucas Santos</div>
       </div>
     </main>
   </div>
 
   <script>
-    // Tabs controller (sem dependências)
     const tabs = Array.from(document.querySelectorAll(".tab"));
     const views = Array.from(document.querySelectorAll("[data-view]"));
 
     function setTab(name){
       tabs.forEach(t => t.classList.toggle("active", t.dataset.tab === name));
       views.forEach(v => v.classList.toggle("show", v.getAttribute("data-view") === name));
-      // fallback: overview sempre que não achar
-      if(!views.some(v => v.classList.contains("show"))){
-        views.forEach(v => v.classList.toggle("show", v.getAttribute("data-view") === "overview"));
-      }
     }
 
     tabs.forEach(t => t.addEventListener("click", ()=> setTab(t.dataset.tab)));
-
-    // default
     setTab("overview");
   </script>
 </body>
