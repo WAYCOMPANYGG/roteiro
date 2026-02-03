@@ -578,6 +578,7 @@
     overflow-y:auto;
     overflow-x:hidden;
     min-height:180px;
+    border-radius:8px;
     /* Hide scrollbar */
     scrollbar-width:none; /* Firefox */
     -ms-overflow-style:none; /* IE and Edge */
@@ -595,39 +596,40 @@
     background:radial-gradient(circle at center, rgba(167,139,250,.08), transparent 70%);
     opacity:0;
     transition:opacity .3s;
+    border-radius:8px;
+    pointer-events:none;
   }
 
-  /* Cells with events - BRIGHT COLORS */
+  /* Cells with events - subtle highlight */
   .cell.hasEvents{
-    background:linear-gradient(135deg, rgba(167,139,250,.25), rgba(34,211,238,.2));
-    border:2px solid rgba(167,139,250,.4);
-    box-shadow:inset 0 0 30px rgba(167,139,250,.15), 
-               0 0 20px rgba(167,139,250,.2);
+    background:rgba(2,6,20,.4);
+    border:1px solid rgba(167,139,250,.2);
   }
 
   .cell.hasEvents::before{
-    background:radial-gradient(circle at center, rgba(167,139,250,.2), rgba(34,211,238,.15), transparent 70%);
-    opacity:1;
+    background:radial-gradient(circle at top, 
+      rgba(167,139,250,.1) 0%, 
+      transparent 70%);
+    opacity:.5;
+  }
+
+  .cell.hasEvents .cellHeader{
+    border-bottom-color:rgba(167,139,250,.2);
   }
 
   .cell.hasEvents .dayNum{
     color:var(--purple-bright);
-    text-shadow:0 0 10px rgba(167,139,250,.5);
+    font-weight:800;
   }
 
   /* Hover effect for cells with events */
   .cell.hasEvents:hover{
-    background:linear-gradient(135deg, rgba(167,139,250,.35), rgba(34,211,238,.3));
-    border-color:var(--purple-bright);
-    box-shadow:inset 0 0 40px rgba(167,139,250,.25), 
-               0 0 30px rgba(167,139,250,.4),
-               0 8px 32px rgba(167,139,250,.3);
-    transform:scale(1.02);
+    background:rgba(2,6,20,.5);
+    border-color:rgba(167,139,250,.3);
   }
 
   .cell.hasEvents:hover::before{
-    opacity:1;
-    background:radial-gradient(circle at center, rgba(167,139,250,.3), rgba(34,211,238,.2), transparent 60%);
+    opacity:.7;
   }
 
   .cell:hover{
@@ -685,18 +687,24 @@
     gap:6px;
   }
 
-  /* Premium event cards */
+  /* Premium event cards - BRIGHT COLORS */
   .event{
     position:relative;
     border-radius:var(--radius-sm);
-    border:1px solid var(--glass-border);
-    background:rgba(15,23,42,.7);
+    border:2px solid;
+    border-color:var(--accent, var(--purple));
+    background:linear-gradient(135deg, 
+      rgba(167,139,250,.35), 
+      rgba(34,211,238,.3));
     backdrop-filter:blur(20px);
-    padding:8px 10px;
+    padding:10px 12px;
     cursor:pointer;
     transition:all .3s cubic-bezier(.4,0,.2,1);
     overflow:hidden;
     font-size:12px;
+    box-shadow:0 0 20px var(--accent, rgba(167,139,250,.4)),
+               inset 0 1px 0 rgba(255,255,255,.2),
+               0 4px 12px rgba(0,0,0,.3);
   }
 
   .event::before{
@@ -705,24 +713,34 @@
     left:0;
     top:0;
     bottom:0;
-    width:4px;
+    width:5px;
     background:var(--accent, var(--purple));
-    box-shadow:0 0 12px var(--accent, var(--purple));
+    box-shadow:0 0 20px var(--accent, var(--purple)),
+               0 0 40px var(--accent, var(--purple));
   }
 
   .event::after{
     content:'';
     position:absolute;
     inset:0;
-    background:linear-gradient(135deg, rgba(255,255,255,.05), transparent);
-    opacity:0;
+    background:linear-gradient(135deg, 
+      rgba(255,255,255,.15), 
+      transparent 60%,
+      rgba(34,211,238,.1));
+    opacity:.7;
     transition:opacity .3s;
   }
 
   .event:hover{
-    transform:translateY(-3px) scale(1.02);
-    border-color:var(--glass-highlight);
-    box-shadow:0 12px 32px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.1);
+    transform:translateY(-4px) scale(1.03);
+    border-color:var(--accent, var(--purple-bright));
+    box-shadow:0 0 30px var(--accent, rgba(167,139,250,.6)),
+               0 0 50px var(--accent, rgba(167,139,250,.4)),
+               inset 0 2px 0 rgba(255,255,255,.3),
+               0 8px 32px rgba(0,0,0,.5);
+    background:linear-gradient(135deg, 
+      rgba(167,139,250,.45), 
+      rgba(34,211,238,.4));
   }
 
   .event:hover::after{
@@ -730,7 +748,7 @@
   }
 
   .event:active{
-    transform:translateY(-1px) scale(1.01);
+    transform:translateY(-2px) scale(1.01);
   }
 
   .eventTop{
