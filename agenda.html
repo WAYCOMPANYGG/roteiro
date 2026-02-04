@@ -179,6 +179,31 @@
     font-size:14px;
   }
 
+  .search-clear{
+    border:0;
+    background:transparent;
+    color:var(--text-dim);
+    cursor:pointer;
+    display:grid;
+    place-items:center;
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    transition:all .2s;
+    opacity:0;
+    pointer-events:none;
+  }
+
+  .search.has-value .search-clear{
+    opacity:1;
+    pointer-events:auto;
+  }
+
+  .search-clear:hover{
+    background:rgba(255,255,255,.08);
+    color:var(--text);
+  }
+
   .search input::placeholder{
     color:var(--text-dim);
   }
@@ -199,6 +224,14 @@
     align-items:center;
     gap:8px;
     white-space:nowrap;
+  }
+
+  .btn:focus-visible,
+  .nav-btn:focus-visible,
+  .chip:focus-visible,
+  .day:focus-visible{
+    outline:2px solid var(--primary);
+    outline-offset:2px;
   }
 
   .btn:hover{
@@ -370,6 +403,18 @@
     animation:slideUp .6s ease .2s both;
   }
 
+  .empty-state{
+    padding:24px;
+    text-align:center;
+    color:var(--text-dim);
+    font-weight:600;
+    display:none;
+  }
+
+  .empty-state.show{
+    display:block;
+  }
+
   .weekdays{
     display:grid;
     grid-template-columns:repeat(7, 1fr);
@@ -404,6 +449,18 @@
     scrollbar-width:none;
     -ms-overflow-style:none;
     position:relative;
+  }
+
+  .day.has-events::before{
+    content:'';
+    position:absolute;
+    left:12px;
+    top:12px;
+    width:6px;
+    height:6px;
+    border-radius:999px;
+    background:var(--accent-light);
+    box-shadow:0 0 6px rgba(34,211,238,.8);
   }
 
   .day::-webkit-scrollbar{
@@ -617,6 +674,11 @@
     border-radius:4px;
     background:rgba(0,0,0,.15);
     backdrop-filter:blur(10px);
+  }
+
+  .event-status{
+    background:rgba(255,255,255,.18);
+    color:#fff;
   }
 
   /* Modal */
@@ -1040,6 +1102,7 @@
           <path d="M16 16L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         </svg>
         <input id="searchInput" placeholder="Buscar evento, local, contratante..." />
+        <button class="search-clear" id="clearSearch" aria-label="Limpar busca">✕</button>
       </div>
 
       <button class="btn" id="btnToday">Hoje</button>
@@ -1062,9 +1125,9 @@
 
     <div class="toolbar-center">
       <div class="month-nav">
-        <div class="nav-btn" id="prevMonth">←</div>
+        <div class="nav-btn" id="prevMonth" role="button" tabindex="0" aria-label="Mês anterior">←</div>
         <div class="month-title" id="monthLabel">—</div>
-        <div class="nav-btn" id="nextMonth">→</div>
+        <div class="nav-btn" id="nextMonth" role="button" tabindex="0" aria-label="Próximo mês">→</div>
       </div>
     </div>
 
@@ -1079,6 +1142,7 @@
       <div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div><div>Dom</div>
     </div>
     <div class="days" id="daysGrid"></div>
+    <div class="empty-state" id="emptyState">Nenhum evento para este mês com os filtros atuais.</div>
   </div>
 </div>
 
@@ -1090,7 +1154,7 @@
         <div class="modal-title" id="modalTitle">Novo Evento</div>
         <div class="modal-subtitle" id="modalSubtitle">—</div>
       </div>
-      <div class="close-btn" id="closeModal">✕</div>
+      <div class="close-btn" id="closeModal" role="button" tabindex="0" aria-label="Fechar modal">✕</div>
     </div>
 
     <div class="modal-body">
@@ -1478,40 +1542,80 @@
     // Create status chips
     const statusChips = document.getElementById('statusChips');
     statusChips.innerHTML = STATUSES.map(s => `
-      <div class="chip" data-status="${s.id}">
+      <div class="chip" data-status="${s.id}" role="button" tabindex="0" aria-pressed="false">
         <span class="dot" style="background:${s.color}"></span>
         <span>${s.label}</span>
       </div>
     `).join('');
 
     statusChips.querySelectorAll('.chip').forEach(chip => {
-      chip.addEventListener('click', ()=> {
+      const toggleChip = () => {
         const status = chip.getAttribute('data-status');
         if(state.statusFilter.has(status)){
           state.statusFilter.delete(status);
           chip.classList.remove('active');
+          chip.setAttribute('aria-pressed', 'false');
         } else {
           state.statusFilter.add(status);
           chip.classList.add('active');
+          chip.setAttribute('aria-pressed', 'true');
         }
         render();
+      };
+      chip.addEventListener('click', toggleChip);
+      chip.addEventListener('keydown', (event) => {
+        if(event.key === 'Enter' || event.key === ' '){
+          event.preventDefault();
+          toggleChip();
+        }
       });
     });
 
     // Event listeners
-    document.getElementById('prevMonth').addEventListener('click', ()=> shiftMonth(-1));
-    document.getElementById('nextMonth').addEventListener('click', ()=> shiftMonth(1));
+    const prevBtn = document.getElementById('prevMonth');
+    const nextBtn = document.getElementById('nextMonth');
+    const closeBtn = document.getElementById('closeModal');
+
+    prevBtn.addEventListener('click', ()=> shiftMonth(-1));
+    nextBtn.addEventListener('click', ()=> shiftMonth(1));
     document.getElementById('btnToday').addEventListener('click', goToday);
     document.getElementById('btnNew').addEventListener('click', ()=> openModal());
-    document.getElementById('closeModal').addEventListener('click', closeModal);
+    closeBtn.addEventListener('click', closeModal);
+
+    [prevBtn, nextBtn, closeBtn].forEach((btn) => {
+      btn.addEventListener('keydown', (event) => {
+        if(event.key === 'Enter' || event.key === ' '){
+          event.preventDefault();
+          btn.click();
+        }
+      });
+    });
     document.getElementById('modalOverlay').addEventListener('click', (e)=> {
       if(e.target.id === 'modalOverlay') closeModal();
     });
 
-    document.getElementById('searchInput').addEventListener('input', (e)=> {
+    const searchInput = document.getElementById('searchInput');
+    const clearSearch = document.getElementById('clearSearch');
+    const searchWrap = document.querySelector('.search');
+
+    const updateSearchState = () => {
+      const hasValue = searchInput.value.trim().length > 0;
+      searchWrap.classList.toggle('has-value', hasValue);
+    };
+
+    searchInput.addEventListener('input', (e)=> {
       state.query = e.target.value.toLowerCase();
+      updateSearchState();
       render();
     });
+    clearSearch.addEventListener('click', () => {
+      searchInput.value = '';
+      state.query = '';
+      updateSearchState();
+      searchInput.focus();
+      render();
+    });
+    updateSearchState();
 
     document.getElementById('fContract').addEventListener('click', function(){
       this.classList.toggle('on');
@@ -1540,6 +1644,7 @@
     });
 
     document.getElementById('countLabel').textContent = `${monthEvents.length} eventos`;
+    document.getElementById('emptyState').classList.toggle('show', monthEvents.length === 0);
 
     // Generate calendar
     const firstDay = new Date(y, m, 1);
@@ -1569,12 +1674,13 @@
       // Detect weekend (Sunday=0, Saturday=6)
       const dayOfWeek = cell.date.getDay();
       if(dayOfWeek === 0 || dayOfWeek === 6) classes.push('weekend');
+      if(cell.dayEvents.length) classes.push('has-events');
 
       const todayTag = cell.isToday ? '<span class="today-tag">Hoje</span>' : '';
       const eventsHtml = cell.dayEvents.map(e => renderEvent(e)).join('');
 
       return `
-        <div class="${classes.join(' ')}" data-date="${cell.dateStr}">
+        <div class="${classes.join(' ')}" data-date="${cell.dateStr}" tabindex="0">
           <div class="day-header">
             <div class="day-number">${cell.date.getDate()}</div>
             ${todayTag}
@@ -1594,9 +1700,16 @@
     });
 
     grid.querySelectorAll('.day').forEach(el => {
-      el.addEventListener('click', ()=> {
+      const openDay = () => {
         const date = el.getAttribute('data-date');
         openModal(null, date);
+      };
+      el.addEventListener('click', openDay);
+      el.addEventListener('keydown', (event) => {
+        if(event.key === 'Enter' || event.key === ' '){
+          event.preventDefault();
+          openDay();
+        }
       });
     });
   }
@@ -1605,11 +1718,13 @@
     const artist = ARTISTS.find(a => a.id === event.artist) || ARTISTS[0];
     const time = event.timeStart || '';
     const location = [event.venue, event.city].filter(x=>x).join(' • ');
+    const status = STATUSES.find(s => s.id === event.status);
 
     return `
       <div class="event" style="background:${artist.color}" data-id="${event.id}">
         <div class="event-title">${escapeHtml(event.title || 'Evento')}</div>
         <div class="event-meta">
+          ${status ? `<span class="event-status">• ${status.label}</span>` : ''}
           ${time ? `<span>⏱ ${time}</span>` : ''}
           ${location ? `<span>📍 ${escapeHtml(location)}</span>` : ''}
         </div>
