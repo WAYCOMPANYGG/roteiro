@@ -28,10 +28,6 @@
       --warning:#f59e0b;
       --danger:#ef4444;
       --slate:#64748b;
-
-      /* FALTAVAM (eram usados no CSS) */
-      --hover:rgba(255,255,255,.04);
-      --surface-hover:#171c2a;
     }
 
     *{box-sizing:border-box; margin:0; padding:0}
@@ -76,7 +72,10 @@
       pointer-events:none;
     }
 
-    .header-content{ position:relative; z-index:1; }
+    .header-content{
+      position:relative;
+      z-index:1;
+    }
 
     .header-title{
       font-size:42px;
@@ -206,7 +205,9 @@
       gap:10px;
     }
 
-    .section-icon{ font-size:24px; }
+    .section-icon{
+      font-size:24px;
+    }
 
     .toolbar{
       display:flex;
@@ -244,7 +245,9 @@
       color:#fff;
     }
 
-    .btn-primary:hover{ box-shadow:0 12px 32px rgba(167,139,250,0.5); }
+    .btn-primary:hover{
+      box-shadow:0 12px 32px rgba(167,139,250,0.5);
+    }
 
     .btn-success{
       background:var(--success);
@@ -258,9 +261,11 @@
       color:#fff;
     }
 
-    .btn-danger:hover{ opacity:0.9; }
+    .btn-danger:hover{
+      opacity:0.9;
+    }
 
-    /* WHATSAPP BUTTON WITH ANIMATION */
+    /* WHATSAPP BUTTON */
     .btn-whatsapp{
       background:#25d366 !important;
       border:none !important;
@@ -439,7 +444,9 @@
       font-weight:900;
     }
 
-    .seat:hover .seat-delete{ display:flex; }
+    .seat:hover .seat-delete{
+      display:flex;
+    }
 
     .seat.status-livre{
       background:linear-gradient(135deg, rgba(37,99,235,1), rgba(29,78,216,0.8));
@@ -469,7 +476,10 @@
       box-shadow:0 8px 22px rgba(239,68,68,0.5);
     }
 
-    .seat.locked{ opacity:0.7; cursor:not-allowed; }
+    .seat.locked{
+      opacity:0.7;
+      cursor:not-allowed;
+    }
 
     .seat.locked::after{
       content:"🔒";
@@ -532,11 +542,15 @@
       padding-right:6px;
     }
 
-    .passenger-list::-webkit-scrollbar{ width:8px; }
+    .passenger-list::-webkit-scrollbar{
+      width:8px;
+    }
+
     .passenger-list::-webkit-scrollbar-track{
       background:var(--elevated);
       border-radius:10px;
     }
+
     .passenger-list::-webkit-scrollbar-thumb{
       background:var(--primary);
       border-radius:10px;
@@ -559,7 +573,6 @@
       border-color:var(--primary);
       transform:translateY(-2px);
       box-shadow:0 8px 20px rgba(167,139,250,0.3);
-      background:var(--surface-hover);
     }
 
     .passenger-num{
@@ -583,7 +596,9 @@
       padding:6px 0;
     }
 
-    .passenger-input::placeholder{ color:var(--text-muted); }
+    .passenger-input::placeholder{
+      color:var(--text-muted);
+    }
 
     .passenger-select{
       background:var(--surface);
@@ -643,29 +658,7 @@
       opacity:1;
     }
 
-    /* RESPONSIVE */
-    @media(max-width:1200px){
-      .main-layout{ grid-template-columns:1fr; }
-      .sidebar{ position:static; }
-      .passenger-list{ max-height:400px; }
-    }
-
-    @media(max-width:768px){
-      body{ padding:12px; }
-      .header{ padding:20px; }
-      .header-title{ font-size:32px; }
-      .stats-bar{ grid-template-columns:1fr; gap:12px; }
-      .toolbar{ width:100%; }
-      .btn{ flex:1; min-width:0; padding:0 12px; }
-      .canvas{ min-height:400px; }
-      .passenger-card{
-        grid-template-columns:48px 1fr 110px;
-        gap:10px;
-        padding:12px;
-      }
-    }
-
-    /* MODAIS */
+    /* MODAL */
     .modal-overlay{
       position:fixed;
       inset:0;
@@ -690,8 +683,14 @@
     }
 
     @keyframes modalIn{
-      from{ transform:scale(0.9); opacity:0; }
-      to{ transform:scale(1); opacity:1; }
+      from{
+        transform:scale(0.9);
+        opacity:0;
+      }
+      to{
+        transform:scale(1);
+        opacity:1;
+      }
     }
 
     .modal-header{
@@ -730,7 +729,9 @@
       color:#fff;
     }
 
-    .modal-content{ padding:28px 32px; }
+    .modal-content{
+      padding:28px 32px;
+    }
 
     .export-options{
       display:grid;
@@ -751,13 +752,15 @@
     }
 
     .export-btn:hover{
-      background:var(--hover);
       border-color:var(--primary);
       transform:translateY(-2px);
       box-shadow:0 8px 24px rgba(167,139,250,0.3);
     }
 
-    .export-icon{ font-size:36px; flex-shrink:0; }
+    .export-icon{
+      font-size:36px;
+      flex-shrink:0;
+    }
 
     .export-info strong{
       display:block;
@@ -787,11 +790,12 @@
     }
 
     .preset-item:hover{
-      background:var(--hover);
       border-color:var(--primary);
     }
 
-    .preset-info{ flex:1; }
+    .preset-info{
+      flex:1;
+    }
 
     .preset-info strong{
       display:block;
@@ -828,7 +832,9 @@
       justify-content:center;
     }
 
-    .preset-btn:hover{ transform:translateY(-2px); }
+    .preset-btn:hover{
+      transform:translateY(-2px);
+    }
 
     .preset-btn.load{
       background:var(--primary);
@@ -836,7 +842,9 @@
       color:#fff;
     }
 
-    .preset-btn.load:hover{ background:var(--primary-light); }
+    .preset-btn.load:hover{
+      background:var(--primary-light);
+    }
 
     .preset-btn.delete{
       background:var(--danger);
@@ -844,12 +852,78 @@
       color:#fff;
     }
 
+    /* RESPONSIVE */
+    @media(max-width:1200px){
+      .main-layout{
+        grid-template-columns:1fr;
+      }
+
+      .sidebar{
+        position:static;
+      }
+
+      .passenger-list{
+        max-height:400px;
+      }
+    }
+
     @media(max-width:768px){
-      .modal{ max-width:calc(100vw - 24px); }
-      .modal-header{ padding:20px; }
-      .modal-content{ padding:20px; }
-      .export-btn{ padding:16px; }
-      .export-icon{ font-size:28px; }
+      body{
+        padding:12px;
+      }
+
+      .header{
+        padding:20px;
+      }
+
+      .header-title{
+        font-size:32px;
+      }
+
+      .stats-bar{
+        grid-template-columns:1fr;
+        gap:12px;
+      }
+
+      .toolbar{
+        width:100%;
+      }
+
+      .btn{
+        flex:1;
+        min-width:0;
+        padding:0 12px;
+      }
+
+      .canvas{
+        min-height:400px;
+      }
+
+      .passenger-card{
+        grid-template-columns:48px 1fr 110px;
+        gap:10px;
+        padding:12px;
+      }
+
+      .modal{
+        max-width:calc(100vw - 24px);
+      }
+
+      .modal-header{
+        padding:20px;
+      }
+
+      .modal-content{
+        padding:20px;
+      }
+
+      .export-btn{
+        padding:16px;
+      }
+
+      .export-icon{
+        font-size:28px;
+      }
     }
   </style>
 </head>
@@ -984,8 +1058,8 @@
         <button class="export-btn" onclick="exportAsPDF()">
           <span class="export-icon">📄</span>
           <div class="export-info">
-            <strong>PDF Completo</strong>
-            <small>Layout visual + lista de passageiros</small>
+            <strong>PDF Completo (Horizontal)</strong>
+            <small>Layout visual + lista de passageiros (Imagem: 1920x1080px)</small>
           </div>
         </button>
         <button class="export-btn" onclick="exportAsImage()">
@@ -1025,15 +1099,15 @@
       <p style="margin-bottom:20px; color:var(--text-dim)">
         Salve layouts como presets para reutilizar rapidamente:
       </p>
-
+      
       <div style="margin-bottom:24px">
         <label style="display:block; font-size:13px; font-weight:700; color:var(--text-dim); margin-bottom:8px">
           SALVAR PRESET ATUAL
         </label>
         <div style="display:flex; gap:10px">
-          <input
-            type="text"
-            id="presetName"
+          <input 
+            type="text" 
+            id="presetName" 
             placeholder="Nome do preset (ex: Van 15 lugares)"
             style="flex:1; background:var(--elevated); border:1px solid var(--border); border-radius:8px; padding:12px; color:var(--text); font-size:13px; font-weight:600"
           />
@@ -1077,23 +1151,23 @@ function toast(msg, icon = '✅'){
 
 function toggleSnap(){
   snap = !snap;
-  document.getElementById('btnSnap').innerHTML =
+  document.getElementById('btnSnap').innerHTML = 
     `<span>🧲</span> Snap: ${snap ? 'ON' : 'OFF'}`;
   toast(snap ? 'Snap ativado' : 'Snap desativado', '🧲');
 }
 
 function toggleVan(){
   const img = document.getElementById('vanBg');
-  vanOpacity = (vanOpacity === 0.3) ? 0.15 : (vanOpacity === 0.15) ? 0.5 : (vanOpacity === 0.5) ? 0.7 : 0.3;
+  vanOpacity = vanOpacity === 0.3 ? 0.15 : vanOpacity === 0.15 ? 0.5 : 0.7;
   img.style.opacity = vanOpacity;
-  document.getElementById('btnVan').innerHTML =
+  document.getElementById('btnVan').innerHTML = 
     `<span>🖼️</span> Van: ${Math.round(vanOpacity * 100)}%`;
   toast(`Opacidade: ${Math.round(vanOpacity * 100)}%`, '🖼️');
 }
 
 function toggleLock(){
   locked = !locked;
-  document.getElementById('btnLock').innerHTML =
+  document.getElementById('btnLock').innerHTML = 
     locked ? '<span>🔒</span> Travado' : '<span>🔓</span> Destravado';
   toast(locked ? 'Editor travado' : 'Editor destravado', locked ? '🔒' : '🔓');
 }
@@ -1199,11 +1273,11 @@ function loadLayout(){
       locked = data.config.locked ?? false;
 
       document.getElementById('vanBg').style.opacity = vanOpacity;
-      document.getElementById('btnSnap').innerHTML =
+      document.getElementById('btnSnap').innerHTML = 
         `<span>🧲</span> Snap: ${snap ? 'ON' : 'OFF'}`;
-      document.getElementById('btnVan').innerHTML =
+      document.getElementById('btnVan').innerHTML = 
         `<span>🖼️</span> Van: ${Math.round(vanOpacity * 100)}%`;
-      document.getElementById('btnLock').innerHTML =
+      document.getElementById('btnLock').innerHTML = 
         locked ? '<span>🔒</span> Travado' : '<span>🔓</span> Destravado';
     }
 
@@ -1243,7 +1317,7 @@ function loadLayout(){
 
 function makeDraggable(el){
   let dragging = false;
-  let offsetX = 0, offsetY = 0;
+  let offsetX, offsetY;
 
   el.addEventListener('contextmenu', (e) => {
     e.preventDefault();
@@ -1259,11 +1333,10 @@ function makeDraggable(el){
     if(e.target.classList.contains('seat-delete')) return;
     if(locked) return;
 
-    const sd = seats.find(s => s.id === el.id);
-    if(sd && sd.locked) return;
-
     dragging = true;
     const rect = el.getBoundingClientRect();
+    const canvasRect = document.getElementById('canvas').getBoundingClientRect();
+
     offsetX = e.clientX - rect.left;
     offsetY = e.clientY - rect.top;
 
@@ -1294,8 +1367,9 @@ function makeDraggable(el){
     el.style.top = y + 'px';
   });
 
-  document.addEventListener('pointerup', () => {
+  document.addEventListener('pointerup', (e) => {
     if(!dragging) return;
+
     dragging = false;
     el.classList.remove('dragging');
 
@@ -1311,16 +1385,15 @@ function makeDraggable(el){
 
     const sd = seats.find(s => s.id === el.id);
     if(!sd) return;
-    if(sd.locked) return;
 
     const num = prompt('Novo número:', sd.number);
     if(!num) return;
 
-    sd.number = parseInt(num, 10);
-    el.querySelector('.seat-num').textContent = '#' + sd.number;
+    sd.number = parseInt(num);
+    el.querySelector('.seat-num').textContent = '#' + num;
 
     renderList();
-    toast(`Renomeado para #${sd.number}`, '✏️');
+    toast(`Renomeado para #${num}`, '✏️');
   });
 }
 
@@ -1347,22 +1420,20 @@ function updateAll(){
 
 function renderList(){
   const list = document.getElementById('passengerList');
-  if(!list) return;
   list.innerHTML = '';
 
   seats
-    .slice()
     .sort((a, b) => a.number - b.number)
     .forEach(s => {
       const card = document.createElement('div');
       card.className = `passenger-card status-${s.status}`;
       card.innerHTML = `
         <div class="passenger-num">#${s.number}</div>
-        <input
-          type="text"
+        <input 
+          type="text" 
           class="passenger-input"
           placeholder="Nome do passageiro"
-          value="${(s.name || '').replace(/"/g,'&quot;')}"
+          value="${s.name || ''}"
           onchange="updateName('${s.id}', this.value)"
         />
         <select class="passenger-select" onchange="updateStatus('${s.id}', this.value)">
@@ -1412,225 +1483,246 @@ function setAll(status){
   toast(`Todos os assentos → ${status}`, '⚡');
 }
 
-/* ===== EXPORT ===== */
+// EXPORT FUNCTIONS
 function exportLayout(){
   if(seats.length === 0){
     toast('Nenhum assento para exportar', '⚠️');
     return;
   }
-  const modal = document.getElementById('exportModal');
-  if(modal) modal.style.display = 'flex';
+  document.getElementById('exportModal').style.display = 'flex';
 }
 
 function closeExportModal(){
-  const modal = document.getElementById('exportModal');
-  if(modal) modal.style.display = 'none';
+  document.getElementById('exportModal').style.display = 'none';
 }
 
-async function captureCanvasPng(){
-  const canvasEl = document.getElementById('canvas');
+async function exportAsPDF(){
+  closeExportModal();
+  toast('Gerando PDF HORIZONTAL em 1920x1080...', '⏳');
 
-  const hint = document.getElementById('hint');
-  const hintWasVisible = hint && hint.style.display !== 'none';
-  if(hint) hint.style.display = 'none';
+  try{
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('landscape', 'mm', 'a4'); // ← LANDSCAPE MODE
 
-  const shot = await html2canvas(canvasEl, {
-    backgroundColor: '#1a1f2e',
-    scale: 3,
-    useCORS: true,
-    allowTaint: true,
-    logging: false
-  });
+    // Header - AJUSTADO PARA LANDSCAPE (297mm wide x 210mm tall)
+    doc.setFillColor(20, 24, 37);
+    doc.rect(0, 0, 297, 35, 'F');
+    
+    doc.setTextColor(167, 139, 250);
+    doc.setFontSize(24);
+    doc.setFont('helvetica', 'bold');
+    doc.text('VAN NOBREAK', 148.5, 16, { align: 'center' });
+    
+    doc.setTextColor(148, 163, 184);
+    doc.setFontSize(9);
+    doc.text('Layout de Assentos', 148.5, 23, { align: 'center' });
+    doc.text(new Date().toLocaleDateString('pt-BR', { 
+      day: '2-digit', 
+      month: 'long', 
+      year: 'numeric' 
+    }), 148.5, 29, { align: 'center' });
 
-  if(hint && hintWasVisible) hint.style.display = 'block';
+    // Stats - AJUSTADO PARA LANDSCAPE
+    const total = seats.length;
+    const livre = seats.filter(s => s.status === 'livre').length;
+    const reservado = seats.filter(s => s.status === 'reservado').length;
+    const confirmado = seats.filter(s => s.status === 'confirmado').length;
+    const bloqueado = seats.filter(s => s.status === 'bloqueado').length;
+    const ocupados = reservado + confirmado + bloqueado;
 
-  const realW = canvasEl.offsetWidth || shot.width;
-  const realH = canvasEl.offsetHeight || shot.height;
-  const ratio = realW / realH;
+    doc.setFillColor(26, 31, 46);
+    doc.roundedRect(15, 40, 267, 12, 3, 3, 'F');
+    
+    doc.setTextColor(241, 245, 249);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`TOTAL: ${total}`, 50, 48);
+    doc.setTextColor(16, 185, 129);
+    doc.text(`LIVRES: ${livre}`, 135, 48);
+    doc.setTextColor(245, 158, 11);
+    doc.text(`OCUPADOS: ${ocupados}`, 220, 48);
 
-  return { imgData: shot.toDataURL('image/png'), ratio };
-}
+    // Screenshot - 1920x1080 PIXELS
+    const canvas = document.getElementById('canvas');
+    const hint = document.getElementById('hint');
+    const hintWasVisible = hint && hint.style.display !== 'none';
+    if(hint) hint.style.display = 'none';
+    
+    const TARGET_WIDTH = 1920;
+    const TARGET_HEIGHT = 1080;
+    
+    const canvasElement = document.getElementById('canvas');
+    const currentWidth = canvasElement.offsetWidth;
+    const currentHeight = canvasElement.offsetHeight;
+    
+    const scaleX = TARGET_WIDTH / currentWidth;
+    const scaleY = TARGET_HEIGHT / currentHeight;
+    const scale = Math.min(scaleX, scaleY);
+    
+    console.log(`Capturando canvas LANDSCAPE em ${TARGET_WIDTH}x${TARGET_HEIGHT} (scale: ${scale.toFixed(2)})`);
+    
+    const screenshot = await html2canvas(canvas, {
+      backgroundColor: '#1a1f2e',
+      scale: scale,
+      width: currentWidth,
+      height: currentHeight,
+      useCORS: true,
+      allowTaint: true,
+      logging: false
+    });
+    
+    if(hint && hintWasVisible) hint.style.display = 'block';
+    
+    console.log(`Screenshot gerado: ${screenshot.width}x${screenshot.height} pixels`);
+    
+    const imgData = screenshot.toDataURL('image/png');
+    
+    // LANDSCAPE: 297mm wide, 210mm tall
+    const pageWidth = 297;
+    const pageHeight = 210;
+    const headerHeight = 57;
+    const sideMargin = 10;
+    const topMargin = 5;
+    const bottomMargin = 15;
+    
+    // Fit image to landscape
+    const availableWidth = pageWidth - (sideMargin * 2);
+    const availableHeight = pageHeight - headerHeight - topMargin - bottomMargin;
+    
+    const REAL_RATIO = TARGET_WIDTH / TARGET_HEIGHT; // 16:9
+    
+    let pdfWidth, pdfHeight;
+    
+    if(REAL_RATIO > (availableWidth / availableHeight)){
+      // Fit to width
+      pdfWidth = availableWidth;
+      pdfHeight = pdfWidth / REAL_RATIO;
+    }else{
+      // Fit to height
+      pdfHeight = availableHeight;
+      pdfWidth = pdfHeight * REAL_RATIO;
+    }
+    
+    const xPos = (pageWidth - pdfWidth) / 2;
+    const remainingSpace = availableHeight - pdfHeight;
+    const yPos = headerHeight + topMargin + (remainingSpace / 2);
+    
+    console.log(`Inserindo imagem LANDSCAPE no PDF: ${pdfWidth}mm x ${pdfHeight}mm na posição (${xPos}, ${yPos})`);
+    
+    doc.addImage(imgData, 'PNG', xPos, yPos, pdfWidth, pdfHeight);
 
-function pdfHeaderAndStats(doc){
-  // Header
-  doc.setFillColor(20, 24, 37);
-  doc.rect(0, 0, 210, 45, 'F');
+    // Passenger list - NEW PAGE (back to portrait)
+    doc.addPage('portrait');
+    
+    let y = 20;
+    
+    doc.setTextColor(167, 139, 250);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Lista de Passageiros', 105, y, { align: 'center' });
+    
+    y += 12;
 
-  doc.setTextColor(167, 139, 250);
-  doc.setFontSize(32);
-  doc.setFont('helvetica', 'bold');
-  doc.text('VAN NOBREAK', 105, 22, { align: 'center' });
+    const sortedSeats = [...seats].sort((a, b) => a.number - b.number);
 
-  doc.setTextColor(148, 163, 184);
-  doc.setFontSize(11);
-  doc.text('Layout de Assentos', 105, 32, { align: 'center' });
-  doc.text(new Date().toLocaleDateString('pt-BR', {
-    day: '2-digit', month: 'long', year: 'numeric'
-  }), 105, 39, { align: 'center' });
-
-  // Stats
-  const total = seats.length;
-  const livre = seats.filter(s => s.status === 'livre').length;
-  const reservado = seats.filter(s => s.status === 'reservado').length;
-  const confirmado = seats.filter(s => s.status === 'confirmado').length;
-  const bloqueado = seats.filter(s => s.status === 'bloqueado').length;
-  const ocupados = reservado + confirmado + bloqueado;
-
-  doc.setFillColor(26, 31, 46);
-  doc.roundedRect(15, 50, 180, 16, 3, 3, 'F');
-
-  doc.setTextColor(241, 245, 249);
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'bold');
-  doc.text(`TOTAL: ${total}`, 30, 59);
-  doc.setTextColor(16, 185, 129);
-  doc.text(`LIVRES: ${livre}`, 80, 59);
-  doc.setTextColor(245, 158, 11);
-  doc.text(`OCUPADOS: ${ocupados}`, 130, 59);
-
-  return { total, livre, ocupados };
-}
-
-function pdfPassengerPages(doc){
-  doc.addPage();
-
-  let y = 20;
-
-  doc.setTextColor(167, 139, 250);
-  doc.setFontSize(16);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Lista de Passageiros', 105, y, { align: 'center' });
-
-  y += 12;
-
-  const sortedSeats = seats.slice().sort((a, b) => a.number - b.number);
-
-  function tableHeader(){
+    // Table header
     doc.setFillColor(26, 31, 46);
     doc.rect(15, y - 5, 180, 8, 'F');
-
+    
     doc.setTextColor(148, 163, 184);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(9);
     doc.text('ASSENTO', 25, y);
     doc.text('PASSAGEIRO', 55, y);
     doc.text('STATUS', 160, y);
+    
     y += 10;
-  }
 
-  tableHeader();
+    sortedSeats.forEach((s, idx) => {
+      if(y > 275){
+        doc.addPage();
+        y = 20;
+        
+        doc.setFillColor(26, 31, 46);
+        doc.rect(15, y - 5, 180, 8, 'F');
+        doc.setTextColor(148, 163, 184);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+        doc.text('ASSENTO', 25, y);
+        doc.text('PASSAGEIRO', 55, y);
+        doc.text('STATUS', 160, y);
+        y += 10;
+      }
 
-  sortedSeats.forEach((s, idx) => {
-    if(y > 275){
-      doc.addPage();
-      y = 20;
-      doc.setTextColor(167, 139, 250);
-      doc.setFontSize(16);
+      if(idx % 2 === 0){
+        doc.setFillColor(22, 27, 40);
+        doc.rect(15, y - 6, 180, 9, 'F');
+      }
+
+      const statusColors = {
+        livre: [59, 130, 246],
+        reservado: [245, 158, 11],
+        confirmado: [16, 185, 129],
+        bloqueado: [239, 68, 68]
+      };
+
+      const color = statusColors[s.status] || [148, 163, 184];
+      
+      doc.setFillColor(...color);
+      doc.circle(20, y - 2, 2, 'F');
+
+      doc.setTextColor(241, 245, 249);
       doc.setFont('helvetica', 'bold');
-      doc.text('Lista de Passageiros (cont.)', 105, y, { align: 'center' });
-      y += 12;
-      tableHeader();
+      doc.setFontSize(10);
+      doc.text(`#${s.number}`, 27, y);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(200, 210, 225);
+      const name = s.name || '—';
+      doc.text(name.substring(0, 35), 55, y);
+
+      doc.setTextColor(...color);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      const statusText = {
+        livre: 'LIVRE',
+        reservado: 'RESERVADO',
+        confirmado: 'CONFIRMADO',
+        bloqueado: 'BLOQUEADO'
+      }[s.status];
+      doc.text(statusText, 160, y);
+
+      y += 9;
+    });
+
+    // Footer
+    const pageCount = doc.internal.getNumberOfPages();
+    for(let i = 1; i <= pageCount; i++){
+      doc.setPage(i);
+      doc.setFontSize(7);
+      doc.setTextColor(100, 116, 139);
+      
+      // Different footer for landscape page
+      if(i === 1){
+        doc.text(
+          `Sistema Van Nobreak • Gerado em ${new Date().toLocaleString('pt-BR')} • Imagem: 1920x1080px HORIZONTAL`, 
+          148.5, 
+          205, 
+          { align: 'center' }
+        );
+      }else{
+        doc.text(
+          `Sistema Van Nobreak • Gerado em ${new Date().toLocaleString('pt-BR')}`, 
+          105, 
+          287, 
+          { align: 'center' }
+        );
+        doc.text(`Página ${i} de ${pageCount}`, 105, 292, { align: 'center' });
+      }
     }
 
-    if(idx % 2 === 0){
-      doc.setFillColor(22, 27, 40);
-      doc.rect(15, y - 6, 180, 9, 'F');
-    }
-
-    const statusColors = {
-      livre: [59, 130, 246],
-      reservado: [245, 158, 11],
-      confirmado: [16, 185, 129],
-      bloqueado: [239, 68, 68]
-    };
-    const color = statusColors[s.status] || [148, 163, 184];
-
-    doc.setFillColor(...color);
-    doc.circle(20, y - 2, 2, 'F');
-
-    doc.setTextColor(241, 245, 249);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.text(`#${s.number}`, 27, y);
-
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(200, 210, 225);
-    const name = s.name || '—';
-    doc.text(String(name).substring(0, 35), 55, y);
-
-    doc.setTextColor(...color);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9);
-    const statusText = {
-      livre: 'LIVRE',
-      reservado: 'RESERVADO',
-      confirmado: 'CONFIRMADO',
-      bloqueado: 'BLOQUEADO'
-    }[s.status] || '—';
-    doc.text(statusText, 160, y);
-
-    y += 9;
-  });
-}
-
-function pdfFooter(doc){
-  const pageCount = doc.internal.getNumberOfPages();
-  for(let i = 1; i <= pageCount; i++){
-    doc.setPage(i);
-    doc.setFontSize(8);
-    doc.setTextColor(100, 116, 139);
-    doc.text(
-      `Sistema Van Nobreak • Gerado em ${new Date().toLocaleString('pt-BR')}`,
-      105, 287, { align: 'center' }
-    );
-    doc.text(`Página ${i} de ${pageCount}`, 105, 292, { align: 'center' });
-  }
-}
-
-async function exportAsPDF(){
-  closeExportModal();
-  if(seats.length === 0){
-    toast('Nenhum assento para exportar', '⚠️');
-    return;
-  }
-  toast('Gerando PDF...', '⏳');
-
-  try{
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('portrait', 'mm', 'a4');
-
-    pdfHeaderAndStats(doc);
-
-    const { imgData, ratio } = await captureCanvasPng();
-
-    const pageW = 210;
-    const pageH = 297;
-
-    const headerBlockH = 72;     // header + stats (deixa igual ao seu)
-    const topMargin = 6;
-    const bottomMargin = 18;
-    const sideMargin = 12;
-
-    const availW = pageW - sideMargin*2;
-    const availH = pageH - headerBlockH - topMargin - bottomMargin;
-
-    let w = availW;
-    let h = w / ratio;
-    if(h > availH){
-      h = availH;
-      w = h * ratio;
-    }
-
-    const x = (pageW - w)/2;
-    const y = headerBlockH + topMargin + (availH - h)/2;
-
-    doc.addImage(imgData, 'PNG', x, y, w, h);
-
-    pdfPassengerPages(doc);
-    pdfFooter(doc);
-
-    doc.save(`van-layout-${Date.now()}.pdf`);
-    toast('PDF exportado com sucesso!', '📄');
+    doc.save(`van-layout-horizontal-${Date.now()}.pdf`);
+    toast('PDF HORIZONTAL exportado!', '📄');
   }catch(e){
     console.error('Erro no PDF:', e);
     toast('Erro ao gerar PDF', '❌');
@@ -1639,25 +1731,24 @@ async function exportAsPDF(){
 
 async function exportAsImage(){
   closeExportModal();
-  if(seats.length === 0){
-    toast('Nenhum assento para exportar', '⚠️');
-    return;
-  }
   toast('Gerando imagem...', '⏳');
 
   try{
-    const { imgData } = await captureCanvasPng();
-    const res = await fetch(imgData);
-    const blob = await res.blob();
+    const canvas = document.getElementById('canvas');
+    const canvasData = await html2canvas(canvas, {
+      backgroundColor: '#1a1f2e',
+      scale: 3
+    });
 
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `van-layout-${Date.now()}.png`;
-    a.click();
-    URL.revokeObjectURL(url);
-
-    toast('Imagem exportada com sucesso!', '🖼️');
+    canvasData.toBlob((blob) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `van-layout-${Date.now()}.png`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast('Imagem exportada com sucesso!', '🖼️');
+    });
   }catch(e){
     console.error(e);
     toast('Erro ao gerar imagem', '❌');
@@ -1666,14 +1757,10 @@ async function exportAsImage(){
 
 function exportAsExcel(){
   closeExportModal();
-  if(seats.length === 0){
-    toast('Nenhum assento para exportar', '⚠️');
-    return;
-  }
   toast('Gerando planilha...', '⏳');
 
   try{
-    const sortedSeats = seats.slice().sort((a, b) => a.number - b.number);
+    const sortedSeats = seats.sort((a, b) => a.number - b.number);
 
     const data = sortedSeats.map(s => ({
       'Assento': `#${s.number}`,
@@ -1683,7 +1770,7 @@ function exportAsExcel(){
         reservado: 'Reservado',
         confirmado: 'Confirmado',
         bloqueado: 'Bloqueado'
-      }[s.status] || '—',
+      }[s.status],
       'Travado': s.locked ? 'Sim' : 'Não'
     }));
 
@@ -1711,7 +1798,7 @@ function exportAsExcel(){
     ];
 
     const wsSummary = XLSX.utils.aoa_to_sheet(summary);
-    wsSummary['!cols'] = [{ wch: 25 }, { wch: 22 }];
+    wsSummary['!cols'] = [{ wch: 25 }, { wch: 15 }];
     XLSX.utils.book_append_sheet(wb, wsSummary, 'Resumo');
 
     XLSX.writeFile(wb, `van-passageiros-${Date.now()}.xlsx`);
@@ -1724,10 +1811,6 @@ function exportAsExcel(){
 
 function exportAsJSON(){
   closeExportModal();
-  if(seats.length === 0){
-    toast('Nenhum assento para exportar', '⚠️');
-    return;
-  }
   toast('Gerando backup...', '⏳');
 
   try{
@@ -1737,7 +1820,11 @@ function exportAsJSON(){
         totalSeats: seats.length,
         version: '1.0'
       },
-      config: { snap, vanOpacity, locked },
+      config: {
+        snap,
+        vanOpacity,
+        locked
+      },
       seats: seats.map(s => ({
         id: s.id,
         number: s.number,
@@ -1764,7 +1851,7 @@ function exportAsJSON(){
   }
 }
 
-/* ===== PRESETS ===== */
+// PRESET FUNCTIONS
 function managePresets(){
   document.getElementById('presetsModal').style.display = 'flex';
   loadPresetsList();
@@ -1791,7 +1878,7 @@ function savePreset(){
 
   const preset = {
     id: Date.now(),
-    name,
+    name: name,
     seats: seats.map(s => ({...s})),
     config: { snap, vanOpacity, locked },
     createdAt: new Date().toISOString(),
@@ -1826,8 +1913,12 @@ function loadPresetsList(){
         <small>${p.totalSeats} assentos • ${new Date(p.createdAt).toLocaleDateString('pt-BR')}</small>
       </div>
       <div class="preset-actions">
-        <button class="preset-btn load" onclick="loadPreset(${p.id})" title="Carregar">📂</button>
-        <button class="preset-btn delete" onclick="deletePreset(${p.id})" title="Excluir">🗑️</button>
+        <button class="preset-btn load" onclick="loadPreset(${p.id})" title="Carregar">
+          📂
+        </button>
+        <button class="preset-btn delete" onclick="deletePreset(${p.id})" title="Excluir">
+          🗑️
+        </button>
       </div>
     </div>
   `).join('');
@@ -1842,7 +1933,9 @@ function loadPreset(id){
     return;
   }
 
-  if(!confirm(`Carregar preset "${preset.name}"? O layout atual será substituído.`)) return;
+  if(!confirm(`Carregar preset "${preset.name}"? O layout atual será substituído.`)){
+    return;
+  }
 
   document.querySelectorAll('.seat').forEach(s => s.remove());
 
@@ -1851,11 +1944,11 @@ function loadPreset(id){
   locked = preset.config.locked ?? false;
 
   document.getElementById('vanBg').style.opacity = vanOpacity;
-  document.getElementById('btnSnap').innerHTML =
+  document.getElementById('btnSnap').innerHTML = 
     `<span>🧲</span> Snap: ${snap ? 'ON' : 'OFF'}`;
-  document.getElementById('btnVan').innerHTML =
+  document.getElementById('btnVan').innerHTML = 
     `<span>🖼️</span> Van: ${Math.round(vanOpacity * 100)}%`;
-  document.getElementById('btnLock').innerHTML =
+  document.getElementById('btnLock').innerHTML = 
     locked ? '<span>🔒</span> Travado' : '<span>🔓</span> Destravado';
 
   const canvas = document.getElementById('canvas');
@@ -1871,6 +1964,7 @@ function loadPreset(id){
 
     seat.style.left = sd.x + 'px';
     seat.style.top = sd.y + 'px';
+
     if(sd.locked) seat.classList.add('locked');
 
     canvas.appendChild(seat);
@@ -1896,7 +1990,9 @@ function deletePreset(id){
     return;
   }
 
-  if(!confirm(`Excluir preset "${preset.name}"?`)) return;
+  if(!confirm(`Excluir preset "${preset.name}"?`)){
+    return;
+  }
 
   const filtered = presets.filter(p => p.id !== id);
   localStorage.setItem('vanPresets', JSON.stringify(filtered));
@@ -1905,55 +2001,222 @@ function deletePreset(id){
   toast('Preset excluído', '🗑️');
 }
 
-/* ===== WHATSAPP SHARE ===== */
 async function shareWhatsApp(){
   if(seats.length === 0){
     toast('Nenhum assento para compartilhar', '⚠️');
     return;
   }
 
-  toast('Gerando PDF para WhatsApp...', '⏳');
+  toast('Gerando PDF HORIZONTAL para WhatsApp...', '⏳');
 
   try{
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('portrait', 'mm', 'a4');
+    const doc = new jsPDF('landscape', 'mm', 'a4');
 
-    const stats = pdfHeaderAndStats(doc);
+    // Same as exportAsPDF - shortened for WhatsApp
+    doc.setFillColor(20, 24, 37);
+    doc.rect(0, 0, 297, 35, 'F');
+    
+    doc.setTextColor(167, 139, 250);
+    doc.setFontSize(24);
+    doc.setFont('helvetica', 'bold');
+    doc.text('VAN NOBREAK', 148.5, 16, { align: 'center' });
+    
+    doc.setTextColor(148, 163, 184);
+    doc.setFontSize(9);
+    doc.text('Layout de Assentos', 148.5, 23, { align: 'center' });
+    doc.text(new Date().toLocaleDateString('pt-BR', { 
+      day: '2-digit', 
+      month: 'long', 
+      year: 'numeric' 
+    }), 148.5, 29, { align: 'center' });
 
-    const { imgData, ratio } = await captureCanvasPng();
+    const total = seats.length;
+    const livre = seats.filter(s => s.status === 'livre').length;
+    const reservado = seats.filter(s => s.status === 'reservado').length;
+    const confirmado = seats.filter(s => s.status === 'confirmado').length;
+    const bloqueado = seats.filter(s => s.status === 'bloqueado').length;
+    const ocupados = reservado + confirmado + bloqueado;
 
-    const pageW = 210;
-    const pageH = 297;
-    const headerBlockH = 72;
-    const topMargin = 6;
-    const bottomMargin = 18;
+    doc.setFillColor(26, 31, 46);
+    doc.roundedRect(15, 40, 267, 12, 3, 3, 'F');
+    
+    doc.setTextColor(241, 245, 249);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`TOTAL: ${total}`, 50, 48);
+    doc.setTextColor(16, 185, 129);
+    doc.text(`LIVRES: ${livre}`, 135, 48);
+    doc.setTextColor(245, 158, 11);
+    doc.text(`OCUPADOS: ${ocupados}`, 220, 48);
+
+    // Screenshot
+    const canvas = document.getElementById('canvas');
+    const hint = document.getElementById('hint');
+    const hintWasVisible = hint && hint.style.display !== 'none';
+    if(hint) hint.style.display = 'none';
+    
+    const TARGET_WIDTH = 1920;
+    const TARGET_HEIGHT = 1080;
+    
+    const canvasElement = document.getElementById('canvas');
+    const currentWidth = canvasElement.offsetWidth;
+    const currentHeight = canvasElement.offsetHeight;
+    
+    const scaleX = TARGET_WIDTH / currentWidth;
+    const scaleY = TARGET_HEIGHT / currentHeight;
+    const scale = Math.min(scaleX, scaleY);
+    
+    const screenshot = await html2canvas(canvas, {
+      backgroundColor: '#1a1f2e',
+      scale: scale,
+      width: currentWidth,
+      height: currentHeight,
+      useCORS: true,
+      allowTaint: true,
+      logging: false
+    });
+    
+    if(hint && hintWasVisible) hint.style.display = 'block';
+    
+    const imgData = screenshot.toDataURL('image/png');
+    
+    const pageWidth = 297;
+    const pageHeight = 210;
+    const headerHeight = 57;
     const sideMargin = 10;
+    const topMargin = 5;
+    const bottomMargin = 15;
+    
+    const availableWidth = pageWidth - (sideMargin * 2);
+    const availableHeight = pageHeight - headerHeight - topMargin - bottomMargin;
+    
+    const REAL_RATIO = TARGET_WIDTH / TARGET_HEIGHT;
+    
+    let pdfWidth, pdfHeight;
+    
+    if(REAL_RATIO > (availableWidth / availableHeight)){
+      pdfWidth = availableWidth;
+      pdfHeight = pdfWidth / REAL_RATIO;
+    }else{
+      pdfHeight = availableHeight;
+      pdfWidth = pdfHeight * REAL_RATIO;
+    }
+    
+    const xPos = (pageWidth - pdfWidth) / 2;
+    const remainingSpace = availableHeight - pdfHeight;
+    const yPos = headerHeight + topMargin + (remainingSpace / 2);
+    
+    doc.addImage(imgData, 'PNG', xPos, yPos, pdfWidth, pdfHeight);
 
-    const availW = pageW - sideMargin*2;
-    const availH = pageH - headerBlockH - topMargin - bottomMargin;
+    // Passenger list
+    doc.addPage('portrait');
+    let y = 20;
+    
+    doc.setTextColor(167, 139, 250);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Lista de Passageiros', 105, y, { align: 'center' });
+    y += 12;
 
-    let w = availW;
-    let h = w / ratio;
-    if(h > availH){
-      h = availH;
-      w = h * ratio;
+    const sortedSeats = [...seats].sort((a, b) => a.number - b.number);
+
+    doc.setFillColor(26, 31, 46);
+    doc.rect(15, y - 5, 180, 8, 'F');
+    doc.setTextColor(148, 163, 184);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.text('ASSENTO', 25, y);
+    doc.text('PASSAGEIRO', 55, y);
+    doc.text('STATUS', 160, y);
+    y += 10;
+
+    sortedSeats.forEach((s, idx) => {
+      if(y > 275){
+        doc.addPage();
+        y = 20;
+        doc.setFillColor(26, 31, 46);
+        doc.rect(15, y - 5, 180, 8, 'F');
+        doc.setTextColor(148, 163, 184);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+        doc.text('ASSENTO', 25, y);
+        doc.text('PASSAGEIRO', 55, y);
+        doc.text('STATUS', 160, y);
+        y += 10;
+      }
+
+      if(idx % 2 === 0){
+        doc.setFillColor(22, 27, 40);
+        doc.rect(15, y - 6, 180, 9, 'F');
+      }
+
+      const statusColors = {
+        livre: [59, 130, 246],
+        reservado: [245, 158, 11],
+        confirmado: [16, 185, 129],
+        bloqueado: [239, 68, 68]
+      };
+
+      const color = statusColors[s.status] || [148, 163, 184];
+      doc.setFillColor(...color);
+      doc.circle(20, y - 2, 2, 'F');
+
+      doc.setTextColor(241, 245, 249);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.text(`#${s.number}`, 27, y);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(200, 210, 225);
+      const name = s.name || '—';
+      doc.text(name.substring(0, 35), 55, y);
+
+      doc.setTextColor(...color);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      const statusText = {
+        livre: 'LIVRE',
+        reservado: 'RESERVADO',
+        confirmado: 'CONFIRMADO',
+        bloqueado: 'BLOQUEADO'
+      }[s.status];
+      doc.text(statusText, 160, y);
+
+      y += 9;
+    });
+
+    const pageCount = doc.internal.getNumberOfPages();
+    for(let i = 1; i <= pageCount; i++){
+      doc.setPage(i);
+      doc.setFontSize(7);
+      doc.setTextColor(100, 116, 139);
+      
+      if(i === 1){
+        doc.text(
+          `Sistema Van Nobreak • ${new Date().toLocaleString('pt-BR')} • 1920x1080px HORIZONTAL`, 
+          148.5, 
+          205, 
+          { align: 'center' }
+        );
+      }else{
+        doc.text(
+          `Sistema Van Nobreak • ${new Date().toLocaleString('pt-BR')}`, 
+          105, 
+          287, 
+          { align: 'center' }
+        );
+        doc.text(`Página ${i} de ${pageCount}`, 105, 292, { align: 'center' });
+      }
     }
 
-    const x = (pageW - w)/2;
-    const y = headerBlockH + topMargin + (availH - h)/2;
-
-    doc.addImage(imgData, 'PNG', x, y, w, h);
-
-    pdfPassengerPages(doc);
-    pdfFooter(doc);
-
     const pdfBlob = doc.output('blob');
-    const file = new File([pdfBlob], `van-layout-${Date.now()}.pdf`, { type: 'application/pdf' });
+    const file = new File([pdfBlob], `van-horizontal-${Date.now()}.pdf`, { type: 'application/pdf' });
 
     if(navigator.share && navigator.canShare && navigator.canShare({ files: [file] })){
       await navigator.share({
-        title: 'Layout Van Nobreak',
-        text: `Layout da van com ${stats.total} assentos (${stats.livre} livres, ${stats.ocupados} ocupados)`,
+        title: 'Layout Van Nobreak (Horizontal)',
+        text: `Layout da van com ${total} assentos (${livre} livres, ${ocupados} ocupados) - 1920x1080px HORIZONTAL`,
         files: [file]
       });
       toast('Compartilhado com sucesso!', '✅');
@@ -1961,15 +2224,14 @@ async function shareWhatsApp(){
       const url = URL.createObjectURL(pdfBlob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `van-layout-${Date.now()}.pdf`;
+      a.download = `van-horizontal-${Date.now()}.pdf`;
       a.click();
       URL.revokeObjectURL(url);
-
+      
       setTimeout(() => {
-        alert('PDF baixado! Abra o WhatsApp e envie o arquivo baixado.');
+        alert('PDF HORIZONTAL baixado! Abra o WhatsApp e envie o arquivo baixado.');
       }, 500);
-
-      toast('PDF baixado - envie pelo WhatsApp', '📱');
+      toast('PDF HORIZONTAL baixado!', '📱');
     }
   }catch(e){
     console.error('Erro no WhatsApp:', e);
@@ -1977,7 +2239,7 @@ async function shareWhatsApp(){
   }
 }
 
-/* EXPORTAR FUNÇÕES (onclick) */
+// Export functions to window
 window.addSeat = addSeat;
 window.removeSeat = removeSeat;
 window.clearAll = clearAll;
