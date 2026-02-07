@@ -561,10 +561,9 @@
       border:1px solid var(--border);
       border-radius:12px;
       padding:14px;
-      display:grid;
-      grid-template-columns:56px 1fr 130px;
-      align-items:center;
-      gap:14px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
       transition:all 0.2s;
       box-shadow:0 4px 12px rgba(0,0,0,0.2);
     }
@@ -573,6 +572,13 @@
       border-color:var(--primary);
       transform:translateY(-2px);
       box-shadow:0 8px 20px rgba(167,139,250,0.3);
+    }
+
+    .passenger-header{
+      display:grid;
+      grid-template-columns:56px 1fr 130px;
+      align-items:center;
+      gap:14px;
     }
 
     .passenger-num{
@@ -610,6 +616,36 @@
       font-size:12px;
       outline:none;
       cursor:pointer;
+    }
+
+    .passenger-docs{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+      padding-top:8px;
+      border-top:1px solid var(--border);
+    }
+
+    .doc-input{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:6px;
+      padding:8px 10px;
+      color:var(--text);
+      font-size:11px;
+      font-weight:600;
+      outline:none;
+      transition:all 0.2s;
+    }
+
+    .doc-input:focus{
+      border-color:var(--primary);
+      box-shadow:0 0 0 2px rgba(167,139,250,0.2);
+    }
+
+    .doc-input::placeholder{
+      color:var(--text-muted);
+      font-size:10px;
     }
 
     .passenger-card.status-livre{
@@ -1203,6 +1239,10 @@ function addSeat(){
     y: y,
     status: 'livre',
     name: '',
+    rg: '',
+    cpf: '',
+    nomeCompleto: '',
+    dataNascimento: '',
     locked: false
   });
 
@@ -1428,30 +1468,63 @@ function renderList(){
       const card = document.createElement('div');
       card.className = `passenger-card status-${s.status}`;
       card.innerHTML = `
-        <div class="passenger-num">#${s.number}</div>
-        <input 
-          type="text" 
-          class="passenger-input"
-          placeholder="Nome do passageiro"
-          value="${s.name || ''}"
-          onchange="updateName('${s.id}', this.value)"
-        />
-        <select class="passenger-select" onchange="updateStatus('${s.id}', this.value)">
-          <option value="livre" ${s.status === 'livre' ? 'selected' : ''}>🟢 Livre</option>
-          <option value="reservado" ${s.status === 'reservado' ? 'selected' : ''}>🟠 Reservado</option>
-          <option value="confirmado" ${s.status === 'confirmado' ? 'selected' : ''}>✅ Confirmado</option>
-          <option value="bloqueado" ${s.status === 'bloqueado' ? 'selected' : ''}>⛔ Bloqueado</option>
-        </select>
+        <div class="passenger-header">
+          <div class="passenger-num">#${s.number}</div>
+          <input 
+            type="text" 
+            class="passenger-input"
+            placeholder="Nome do passageiro"
+            value="${s.name || ''}"
+            onchange="updateField('${s.id}', 'name', this.value)"
+          />
+          <select class="passenger-select" onchange="updateStatus('${s.id}', this.value)">
+            <option value="livre" ${s.status === 'livre' ? 'selected' : ''}>🟢 Livre</option>
+            <option value="reservado" ${s.status === 'reservado' ? 'selected' : ''}>🟠 Reservado</option>
+            <option value="confirmado" ${s.status === 'confirmado' ? 'selected' : ''}>✅ Confirmado</option>
+            <option value="bloqueado" ${s.status === 'bloqueado' ? 'selected' : ''}>⛔ Bloqueado</option>
+          </select>
+        </div>
+        <div class="passenger-docs">
+          <input 
+            type="text" 
+            class="doc-input" 
+            placeholder="Nome Completo"
+            value="${s.nomeCompleto || ''}"
+            onchange="updateField('${s.id}', 'nomeCompleto', this.value)"
+          />
+          <input 
+            type="text" 
+            class="doc-input" 
+            placeholder="RG"
+            value="${s.rg || ''}"
+            onchange="updateField('${s.id}', 'rg', this.value)"
+          />
+          <input 
+            type="text" 
+            class="doc-input" 
+            placeholder="CPF"
+            value="${s.cpf || ''}"
+            onchange="updateField('${s.id}', 'cpf', this.value)"
+          />
+          <input 
+            type="date" 
+            class="doc-input" 
+            placeholder="Data Nasc."
+            value="${s.dataNascimento || ''}"
+            onchange="updateField('${s.id}', 'dataNascimento', this.value)"
+          />
+        </div>
       `;
       list.appendChild(card);
     });
 }
 
-function updateName(id, name){
+function updateField(id, field, value){
   const s = seats.find(x => x.id === id);
   if(s){
-    s.name = name;
-    toast('Nome atualizado', '👤');
+    s[field] = value;
+    if(field === 'name') toast('Nome atualizado', '👤');
+    else toast('Documento atualizado', '📄');
   }
 }
 
@@ -1630,40 +1703,55 @@ async function exportAsPDF(){
 
     const sortedSeats = [...seats].sort((a, b) => a.number - b.number);
 
-    // Table header
-    doc.setFillColor(26, 31, 46);
-    doc.rect(15, y - 5, 180, 8, 'F');
+    // Table header - CORES ESCURAS
+    doc.setFillColor(15, 20, 30); // Azul escuro ao invés de branco
+    doc.rect(10, y - 5, 190, 8, 'F');
     
-    doc.setTextColor(148, 163, 184);
+    doc.setTextColor(167, 139, 250); // Roxo para headers
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9);
-    doc.text('ASSENTO', 25, y);
-    doc.text('PASSAGEIRO', 55, y);
-    doc.text('STATUS', 160, y);
+    doc.setFontSize(7);
+    doc.text('#', 13, y);
+    doc.text('NOME', 22, y);
+    doc.text('NOME COMPLETO', 55, y);
+    doc.text('RG', 100, y);
+    doc.text('CPF', 125, y);
+    doc.text('NASC', 155, y);
+    doc.text('STATUS', 180, y);
     
     y += 10;
 
     sortedSeats.forEach((s, idx) => {
-      if(y > 275){
+      // QUEBRA DE PÁGINA
+      if(y > 270){
         doc.addPage();
         y = 20;
         
-        doc.setFillColor(26, 31, 46);
-        doc.rect(15, y - 5, 180, 8, 'F');
-        doc.setTextColor(148, 163, 184);
+        // Repete header
+        doc.setFillColor(15, 20, 30);
+        doc.rect(10, y - 5, 190, 8, 'F');
+        doc.setTextColor(167, 139, 250);
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(9);
-        doc.text('ASSENTO', 25, y);
-        doc.text('PASSAGEIRO', 55, y);
-        doc.text('STATUS', 160, y);
+        doc.setFontSize(7);
+        doc.text('#', 13, y);
+        doc.text('NOME', 22, y);
+        doc.text('NOME COMPLETO', 55, y);
+        doc.text('RG', 100, y);
+        doc.text('CPF', 125, y);
+        doc.text('NASC', 155, y);
+        doc.text('STATUS', 180, y);
         y += 10;
       }
 
+      // BACKGROUND ALTERNADO - CORES ESCURAS
       if(idx % 2 === 0){
-        doc.setFillColor(22, 27, 40);
-        doc.rect(15, y - 6, 180, 9, 'F');
+        doc.setFillColor(20, 25, 35); // Cinza escuro
+        doc.rect(10, y - 6, 190, 11, 'F');
+      }else{
+        doc.setFillColor(15, 20, 30); // Mais escuro ainda
+        doc.rect(10, y - 6, 190, 11, 'F');
       }
 
+      // Status colors
       const statusColors = {
         livre: [59, 130, 246],
         reservado: [245, 158, 11],
@@ -1673,31 +1761,52 @@ async function exportAsPDF(){
 
       const color = statusColors[s.status] || [148, 163, 184];
       
+      // Status indicator
       doc.setFillColor(...color);
-      doc.circle(20, y - 2, 2, 'F');
+      doc.circle(13, y - 2, 1.5, 'F');
 
+      // Número do assento
       doc.setTextColor(241, 245, 249);
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
-      doc.text(`#${s.number}`, 27, y);
+      doc.setFontSize(8);
+      doc.text(`${s.number}`, 13, y, { align: 'center' });
 
+      // Nome (curto)
       doc.setFont('helvetica', 'normal');
-      doc.setTextColor(200, 210, 225);
+      doc.setTextColor(220, 225, 235);
+      doc.setFontSize(7);
       const name = s.name || '—';
-      doc.text(name.substring(0, 35), 55, y);
+      doc.text(name.substring(0, 18), 22, y);
 
+      // Nome Completo
+      const nomeCompleto = s.nomeCompleto || '—';
+      doc.text(nomeCompleto.substring(0, 22), 55, y);
+
+      // RG
+      const rg = s.rg || '—';
+      doc.text(rg.substring(0, 12), 100, y);
+
+      // CPF
+      const cpf = s.cpf || '—';
+      doc.text(cpf.substring(0, 14), 125, y);
+
+      // Data Nascimento
+      const dataNasc = s.dataNascimento ? new Date(s.dataNascimento + 'T00:00').toLocaleDateString('pt-BR') : '—';
+      doc.text(dataNasc, 155, y);
+
+      // Status
       doc.setTextColor(...color);
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
+      doc.setFontSize(7);
       const statusText = {
         livre: 'LIVRE',
-        reservado: 'RESERVADO',
-        confirmado: 'CONFIRMADO',
-        bloqueado: 'BLOQUEADO'
+        reservado: 'RESERV',
+        confirmado: 'CONF',
+        bloqueado: 'BLOQ'
       }[s.status];
-      doc.text(statusText, 160, y);
+      doc.text(statusText, 180, y);
 
-      y += 9;
+      y += 11;
     });
 
     // Footer
