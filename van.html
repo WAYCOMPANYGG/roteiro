@@ -118,19 +118,24 @@
     /* STATS BAR */
     .stats-bar{
       display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
-      gap:20px;
+      grid-template-columns:repeat(3, 1fr);
+      gap:16px;
       margin-bottom:24px;
     }
 
     .stat-box{
       background:var(--surface);
       border:1px solid var(--border);
-      border-radius:14px;
-      padding:24px;
+      border-radius:16px;
+      padding:32px 28px;
       position:relative;
       overflow:hidden;
       transition:all 0.3s;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      min-height:160px;
     }
 
     .stat-box:hover{
@@ -152,22 +157,24 @@
     }
 
     .stat-label{
-      font-size:12px;
+      font-size:11px;
       color:var(--text-muted);
       text-transform:uppercase;
-      letter-spacing:1.5px;
+      letter-spacing:2px;
       font-weight:800;
-      margin-bottom:12px;
+      margin-bottom:16px;
+      text-align:center;
     }
 
     .stat-value{
-      font-size:48px;
+      font-size:72px;
       font-weight:900;
       line-height:1;
       background:linear-gradient(135deg, var(--primary-light), var(--accent));
       -webkit-background-clip:text;
       -webkit-text-fill-color:transparent;
       background-clip:text;
+      text-align:center;
     }
 
     /* MAIN LAYOUT */
@@ -412,9 +419,13 @@
     }
 
     .seat-num{
-      font-size:14px;
+      font-size:16px;
       font-weight:900;
       line-height:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
     }
 
     .seat-tag{
@@ -423,6 +434,7 @@
       color:rgba(241,245,249,.6);
       letter-spacing:0.5px;
       line-height:1;
+      text-align:center;
     }
 
     .seat-delete{
@@ -539,21 +551,14 @@
       gap:12px;
       max-height:calc(100vh - 420px);
       overflow-y:auto;
+      overflow-x:hidden;
       padding-right:6px;
+      scrollbar-width:none; /* Firefox */
+      -ms-overflow-style:none; /* IE/Edge */
     }
 
     .passenger-list::-webkit-scrollbar{
-      width:8px;
-    }
-
-    .passenger-list::-webkit-scrollbar-track{
-      background:var(--elevated);
-      border-radius:10px;
-    }
-
-    .passenger-list::-webkit-scrollbar-thumb{
-      background:var(--primary);
-      border-radius:10px;
+      display:none; /* Chrome/Safari/Opera */
     }
 
     .passenger-card{
