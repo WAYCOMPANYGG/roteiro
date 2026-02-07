@@ -312,7 +312,7 @@
       background:var(--elevated);
       border:2px dashed var(--border);
       border-radius:14px;
-      min-height:750px;
+      min-height:900px; /* ← AUMENTADO de 750px para 900px - mais alto */
       position:relative;
       overflow:hidden;
     }
@@ -321,13 +321,12 @@
       position:absolute;
       inset:0;
       margin:auto;
-      width:90%; /* ← Aumentado para horizontal */
-      height:70%; /* ← Ajustado para horizontal */
+      width:auto; /* ← AUTO para manter proporção */
+      height:95%; /* ← AUMENTADO para 95% da altura - van mais alta */
       opacity:0.3;
       pointer-events:none;
-      object-fit:contain;
+      object-fit:contain; /* ← CONTAIN garante que não distorce */
       filter:brightness(1.1) contrast(1.05);
-      transform:rotate(90deg); /* ← ROTACIONA A VAN PARA HORIZONTAL */
     }
 
     .canvas-hint{
@@ -1059,8 +1058,8 @@
         <button class="export-btn" onclick="exportAsPDF()">
           <span class="export-icon">📄</span>
           <div class="export-info">
-            <strong>PDF Completo (Horizontal)</strong>
-            <small>Layout visual + lista de passageiros (Imagem: 1920x1080px)</small>
+            <strong>PDF Completo (Otimizado)</strong>
+            <small>Van vertical otimizada + lista de passageiros (1920x1080px)</small>
           </div>
         </button>
         <button class="export-btn" onclick="exportAsImage()">
@@ -1499,31 +1498,31 @@ function closeExportModal(){
 
 async function exportAsPDF(){
   closeExportModal();
-  toast('Gerando PDF HORIZONTAL em 1920x1080...', '⏳');
+  toast('Gerando PDF em 1920x1080...', '⏳');
 
   try{
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('landscape', 'mm', 'a4'); // ← LANDSCAPE MODE
+    const doc = new jsPDF('portrait', 'mm', 'a4'); // ← PORTRAIT para van vertical
 
-    // Header - AJUSTADO PARA LANDSCAPE (297mm wide x 210mm tall)
+    // Header - COMPACTO PARA PORTRAIT
     doc.setFillColor(20, 24, 37);
-    doc.rect(0, 0, 297, 35, 'F');
+    doc.rect(0, 0, 210, 35, 'F');
     
     doc.setTextColor(167, 139, 250);
     doc.setFontSize(24);
     doc.setFont('helvetica', 'bold');
-    doc.text('VAN NOBREAK', 148.5, 16, { align: 'center' });
+    doc.text('VAN NOBREAK', 105, 16, { align: 'center' });
     
     doc.setTextColor(148, 163, 184);
     doc.setFontSize(9);
-    doc.text('Layout de Assentos', 148.5, 23, { align: 'center' });
+    doc.text('Layout de Assentos', 105, 23, { align: 'center' });
     doc.text(new Date().toLocaleDateString('pt-BR', { 
       day: '2-digit', 
       month: 'long', 
       year: 'numeric' 
-    }), 148.5, 29, { align: 'center' });
+    }), 105, 29, { align: 'center' });
 
-    // Stats - AJUSTADO PARA LANDSCAPE
+    // Stats - COMPACTO PARA PORTRAIT
     const total = seats.length;
     const livre = seats.filter(s => s.status === 'livre').length;
     const reservado = seats.filter(s => s.status === 'reservado').length;
@@ -1532,18 +1531,18 @@ async function exportAsPDF(){
     const ocupados = reservado + confirmado + bloqueado;
 
     doc.setFillColor(26, 31, 46);
-    doc.roundedRect(15, 40, 267, 12, 3, 3, 'F');
+    doc.roundedRect(15, 40, 180, 12, 3, 3, 'F');
     
     doc.setTextColor(241, 245, 249);
     doc.setFontSize(8);
     doc.setFont('helvetica', 'bold');
-    doc.text(`TOTAL: ${total}`, 50, 48);
+    doc.text(`TOTAL: ${total}`, 35, 48);
     doc.setTextColor(16, 185, 129);
-    doc.text(`LIVRES: ${livre}`, 135, 48);
+    doc.text(`LIVRES: ${livre}`, 95, 48);
     doc.setTextColor(245, 158, 11);
-    doc.text(`OCUPADOS: ${ocupados}`, 220, 48);
+    doc.text(`OCUPADOS: ${ocupados}`, 155, 48);
 
-    // Screenshot - 1920x1080 PIXELS
+    // Screenshot - 1920x1080 PIXELS - MAXIMIZA ALTURA SEM ACHATAR
     const canvas = document.getElementById('canvas');
     const hint = document.getElementById('hint');
     const hintWasVisible = hint && hint.style.display !== 'none';
@@ -1560,7 +1559,7 @@ async function exportAsPDF(){
     const scaleY = TARGET_HEIGHT / currentHeight;
     const scale = Math.min(scaleX, scaleY);
     
-    console.log(`Capturando canvas LANDSCAPE em ${TARGET_WIDTH}x${TARGET_HEIGHT} (scale: ${scale.toFixed(2)})`);
+    console.log(`Capturando canvas em ${TARGET_WIDTH}x${TARGET_HEIGHT} (scale: ${scale.toFixed(2)})`);
     
     const screenshot = await html2canvas(canvas, {
       backgroundColor: '#1a1f2e',
@@ -1578,37 +1577,42 @@ async function exportAsPDF(){
     
     const imgData = screenshot.toDataURL('image/png');
     
-    // LANDSCAPE: 297mm wide, 210mm tall
-    const pageWidth = 297;
-    const pageHeight = 210;
-    const headerHeight = 57;
-    const sideMargin = 10;
-    const topMargin = 5;
-    const bottomMargin = 15;
+    // PORTRAIT A4: 210mm wide, 297mm tall
+    const pageWidth = 210;
+    const pageHeight = 297;
+    const headerHeight = 57; // header + stats
+    const sideMargin = 8;
+    const topMargin = 3;
+    const bottomMargin = 10;
     
-    // Fit image to landscape
-    const availableWidth = pageWidth - (sideMargin * 2);
-    const availableHeight = pageHeight - headerHeight - topMargin - bottomMargin;
+    // Espaço disponível para a imagem
+    const availableWidth = pageWidth - (sideMargin * 2); // 194mm
+    const availableHeight = pageHeight - headerHeight - topMargin - bottomMargin; // ~227mm
     
-    const REAL_RATIO = TARGET_WIDTH / TARGET_HEIGHT; // 16:9
+    // Proporção real da captura
+    const imgRatio = screenshot.width / screenshot.height;
     
     let pdfWidth, pdfHeight;
     
-    if(REAL_RATIO > (availableWidth / availableHeight)){
-      // Fit to width
-      pdfWidth = availableWidth;
-      pdfHeight = pdfWidth / REAL_RATIO;
+    // PRIORIZA ALTURA para ocupar máximo vertical sem achatar
+    if(imgRatio < (availableWidth / availableHeight)){
+      // Imagem é mais alta que larga - FIT TO HEIGHT
+      pdfHeight = availableHeight; // USA TODA ALTURA DISPONÍVEL
+      pdfWidth = pdfHeight * imgRatio; // Calcula largura mantendo proporção
     }else{
-      // Fit to height
-      pdfHeight = availableHeight;
-      pdfWidth = pdfHeight * REAL_RATIO;
+      // Imagem é mais larga - FIT TO WIDTH
+      pdfWidth = availableWidth;
+      pdfHeight = pdfWidth / imgRatio;
     }
     
+    // Centraliza horizontalmente
     const xPos = (pageWidth - pdfWidth) / 2;
+    
+    // Centraliza verticalmente no espaço disponível
     const remainingSpace = availableHeight - pdfHeight;
     const yPos = headerHeight + topMargin + (remainingSpace / 2);
     
-    console.log(`Inserindo imagem LANDSCAPE no PDF: ${pdfWidth}mm x ${pdfHeight}mm na posição (${xPos}, ${yPos})`);
+    console.log(`Inserindo imagem no PDF: ${pdfWidth.toFixed(1)}mm x ${pdfHeight.toFixed(1)}mm na posição (${xPos.toFixed(1)}, ${yPos.toFixed(1)})`);
     
     doc.addImage(imgData, 'PNG', xPos, yPos, pdfWidth, pdfHeight);
 
@@ -1702,28 +1706,17 @@ async function exportAsPDF(){
       doc.setPage(i);
       doc.setFontSize(7);
       doc.setTextColor(100, 116, 139);
-      
-      // Different footer for landscape page
-      if(i === 1){
-        doc.text(
-          `Sistema Van Nobreak • Gerado em ${new Date().toLocaleString('pt-BR')} • Imagem: 1920x1080px HORIZONTAL`, 
-          148.5, 
-          205, 
-          { align: 'center' }
-        );
-      }else{
-        doc.text(
-          `Sistema Van Nobreak • Gerado em ${new Date().toLocaleString('pt-BR')}`, 
-          105, 
-          287, 
-          { align: 'center' }
-        );
-        doc.text(`Página ${i} de ${pageCount}`, 105, 292, { align: 'center' });
-      }
+      doc.text(
+        `Sistema Van Nobreak • Gerado em ${new Date().toLocaleString('pt-BR')} • Imagem: 1920x1080px`, 
+        105, 
+        287, 
+        { align: 'center' }
+      );
+      doc.text(`Página ${i} de ${pageCount}`, 105, 292, { align: 'center' });
     }
 
-    doc.save(`van-layout-horizontal-${Date.now()}.pdf`);
-    toast('PDF HORIZONTAL exportado!', '📄');
+    doc.save(`van-layout-vertical-${Date.now()}.pdf`);
+    toast('PDF exportado (vertical otimizado)!', '📄');
   }catch(e){
     console.error('Erro no PDF:', e);
     toast('Erro ao gerar PDF', '❌');
@@ -2008,29 +2001,29 @@ async function shareWhatsApp(){
     return;
   }
 
-  toast('Gerando PDF HORIZONTAL para WhatsApp...', '⏳');
+  toast('Gerando PDF para WhatsApp...', '⏳');
 
   try{
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('landscape', 'mm', 'a4');
+    const doc = new jsPDF('portrait', 'mm', 'a4');
 
-    // Same as exportAsPDF - shortened for WhatsApp
+    // Header compacto
     doc.setFillColor(20, 24, 37);
-    doc.rect(0, 0, 297, 35, 'F');
+    doc.rect(0, 0, 210, 35, 'F');
     
     doc.setTextColor(167, 139, 250);
     doc.setFontSize(24);
     doc.setFont('helvetica', 'bold');
-    doc.text('VAN NOBREAK', 148.5, 16, { align: 'center' });
+    doc.text('VAN NOBREAK', 105, 16, { align: 'center' });
     
     doc.setTextColor(148, 163, 184);
     doc.setFontSize(9);
-    doc.text('Layout de Assentos', 148.5, 23, { align: 'center' });
+    doc.text('Layout de Assentos', 105, 23, { align: 'center' });
     doc.text(new Date().toLocaleDateString('pt-BR', { 
       day: '2-digit', 
       month: 'long', 
       year: 'numeric' 
-    }), 148.5, 29, { align: 'center' });
+    }), 105, 29, { align: 'center' });
 
     const total = seats.length;
     const livre = seats.filter(s => s.status === 'livre').length;
@@ -2040,16 +2033,16 @@ async function shareWhatsApp(){
     const ocupados = reservado + confirmado + bloqueado;
 
     doc.setFillColor(26, 31, 46);
-    doc.roundedRect(15, 40, 267, 12, 3, 3, 'F');
+    doc.roundedRect(15, 40, 180, 12, 3, 3, 'F');
     
     doc.setTextColor(241, 245, 249);
     doc.setFontSize(8);
     doc.setFont('helvetica', 'bold');
-    doc.text(`TOTAL: ${total}`, 50, 48);
+    doc.text(`TOTAL: ${total}`, 35, 48);
     doc.setTextColor(16, 185, 129);
-    doc.text(`LIVRES: ${livre}`, 135, 48);
+    doc.text(`LIVRES: ${livre}`, 95, 48);
     doc.setTextColor(245, 158, 11);
-    doc.text(`OCUPADOS: ${ocupados}`, 220, 48);
+    doc.text(`OCUPADOS: ${ocupados}`, 155, 48);
 
     // Screenshot
     const canvas = document.getElementById('canvas');
@@ -2082,26 +2075,26 @@ async function shareWhatsApp(){
     
     const imgData = screenshot.toDataURL('image/png');
     
-    const pageWidth = 297;
-    const pageHeight = 210;
+    const pageWidth = 210;
+    const pageHeight = 297;
     const headerHeight = 57;
-    const sideMargin = 10;
-    const topMargin = 5;
-    const bottomMargin = 15;
+    const sideMargin = 8;
+    const topMargin = 3;
+    const bottomMargin = 10;
     
     const availableWidth = pageWidth - (sideMargin * 2);
     const availableHeight = pageHeight - headerHeight - topMargin - bottomMargin;
     
-    const REAL_RATIO = TARGET_WIDTH / TARGET_HEIGHT;
+    const imgRatio = screenshot.width / screenshot.height;
     
     let pdfWidth, pdfHeight;
     
-    if(REAL_RATIO > (availableWidth / availableHeight)){
-      pdfWidth = availableWidth;
-      pdfHeight = pdfWidth / REAL_RATIO;
-    }else{
+    if(imgRatio < (availableWidth / availableHeight)){
       pdfHeight = availableHeight;
-      pdfWidth = pdfHeight * REAL_RATIO;
+      pdfWidth = pdfHeight * imgRatio;
+    }else{
+      pdfWidth = availableWidth;
+      pdfHeight = pdfWidth / imgRatio;
     }
     
     const xPos = (pageWidth - pdfWidth) / 2;
@@ -2192,32 +2185,22 @@ async function shareWhatsApp(){
       doc.setPage(i);
       doc.setFontSize(7);
       doc.setTextColor(100, 116, 139);
-      
-      if(i === 1){
-        doc.text(
-          `Sistema Van Nobreak • ${new Date().toLocaleString('pt-BR')} • 1920x1080px HORIZONTAL`, 
-          148.5, 
-          205, 
-          { align: 'center' }
-        );
-      }else{
-        doc.text(
-          `Sistema Van Nobreak • ${new Date().toLocaleString('pt-BR')}`, 
-          105, 
-          287, 
-          { align: 'center' }
-        );
-        doc.text(`Página ${i} de ${pageCount}`, 105, 292, { align: 'center' });
-      }
+      doc.text(
+        `Sistema Van Nobreak • ${new Date().toLocaleString('pt-BR')} • 1920x1080px`, 
+        105, 
+        287, 
+        { align: 'center' }
+      );
+      doc.text(`Página ${i} de ${pageCount}`, 105, 292, { align: 'center' });
     }
 
     const pdfBlob = doc.output('blob');
-    const file = new File([pdfBlob], `van-horizontal-${Date.now()}.pdf`, { type: 'application/pdf' });
+    const file = new File([pdfBlob], `van-layout-${Date.now()}.pdf`, { type: 'application/pdf' });
 
     if(navigator.share && navigator.canShare && navigator.canShare({ files: [file] })){
       await navigator.share({
-        title: 'Layout Van Nobreak (Horizontal)',
-        text: `Layout da van com ${total} assentos (${livre} livres, ${ocupados} ocupados) - 1920x1080px HORIZONTAL`,
+        title: 'Layout Van Nobreak',
+        text: `Layout da van com ${total} assentos (${livre} livres, ${ocupados} ocupados) - 1920x1080px`,
         files: [file]
       });
       toast('Compartilhado com sucesso!', '✅');
@@ -2225,14 +2208,14 @@ async function shareWhatsApp(){
       const url = URL.createObjectURL(pdfBlob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `van-horizontal-${Date.now()}.pdf`;
+      a.download = `van-layout-${Date.now()}.pdf`;
       a.click();
       URL.revokeObjectURL(url);
       
       setTimeout(() => {
-        alert('PDF HORIZONTAL baixado! Abra o WhatsApp e envie o arquivo baixado.');
+        alert('PDF baixado! Abra o WhatsApp e envie o arquivo baixado.');
       }, 500);
-      toast('PDF HORIZONTAL baixado!', '📱');
+      toast('PDF baixado - envie pelo WhatsApp', '📱');
     }
   }catch(e){
     console.error('Erro no WhatsApp:', e);
