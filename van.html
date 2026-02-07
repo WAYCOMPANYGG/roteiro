@@ -1459,55 +1459,126 @@ async function exportAsPDF(){
 
   try{
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+    const doc = new jsPDF('portrait', 'mm', 'a4');
 
     // Header
     doc.setFillColor(20, 24, 37);
-    doc.rect(0, 0, 210, 40, 'F');
+    doc.rect(0, 0, 210, 45, 'F');
     
     doc.setTextColor(167, 139, 250);
-    doc.setFontSize(28);
+    doc.setFontSize(32);
     doc.setFont('helvetica', 'bold');
-    doc.text('VAN NOBREAK', 105, 20, { align: 'center' });
+    doc.text('VAN NOBREAK', 105, 22, { align: 'center' });
     
     doc.setTextColor(148, 163, 184);
-    doc.setFontSize(12);
-    doc.text('Layout de Assentos - ' + new Date().toLocaleDateString('pt-BR'), 105, 30, { align: 'center' });
+    doc.setFontSize(11);
+    doc.text('Layout de Assentos', 105, 32, { align: 'center' });
+    doc.text(new Date().toLocaleDateString('pt-BR', { 
+      day: '2-digit', 
+      month: 'long', 
+      year: 'numeric' 
+    }), 105, 39, { align: 'center' });
 
     // Stats
     const total = seats.length;
     const livre = seats.filter(s => s.status === 'livre').length;
-    const ocupados = total - livre;
+    const reservado = seats.filter(s => s.status === 'reservado').length;
+    const confirmado = seats.filter(s => s.status === 'confirmado').length;
+    const bloqueado = seats.filter(s => s.status === 'bloqueado').length;
+    const ocupados = reservado + confirmado + bloqueado;
 
+    doc.setFillColor(26, 31, 46);
+    doc.roundedRect(15, 50, 180, 16, 3, 3, 'F');
+    
     doc.setTextColor(241, 245, 249);
-    doc.setFontSize(11);
-    doc.text(`Total: ${total}   |   Livres: ${livre}   |   Ocupados: ${ocupados}`, 105, 48, { align: 'center' });
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`TOTAL: ${total}`, 30, 59);
+    doc.setTextColor(16, 185, 129);
+    doc.text(`LIVRES: ${livre}`, 80, 59);
+    doc.setTextColor(245, 158, 11);
+    doc.text(`OCUPADOS: ${ocupados}`, 130, 59);
 
-    // Canvas screenshot
+    // Canvas screenshot with better quality
     const canvas = document.getElementById('canvas');
+    
+    // Temporarily hide hint if visible
+    const hint = document.getElementById('hint');
+    const hintDisplay = hint ? hint.style.display : 'none';
+    if(hint) hint.style.display = 'none';
+    
     const canvasData = await html2canvas(canvas, {
       backgroundColor: '#1a1f2e',
-      scale: 2
+      scale: 3, // Higher quality
+      logging: false,
+      useCORS: true,
+      allowTaint: true,
+      removeContainer: true
     });
     
+    // Restore hint
+    if(hint) hint.style.display = hintDisplay;
+    
     const imgData = canvasData.toDataURL('image/png');
-    doc.addImage(imgData, 'PNG', 15, 55, 180, 100);
+    
+    // Calculate aspect ratio to fit properly
+    const canvasAspect = canvasData.width / canvasData.height;
+    const pdfWidth = 180;
+    const pdfHeight = pdfWidth / canvasAspect;
+    
+    doc.addImage(imgData, 'PNG', 15, 72, pdfWidth, Math.min(pdfHeight, 140));
 
-    // Passenger list
-    doc.setFontSize(14);
+    // Passenger list on new page
+    doc.addPage();
+    
+    doc.setFillColor(20, 24, 37);
+    doc.rect(0, 0, 210, 25, 'F');
+    
+    doc.setTextColor(167, 139, 250);
+    doc.setFontSize(20);
     doc.setFont('helvetica', 'bold');
-    doc.text('Lista de Passageiros', 15, 165);
+    doc.text('Lista de Passageiros', 105, 16, { align: 'center' });
 
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
     
-    let y = 175;
-    const sortedSeats = seats.sort((a, b) => a.number - b.number);
+    let y = 35;
+    const sortedSeats = [...seats].sort((a, b) => a.number - b.number);
+
+    // Table header
+    doc.setFillColor(26, 31, 46);
+    doc.rect(15, y - 5, 180, 8, 'F');
+    
+    doc.setTextColor(148, 163, 184);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.text('ASSENTO', 25, y);
+    doc.text('PASSAGEIRO', 55, y);
+    doc.text('STATUS', 160, y);
+    
+    y += 10;
 
     sortedSeats.forEach((s, idx) => {
-      if(y > 280){
+      if(y > 275){
         doc.addPage();
         y = 20;
+        
+        // Repeat header
+        doc.setFillColor(26, 31, 46);
+        doc.rect(15, y - 5, 180, 8, 'F');
+        doc.setTextColor(148, 163, 184);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+        doc.text('ASSENTO', 25, y);
+        doc.text('PASSAGEIRO', 55, y);
+        doc.text('STATUS', 160, y);
+        y += 10;
+      }
+
+      // Alternating row background
+      if(idx % 2 === 0){
+        doc.setFillColor(22, 27, 40);
+        doc.rect(15, y - 6, 180, 9, 'F');
       }
 
       const statusColors = {
@@ -1518,34 +1589,52 @@ async function exportAsPDF(){
       };
 
       const color = statusColors[s.status] || [148, 163, 184];
+      
+      // Status indicator circle
       doc.setFillColor(...color);
-      doc.circle(18, y - 2, 2, 'F');
+      doc.circle(20, y - 2, 2, 'F');
 
+      // Seat number
       doc.setTextColor(241, 245, 249);
       doc.setFont('helvetica', 'bold');
-      doc.text(`#${s.number}`, 25, y);
+      doc.setFontSize(10);
+      doc.text(`#${s.number}`, 27, y);
 
+      // Passenger name
       doc.setFont('helvetica', 'normal');
-      doc.setTextColor(148, 163, 184);
-      const name = s.name || 'Sem passageiro';
-      doc.text(name, 45, y);
+      doc.setTextColor(200, 210, 225);
+      const name = s.name || '—';
+      doc.text(name.substring(0, 35), 55, y);
 
-      doc.setTextColor(100, 116, 139);
+      // Status
+      doc.setTextColor(...color);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
       const statusText = {
-        livre: 'Livre',
-        reservado: 'Reservado',
-        confirmado: 'Confirmado',
-        bloqueado: 'Bloqueado'
+        livre: 'LIVRE',
+        reservado: 'RESERVADO',
+        confirmado: 'CONFIRMADO',
+        bloqueado: 'BLOQUEADO'
       }[s.status];
       doc.text(statusText, 160, y);
 
-      y += 8;
+      y += 9;
     });
 
     // Footer
-    doc.setFontSize(8);
-    doc.setTextColor(100, 116, 139);
-    doc.text('Gerado por Sistema Van Nobreak - ' + new Date().toLocaleString('pt-BR'), 105, 290, { align: 'center' });
+    const pageCount = doc.internal.getNumberOfPages();
+    for(let i = 1; i <= pageCount; i++){
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(100, 116, 139);
+      doc.text(
+        `Sistema Van Nobreak • Gerado em ${new Date().toLocaleString('pt-BR')}`, 
+        105, 
+        287, 
+        { align: 'center' }
+      );
+      doc.text(`Página ${i} de ${pageCount}`, 105, 292, { align: 'center' });
+    }
 
     doc.save(`van-layout-${Date.now()}.pdf`);
     toast('PDF exportado com sucesso!', '📄');
@@ -1844,20 +1933,25 @@ async function shareWhatsApp(){
 
   try{
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+    const doc = new jsPDF('portrait', 'mm', 'a4');
 
     // Header
     doc.setFillColor(20, 24, 37);
-    doc.rect(0, 0, 210, 40, 'F');
+    doc.rect(0, 0, 210, 45, 'F');
     
     doc.setTextColor(167, 139, 250);
-    doc.setFontSize(28);
+    doc.setFontSize(32);
     doc.setFont('helvetica', 'bold');
-    doc.text('VAN NOBREAK', 105, 20, { align: 'center' });
+    doc.text('VAN NOBREAK', 105, 22, { align: 'center' });
     
     doc.setTextColor(148, 163, 184);
-    doc.setFontSize(12);
-    doc.text('Layout de Assentos - ' + new Date().toLocaleDateString('pt-BR'), 105, 30, { align: 'center' });
+    doc.setFontSize(11);
+    doc.text('Layout de Assentos', 105, 32, { align: 'center' });
+    doc.text(new Date().toLocaleDateString('pt-BR', { 
+      day: '2-digit', 
+      month: 'long', 
+      year: 'numeric' 
+    }), 105, 39, { align: 'center' });
 
     // Stats
     const total = seats.length;
@@ -1867,35 +1961,84 @@ async function shareWhatsApp(){
     const bloqueado = seats.filter(s => s.status === 'bloqueado').length;
     const ocupados = reservado + confirmado + bloqueado;
 
+    doc.setFillColor(26, 31, 46);
+    doc.roundedRect(15, 50, 180, 16, 3, 3, 'F');
+    
     doc.setTextColor(241, 245, 249);
-    doc.setFontSize(11);
-    doc.text(`Total: ${total}   |   Livres: ${livre}   |   Ocupados: ${ocupados}`, 105, 48, { align: 'center' });
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`TOTAL: ${total}`, 30, 59);
+    doc.setTextColor(16, 185, 129);
+    doc.text(`LIVRES: ${livre}`, 80, 59);
+    doc.setTextColor(245, 158, 11);
+    doc.text(`OCUPADOS: ${ocupados}`, 130, 59);
 
     // Canvas screenshot
     const canvas = document.getElementById('canvas');
+    const hint = document.getElementById('hint');
+    const hintDisplay = hint ? hint.style.display : 'none';
+    if(hint) hint.style.display = 'none';
+    
     const canvasData = await html2canvas(canvas, {
       backgroundColor: '#1a1f2e',
-      scale: 2
+      scale: 3,
+      logging: false,
+      useCORS: true,
+      allowTaint: true
     });
     
-    const imgData = canvasData.toDataURL('image/png');
-    doc.addImage(imgData, 'PNG', 15, 55, 180, 100);
-
-    // Passenger list
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Lista de Passageiros', 15, 165);
-
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
+    if(hint) hint.style.display = hintDisplay;
     
-    let y = 175;
-    const sortedSeats = seats.sort((a, b) => a.number - b.number);
+    const imgData = canvasData.toDataURL('image/png');
+    const canvasAspect = canvasData.width / canvasData.height;
+    const pdfWidth = 180;
+    const pdfHeight = pdfWidth / canvasAspect;
+    
+    doc.addImage(imgData, 'PNG', 15, 72, pdfWidth, Math.min(pdfHeight, 140));
+
+    // Passenger list on new page
+    doc.addPage();
+    
+    doc.setFillColor(20, 24, 37);
+    doc.rect(0, 0, 210, 25, 'F');
+    
+    doc.setTextColor(167, 139, 250);
+    doc.setFontSize(20);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Lista de Passageiros', 105, 16, { align: 'center' });
+
+    let y = 35;
+    const sortedSeats = [...seats].sort((a, b) => a.number - b.number);
+
+    // Table header
+    doc.setFillColor(26, 31, 46);
+    doc.rect(15, y - 5, 180, 8, 'F');
+    doc.setTextColor(148, 163, 184);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.text('ASSENTO', 25, y);
+    doc.text('PASSAGEIRO', 55, y);
+    doc.text('STATUS', 160, y);
+    y += 10;
 
     sortedSeats.forEach((s, idx) => {
-      if(y > 280){
+      if(y > 275){
         doc.addPage();
         y = 20;
+        doc.setFillColor(26, 31, 46);
+        doc.rect(15, y - 5, 180, 8, 'F');
+        doc.setTextColor(148, 163, 184);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+        doc.text('ASSENTO', 25, y);
+        doc.text('PASSAGEIRO', 55, y);
+        doc.text('STATUS', 160, y);
+        y += 10;
+      }
+
+      if(idx % 2 === 0){
+        doc.setFillColor(22, 27, 40);
+        doc.rect(15, y - 6, 180, 9, 'F');
       }
 
       const statusColors = {
@@ -1907,39 +2050,51 @@ async function shareWhatsApp(){
 
       const color = statusColors[s.status] || [148, 163, 184];
       doc.setFillColor(...color);
-      doc.circle(18, y - 2, 2, 'F');
+      doc.circle(20, y - 2, 2, 'F');
 
       doc.setTextColor(241, 245, 249);
       doc.setFont('helvetica', 'bold');
-      doc.text(`#${s.number}`, 25, y);
+      doc.setFontSize(10);
+      doc.text(`#${s.number}`, 27, y);
 
       doc.setFont('helvetica', 'normal');
-      doc.setTextColor(148, 163, 184);
-      const name = s.name || 'Sem passageiro';
-      doc.text(name, 45, y);
+      doc.setTextColor(200, 210, 225);
+      const name = s.name || '—';
+      doc.text(name.substring(0, 35), 55, y);
 
-      doc.setTextColor(100, 116, 139);
+      doc.setTextColor(...color);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
       const statusText = {
-        livre: 'Livre',
-        reservado: 'Reservado',
-        confirmado: 'Confirmado',
-        bloqueado: 'Bloqueado'
+        livre: 'LIVRE',
+        reservado: 'RESERVADO',
+        confirmado: 'CONFIRMADO',
+        bloqueado: 'BLOQUEADO'
       }[s.status];
       doc.text(statusText, 160, y);
 
-      y += 8;
+      y += 9;
     });
 
     // Footer
-    doc.setFontSize(8);
-    doc.setTextColor(100, 116, 139);
-    doc.text('Gerado por Sistema Van Nobreak - ' + new Date().toLocaleString('pt-BR'), 105, 290, { align: 'center' });
+    const pageCount = doc.internal.getNumberOfPages();
+    for(let i = 1; i <= pageCount; i++){
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(100, 116, 139);
+      doc.text(
+        `Sistema Van Nobreak • Gerado em ${new Date().toLocaleString('pt-BR')}`, 
+        105, 
+        287, 
+        { align: 'center' }
+      );
+      doc.text(`Página ${i} de ${pageCount}`, 105, 292, { align: 'center' });
+    }
 
-    // Convert to blob
+    // Convert to blob and share
     const pdfBlob = doc.output('blob');
     const file = new File([pdfBlob], `van-layout-${Date.now()}.pdf`, { type: 'application/pdf' });
 
-    // Check if Web Share API is available
     if(navigator.share && navigator.canShare && navigator.canShare({ files: [file] })){
       await navigator.share({
         title: 'Layout Van Nobreak',
@@ -1948,7 +2103,6 @@ async function shareWhatsApp(){
       });
       toast('Compartilhado com sucesso!', '✅');
     }else{
-      // Fallback: download and show instructions
       const url = URL.createObjectURL(pdfBlob);
       const a = document.createElement('a');
       a.href = url;
