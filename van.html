@@ -624,11 +624,17 @@
     }
 
     .passenger-docs{
-      display:grid;
-      grid-template-columns:1fr 1fr;
+      display:flex;
+      flex-direction:column;
       gap:8px;
       padding-top:10px;
       border-top:1px solid var(--border);
+    }
+
+    .doc-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
     }
 
     .doc-input{
@@ -642,6 +648,7 @@
       outline:none;
       transition:all 0.2s;
       font-family:'Rokiest','Inter',system-ui,sans-serif;
+      width:100%;
     }
 
     .doc-input:focus{
@@ -663,6 +670,26 @@
     .doc-input[type="date"]::-webkit-calendar-picker-indicator{
       filter:invert(1);
       cursor:pointer;
+    }
+
+    .doc-field{
+      position:relative;
+      flex:1;
+      min-width:0;
+    }
+
+    .doc-label{
+      position:absolute;
+      top:-6px;
+      left:8px;
+      font-size:9px;
+      color:var(--text-muted);
+      background:var(--elevated);
+      padding:0 4px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      z-index:1;
     }
 
     .passenger-card.status-livre{
@@ -1502,35 +1529,42 @@ function renderList(){
           </select>
         </div>
         <div class="passenger-docs">
-          <input 
-            type="text" 
-            class="doc-input" 
-            placeholder="Nome Completo"
-            value="${s.nomeCompleto || ''}"
-            onchange="updateField('${s.id}', 'nomeCompleto', this.value)"
-          />
-          <input 
-            type="text" 
-            class="doc-input" 
-            placeholder="RG"
-            value="${s.rg || ''}"
-            onchange="updateField('${s.id}', 'rg', this.value)"
-          />
-          <input 
-            type="text" 
-            class="doc-input" 
-            placeholder="CPF"
-            value="${s.cpf || ''}"
-            onchange="updateField('${s.id}', 'cpf', this.value)"
-          />
-          <div style="position:relative">
-            <label style="position:absolute; top:-6px; left:8px; font-size:9px; color:var(--text-muted); background:var(--elevated); padding:0 4px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; z-index:1">Data Nasc.</label>
+          <div class="doc-row">
             <input 
-              type="date" 
+              type="text" 
               class="doc-input" 
-              value="${s.dataNascimento || ''}"
-              onchange="updateField('${s.id}', 'dataNascimento', this.value)"
+              placeholder="Nome Completo"
+              value="${s.nomeCompleto || ''}"
+              onchange="updateField('${s.id}', 'nomeCompleto', this.value)"
             />
+            <div class="doc-field">
+              <label class="doc-label">RG</label>
+              <input 
+                type="text" 
+                class="doc-input" 
+                placeholder="00.000.000-0"
+                value="${s.rg || ''}"
+                onchange="updateField('${s.id}', 'rg', this.value)"
+              />
+            </div>
+          </div>
+          <div class="doc-row">
+            <input 
+              type="text" 
+              class="doc-input" 
+              placeholder="CPF: 000.000.000-00"
+              value="${s.cpf || ''}"
+              onchange="updateField('${s.id}', 'cpf', this.value)"
+            />
+            <div class="doc-field">
+              <label class="doc-label">Data Nasc.</label>
+              <input 
+                type="date" 
+                class="doc-input" 
+                value="${s.dataNascimento || ''}"
+                onchange="updateField('${s.id}', 'dataNascimento', this.value)"
+              />
+            </div>
           </div>
         </div>
       `;
