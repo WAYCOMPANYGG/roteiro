@@ -3,687 +3,706 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Nobreak Company | Dashboard</title>
+  <title>Nobreak Company | Home</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
   <style>
     @font-face{
       font-family:"Rokiest";
       src:url("https://raw.githubusercontent.com/NOBRAKEGG/iMake/main/assets/fonts/Rokiest-Extrabold.otf") format("opentype");
-      font-weight:800;
-      font-display:swap;
+      font-weight:800;font-display:swap;
     }
 
     :root{
-      --bg:#0a0f1a;
-      --bg-secondary:#111827;
-      --surface:#1a1f2e;
-      --surface-elevated:#252b3b;
-
-      --border:rgba(255,255,255,.08);
-      --border-light:rgba(255,255,255,.12);
-      --border-hover:rgba(255,0,128,.5);
-
-      --text:#f8fafc;
-      --text-secondary:#e2e8f0;
-      --text-muted:#94a3b8;
-      --text-dim:#64748b;
-
-      --primary:#FF0080;
-      --primary-light:#FF3399;
-      --primary-dark:#CC0066;
-      --accent:#00F0FF;
-      --accent-light:#22d3ee;
-      --success:#10b981;
-      --warning:#f59e0b;
-      --danger:#ef4444;
-
-      --shadow-sm:0 2px 8px rgba(0,0,0,.3);
-      --shadow-md:0 8px 24px rgba(0,0,0,.4);
-      --shadow-lg:0 20px 40px rgba(0,0,0,.5);
-
-      --radius-lg:16px;
-      --radius-md:12px;
-      --radius-sm:8px;
+      --bg1:#050611;
+      --bg2:#0b1220;
+      --panel:rgba(10,16,28,.72);
+      --panel-solid:#0d1322;
+      --surface:rgba(255,255,255,.04);
+      --surface-hover:rgba(255,255,255,.07);
+      --stroke:rgba(255,255,255,.08);
+      --stroke-light:rgba(255,255,255,.12);
+      --text:#e5e7eb;
+      --text-secondary:#cbd5e1;
+      --muted:rgba(229,231,235,.55);
+      --purple:#8b5cf6;
+      --pink:#FF0080;
+      --cyan:#06b6d4;
+      --green:#22c55e;
+      --amber:#f59e0b;
+      --red:#ef4444;
+      --blue:#3b82f6;
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
 
-    html,body{
-      height:100%;
+    body{
+      min-height:100vh;
       font-family:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
       color:var(--text);
-      background:var(--bg);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-    }
-
-    body::before{
-      content:'';
-      position:fixed;
-      inset:0;
       background:
-        radial-gradient(circle at 20% 50%,rgba(255,0,128,.10) 0%,transparent 50%),
-        radial-gradient(circle at 80% 80%,rgba(0,240,255,.10) 0%,transparent 50%);
+        radial-gradient(900px 500px at 10% 10%,rgba(139,92,246,.14),transparent 60%),
+        radial-gradient(800px 500px at 90% 15%,rgba(6,182,212,.12),transparent 60%),
+        radial-gradient(700px 400px at 50% 90%,rgba(255,0,128,.08),transparent 60%),
+        linear-gradient(160deg,var(--bg1),var(--bg2));
+      background-attachment:fixed;
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* Noise overlay */
+    body::after{
+      content:'';
+      position:fixed;inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.15'/%3E%3C/svg%3E");
+      opacity:.12;
+      mix-blend-mode:overlay;
       pointer-events:none;
-      z-index:0;
+      z-index:9999;
     }
 
-    .container{
-      max-width:1400px;
-      margin:0 auto;
-      padding:24px;
-      animation:fadeIn .6s ease;
-      position:relative;
-      z-index:1;
-    }
-
-    @keyframes fadeIn{
-      from{opacity:0;transform:translateY(10px)}
-      to{opacity:1;transform:translateY(0)}
-    }
-
-    @keyframes slideDown{
-      from{opacity:0;transform:translateY(-20px)}
-      to{opacity:1;transform:translateY(0)}
-    }
-
-    @keyframes slideUp{
-      from{opacity:0;transform:translateY(20px)}
-      to{opacity:1;transform:translateY(0)}
-    }
-
-    /* HEADER */
-    .header{
-      background:var(--surface);
-      border:1px solid var(--border);
-      border-radius:var(--radius-lg);
-      padding:24px 32px;
-      margin-bottom:24px;
+    /* ========== TOP NAV ========== */
+    .topnav{
+      position:fixed;top:0;left:0;right:0;
+      z-index:1000;
+      padding:14px 32px;
       display:flex;
+      align-items:center;
       justify-content:space-between;
-      align-items:center;
-      gap:20px;
-      flex-wrap:wrap;
-      animation:slideDown .5s ease;
+      gap:16px;
+      background:rgba(5,6,17,.65);
+      backdrop-filter:blur(20px) saturate(1.4);
+      border-bottom:1px solid var(--stroke);
+      transition:background .3s;
     }
 
-    .brand{
+    .nav-brand{
       display:flex;
       align-items:center;
-      gap:20px;
+      gap:14px;
+      text-decoration:none;
+      color:var(--text);
     }
 
-    .logo{
-      display:flex;
-      align-items:center;
-      gap:2px;
+    .nav-logo{
+      width:42px;height:42px;
+      border-radius:12px;
+      display:grid;place-items:center;
       font-family:'Rokiest',sans-serif;
-      font-size:24px;
-      letter-spacing:0.5px;
-      color:var(--text);
+      font-size:14px;
+      letter-spacing:.5px;
+      background:
+        radial-gradient(60px 60px at 30% 25%,rgba(139,92,246,.7),transparent 60%),
+        radial-gradient(60px 60px at 75% 70%,rgba(6,182,212,.5),transparent 65%),
+        rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 8px 24px rgba(0,0,0,.4);
     }
 
-    .logo-k{position:relative;margin-right:-3px}
-
-    .logo-lightning{
-      position:absolute;
-      right:-6px;
-      top:50%;
-      transform:translateY(-50%);
-      width:16px;
-      filter:drop-shadow(0 0 8px #ffd700);
+    .nav-title{
+      font-family:'Rokiest',sans-serif;
+      font-size:18px;
+      letter-spacing:.5px;
     }
 
-    .header-titles h1{
-      font-family:'Space Grotesk',sans-serif;
-      font-size:24px;
-      font-weight:600;
-      letter-spacing:-0.3px;
-      margin-bottom:4px;
-      color:var(--text);
-    }
-
-    .header-sub{
-      font-size:13px;
-      color:var(--text-dim);
-      font-weight:500;
-    }
-
-    .header-right{
+    .nav-links{
       display:flex;
       align-items:center;
-      gap:12px;
+      gap:6px;
+      flex-wrap:wrap;
     }
 
-    .status-badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 20px;
+    .nav-link{
+      padding:8px 16px;
       border-radius:999px;
-      background:rgba(16,185,129,.12);
-      border:1px solid rgba(16,185,129,.25);
+      text-decoration:none;
+      color:var(--muted);
       font-size:13px;
       font-weight:600;
-      color:var(--success);
+      transition:all .2s;
+      border:1px solid transparent;
+    }
+    .nav-link:hover{
+      color:var(--text);
+      background:var(--surface);
+      border-color:var(--stroke);
+    }
+    .nav-link.active{
+      color:#fff;
+      background:linear-gradient(135deg,var(--purple),var(--pink));
+      border-color:transparent;
+      box-shadow:0 4px 16px rgba(139,92,246,.3);
     }
 
-    .status-dot{
-      width:8px;
-      height:8px;
-      border-radius:50%;
-      background:var(--success);
-      box-shadow:0 0 12px var(--success);
+    .nav-status{
+      display:flex;align-items:center;gap:8px;
+      padding:8px 16px;
+      border-radius:999px;
+      border:1px solid rgba(34,197,94,.2);
+      background:rgba(34,197,94,.08);
+      font-size:12px;font-weight:600;
+      color:var(--green);
+    }
+    .nav-status-dot{
+      width:7px;height:7px;border-radius:50%;
+      background:var(--green);
+      box-shadow:0 0 10px var(--green);
       animation:pulse 2s ease-in-out infinite;
     }
 
     @keyframes pulse{
       0%,100%{opacity:1;transform:scale(1)}
-      50%{opacity:.6;transform:scale(1.2)}
+      50%{opacity:.5;transform:scale(1.3)}
     }
 
-    /* NAV BAR */
-    .nav-bar{
+    /* Mobile menu toggle */
+    .menu-toggle{
+      display:none;
+      width:40px;height:40px;
+      border-radius:10px;
+      border:1px solid var(--stroke);
       background:var(--surface);
-      border:1px solid var(--border);
-      border-radius:var(--radius-lg);
-      padding:16px 24px;
-      margin-bottom:32px;
-      display:flex;
-      align-items:center;
-      gap:8px;
-      flex-wrap:wrap;
-      animation:slideUp .5s ease .1s both;
-      overflow-x:auto;
-      scrollbar-width:none;
+      color:var(--text);
+      font-size:20px;
+      cursor:pointer;
+      place-items:center;
     }
-    .nav-bar::-webkit-scrollbar{display:none}
 
-    .nav-label{
-      font-size:12px;
-      color:var(--text-dim);
-      font-weight:700;
+    /* ========== HERO ========== */
+    .hero{
+      padding:160px 32px 80px;
+      text-align:center;
+      position:relative;
+    }
+
+    .hero::before{
+      content:'';
+      position:absolute;
+      top:80px;left:50%;
+      transform:translateX(-50%);
+      width:600px;height:600px;
+      background:radial-gradient(circle,rgba(139,92,246,.15),rgba(6,182,212,.08),transparent 70%);
+      pointer-events:none;
+      filter:blur(60px);
+    }
+
+    .hero-badge{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 20px;
+      border-radius:999px;
+      border:1px solid rgba(139,92,246,.25);
+      background:rgba(139,92,246,.08);
+      font-size:12px;font-weight:700;
+      color:var(--purple);
       text-transform:uppercase;
       letter-spacing:1px;
-      margin-right:8px;
-      white-space:nowrap;
+      margin-bottom:32px;
+      animation:fadeUp .6s ease both;
     }
 
-    .nav-pill{
-      height:38px;
+    .hero-title{
+      font-family:'Rokiest',sans-serif;
+      font-size:clamp(48px,8vw,86px);
+      letter-spacing:1px;
+      line-height:1;
+      margin-bottom:20px;
+      position:relative;
+      animation:fadeUp .6s ease .1s both;
+    }
+
+    .hero-title .gradient{
+      background:linear-gradient(135deg,var(--purple),var(--pink),var(--cyan));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+
+    .hero-sub{
+      font-size:clamp(16px,2vw,20px);
+      color:var(--muted);
+      font-weight:400;
+      max-width:560px;
+      margin:0 auto 40px;
+      line-height:1.6;
+      animation:fadeUp .6s ease .2s both;
+    }
+
+    .hero-actions{
+      display:flex;
+      justify-content:center;
+      gap:14px;
+      flex-wrap:wrap;
+      animation:fadeUp .6s ease .3s both;
+    }
+
+    .btn{
+      height:48px;
+      padding:0 28px;
       border-radius:999px;
-      border:1px solid var(--border);
-      background:var(--surface-elevated);
-      color:var(--text-muted);
-      padding:0 18px;
+      border:1px solid var(--stroke);
+      background:var(--surface);
+      color:var(--text);
+      font-family:'Poppins',sans-serif;
+      font-size:14px;
+      font-weight:600;
+      cursor:pointer;
+      transition:all .25s;
       display:inline-flex;
       align-items:center;
-      gap:8px;
-      font-weight:600;
-      font-size:13px;
-      cursor:pointer;
-      transition:all .2s;
+      gap:10px;
       text-decoration:none;
-      white-space:nowrap;
+    }
+    .btn:hover{
+      transform:translateY(-2px);
+      border-color:var(--stroke-light);
+      box-shadow:0 8px 24px rgba(0,0,0,.3);
     }
 
-    .nav-pill:hover{
-      transform:translateY(-1px);
-      border-color:var(--border-light);
-      color:var(--text);
-      box-shadow:var(--shadow-sm);
-    }
-
-    .nav-pill.active{
-      background:linear-gradient(135deg,var(--primary),#7928CA);
+    .btn-primary{
+      background:linear-gradient(135deg,var(--purple),var(--pink));
       border-color:transparent;
       color:#fff;
       font-weight:700;
-      box-shadow:0 4px 16px rgba(255,0,128,.3);
+      box-shadow:0 6px 24px rgba(139,92,246,.35);
+    }
+    .btn-primary:hover{
+      box-shadow:0 10px 32px rgba(139,92,246,.45);
+      transform:translateY(-3px);
     }
 
-    .nav-pill.active:hover{
-      box-shadow:0 6px 20px rgba(255,0,128,.4);
+    @keyframes fadeUp{
+      from{opacity:0;transform:translateY(20px)}
+      to{opacity:1;transform:translateY(0)}
     }
 
-    .nav-divider{
-      width:1px;
-      height:24px;
-      background:var(--border);
-      margin:0 8px;
+    /* ========== CONTENT ========== */
+    .content{
+      max-width:1200px;
+      margin:0 auto;
+      padding:0 32px 80px;
     }
 
-    /* SECTION HEADER */
-    .section-header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:24px;
+    .section{margin-bottom:60px}
+
+    .section-label{
+      font-size:11px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:2px;
+      color:var(--purple);
+      margin-bottom:8px;
     }
 
     .section-title{
       font-family:'Space Grotesk',sans-serif;
-      font-size:20px;
+      font-size:26px;
       font-weight:600;
       letter-spacing:-0.3px;
       color:var(--text);
+      margin-bottom:32px;
     }
 
-    .section-subtitle{
-      font-size:13px;
-      color:var(--text-dim);
-      font-weight:400;
-      margin-top:4px;
-    }
-
-    /* ACTION CARDS */
-    .quick-actions{
+    /* ========== CARDS GRID ========== */
+    .cards-grid{
       display:grid;
-      grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
-      gap:20px;
-      margin-bottom:40px;
-      animation:slideUp .6s ease .2s both;
+      grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
+      gap:16px;
     }
 
-    .action-card{
-      background:var(--surface);
-      border:1px solid var(--border);
-      border-radius:var(--radius-lg);
+    .card{
+      background:var(--panel);
+      border:1px solid var(--stroke);
+      border-radius:20px;
       padding:28px;
-      display:flex;
-      flex-direction:column;
-      gap:20px;
       text-decoration:none;
       color:inherit;
-      transition:all .3s cubic-bezier(.4,0,.2,1);
       position:relative;
       overflow:hidden;
+      transition:all .3s cubic-bezier(.4,0,.2,1);
+      backdrop-filter:blur(10px);
+      display:flex;
+      flex-direction:column;
+      gap:18px;
     }
 
-    .action-card::before{
+    .card::before{
       content:'';
-      position:absolute;
-      inset:0;
-      background:radial-gradient(circle at 50% 0%,rgba(255,0,128,.06),transparent 60%);
+      position:absolute;inset:-1px;
+      border-radius:20px;
+      background:linear-gradient(135deg,transparent,transparent);
       opacity:0;
       transition:opacity .3s;
+      pointer-events:none;
+      z-index:0;
     }
 
-    .action-card:hover{
+    .card:hover{
       transform:translateY(-4px);
-      border-color:var(--border-hover);
-      box-shadow:var(--shadow-md),0 0 30px rgba(255,0,128,.08);
+      border-color:rgba(139,92,246,.25);
+      box-shadow:
+        0 20px 40px rgba(0,0,0,.35),
+        0 0 60px rgba(139,92,246,.06);
     }
 
-    .action-card:hover::before{
+    .card:hover::before{
       opacity:1;
+      background:radial-gradient(circle at 30% 0%,rgba(139,92,246,.08),transparent 50%);
     }
 
-    .action-card.featured{
-      background:var(--surface-elevated);
-      border-color:var(--border-light);
+    .card.featured{
+      border-color:rgba(139,92,246,.2);
+      background:
+        radial-gradient(400px 200px at 10% 10%,rgba(139,92,246,.08),transparent 50%),
+        var(--panel);
     }
 
-    .action-card.featured::before{
-      background:radial-gradient(circle at 50% 0%,rgba(255,0,128,.10),transparent 60%);
-    }
-
-    .action-header{
+    .card-top{
       display:flex;
       justify-content:space-between;
       align-items:flex-start;
-      position:relative;
-      z-index:1;
+      position:relative;z-index:1;
     }
 
-    .action-icon{
-      width:52px;
-      height:52px;
+    .card-icon{
+      width:50px;height:50px;
       border-radius:14px;
-      background:var(--surface-elevated);
-      border:1px solid var(--border);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:26px;
+      display:grid;place-items:center;
+      font-size:24px;
+      border:1px solid var(--stroke);
       transition:all .3s;
     }
 
-    .action-card:hover .action-icon{
+    .card-icon.purple{background:rgba(139,92,246,.10)}
+    .card-icon.cyan{background:rgba(6,182,212,.10)}
+    .card-icon.pink{background:rgba(255,0,128,.10)}
+    .card-icon.green{background:rgba(34,197,94,.10)}
+    .card-icon.amber{background:rgba(245,158,11,.10)}
+    .card-icon.blue{background:rgba(59,130,246,.10)}
+
+    .card:hover .card-icon{
       transform:scale(1.08);
-      border-color:var(--border-hover);
-      box-shadow:0 0 20px rgba(255,0,128,.1);
+      box-shadow:0 0 20px rgba(139,92,246,.12);
     }
 
-    .action-badge{
-      padding:6px 14px;
+    .card-badge{
+      padding:5px 12px;
       border-radius:999px;
-      font-size:11px;
+      font-size:10px;
       font-weight:700;
       text-transform:uppercase;
-      letter-spacing:0.5px;
+      letter-spacing:.5px;
       border:1px solid;
     }
 
-    .badge-primary{
-      background:rgba(255,0,128,.12);
-      color:var(--primary-light);
-      border-color:rgba(255,0,128,.25);
+    .badge-featured{background:rgba(139,92,246,.10);color:var(--purple);border-color:rgba(139,92,246,.2)}
+    .badge-user{background:rgba(6,182,212,.10);color:var(--cyan);border-color:rgba(6,182,212,.2)}
+    .badge-admin{background:rgba(34,197,94,.10);color:var(--green);border-color:rgba(34,197,94,.2)}
+
+    .card-body{
+      position:relative;z-index:1;
+      display:flex;flex-direction:column;gap:8px;
     }
 
-    .badge-accent{
-      background:rgba(0,240,255,.10);
-      color:var(--accent);
-      border-color:rgba(0,240,255,.20);
-    }
-
-    .badge-success{
-      background:rgba(16,185,129,.12);
-      color:var(--success);
-      border-color:rgba(16,185,129,.25);
-    }
-
-    .action-content{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      position:relative;
-      z-index:1;
-    }
-
-    .action-title{
+    .card-title{
       font-family:'Space Grotesk',sans-serif;
       font-size:17px;
       font-weight:600;
-      letter-spacing:-0.3px;
+      letter-spacing:-0.2px;
       color:var(--text);
     }
 
-    .action-desc{
+    .card-desc{
       font-size:13px;
-      color:var(--text-muted);
-      font-weight:400;
+      color:var(--muted);
       line-height:1.6;
     }
 
-    .action-footer{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      font-size:14px;
-      color:var(--primary-light);
-      font-weight:600;
-      position:relative;
-      z-index:1;
+    .card-action{
+      display:flex;align-items:center;gap:8px;
+      font-size:13px;font-weight:600;
+      color:var(--purple);
+      position:relative;z-index:1;
+      margin-top:auto;
     }
 
-    .action-footer .arrow{
-      transition:transform .3s;
+    .card-action .arrow{
       display:inline-block;
+      transition:transform .3s;
     }
 
-    .action-card:hover .action-footer .arrow{
+    .card:hover .card-action .arrow{
       transform:translateX(5px);
     }
 
-    /* STATS */
-    .stats-section{
-      animation:slideUp .6s ease .3s both;
-    }
-
-    .stats-grid{
+    /* ========== STATS ========== */
+    .stats-row{
       display:grid;
-      grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-      gap:20px;
+      grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+      gap:16px;
     }
 
-    .stat-card{
-      background:var(--surface);
-      border:1px solid var(--border);
-      border-radius:var(--radius-lg);
-      padding:24px;
-      display:flex;
-      flex-direction:column;
-      gap:14px;
+    .stat{
+      background:var(--panel);
+      border:1px solid var(--stroke);
+      border-radius:16px;
+      padding:22px;
+      backdrop-filter:blur(10px);
       transition:all .3s;
       position:relative;
       overflow:hidden;
     }
 
-    .stat-card::before{
-      content:'';
-      position:absolute;
-      inset:0;
-      background:radial-gradient(circle at 50% 100%,rgba(0,240,255,.04),transparent 60%);
-      opacity:0;
-      transition:opacity .3s;
+    .stat::before{
+      content:'';position:absolute;inset:0;
+      background:radial-gradient(circle at 50% 100%,rgba(6,182,212,.04),transparent 60%);
+      opacity:0;transition:opacity .3s;pointer-events:none;
     }
 
-    .stat-card:hover{
+    .stat:hover{
       transform:translateY(-2px);
-      border-color:var(--border-light);
-      box-shadow:var(--shadow-md);
+      border-color:var(--stroke-light);
+      box-shadow:0 12px 30px rgba(0,0,0,.25);
     }
-
-    .stat-card:hover::before{
-      opacity:1;
-    }
+    .stat:hover::before{opacity:1}
 
     .stat-label{
-      font-size:11px;
-      color:var(--text-dim);
-      text-transform:uppercase;
-      letter-spacing:1px;
-      font-weight:700;
-      position:relative;
-      z-index:1;
+      font-size:10px;font-weight:700;
+      text-transform:uppercase;letter-spacing:1px;
+      color:var(--muted);margin-bottom:10px;
     }
 
     .stat-value{
       font-family:'Space Grotesk',sans-serif;
-      font-size:28px;
-      font-weight:600;
+      font-size:26px;font-weight:600;
       letter-spacing:-0.5px;
-      position:relative;
-      z-index:1;
+      margin-bottom:6px;
     }
 
-    .stat-trend{
-      font-size:12px;
-      color:var(--success);
-      font-weight:600;
-      position:relative;
-      z-index:1;
+    .stat-hint{
+      font-size:11px;font-weight:600;
+      color:var(--green);
     }
 
-    /* FOOTER */
+    /* ========== FOOTER ========== */
     .footer{
-      margin-top:40px;
-      padding:20px;
+      border-top:1px solid var(--stroke);
+      padding:32px;
       text-align:center;
       font-size:12px;
-      color:var(--text-dim);
-      animation:fadeIn .6s ease .4s both;
+      color:var(--muted);
     }
+    .footer a{color:var(--purple);text-decoration:none;font-weight:600}
+    .footer a:hover{text-decoration:underline}
 
-    .footer a{
-      color:var(--primary-light);
-      text-decoration:none;
-      font-weight:600;
-    }
-    .footer a:hover{
-      text-decoration:underline;
-    }
-
-    /* RESPONSIVO */
-    @media(max-width:768px){
-      .container{padding:16px}
-      .header{padding:20px;gap:16px}
-      .header-titles h1{font-size:20px}
-      .nav-bar{padding:12px 16px;gap:6px}
-      .nav-pill{height:34px;padding:0 14px;font-size:12px}
-      .quick-actions{grid-template-columns:1fr}
-      .stats-grid{grid-template-columns:repeat(2,1fr)}
-      .brand{gap:14px}
-      .logo{font-size:20px}
+    /* ========== RESPONSIVE ========== */
+    @media(max-width:900px){
+      .nav-links{display:none}
+      .nav-links.open{
+        display:flex;
+        flex-direction:column;
+        position:absolute;
+        top:100%;left:0;right:0;
+        background:rgba(5,6,17,.92);
+        backdrop-filter:blur(20px);
+        border-bottom:1px solid var(--stroke);
+        padding:16px;
+        gap:4px;
+      }
+      .nav-links.open .nav-link{
+        padding:12px 16px;
+        border-radius:12px;
+        width:100%;
+      }
+      .menu-toggle{display:grid}
+      .nav-status{display:none}
+      .hero{padding:140px 20px 60px}
+      .content{padding:0 20px 60px}
+      .cards-grid{grid-template-columns:1fr}
     }
 
     @media(max-width:480px){
-      .header{
-        flex-direction:column;
-        align-items:flex-start;
-      }
-      .stats-grid{grid-template-columns:1fr}
-      .action-card{padding:20px}
-      .nav-divider{display:none}
+      .topnav{padding:12px 16px}
+      .hero-title{font-size:42px}
+      .hero-sub{font-size:15px}
+      .hero-actions{flex-direction:column;align-items:center}
+      .btn{width:100%;max-width:280px;justify-content:center}
+      .stats-row{grid-template-columns:1fr 1fr}
+      .card{padding:22px}
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <!-- HEADER -->
-    <header class="header">
-      <div class="brand">
-        <div class="logo">
-          <span>NOBREA</span>
-          <span class="logo-k">
-            K
-            <svg class="logo-lightning" viewBox="0 0 100 180" fill="none">
-              <path d="M50 0L14 90H40L25 180L75 63H50L65 18L50 0Z" fill="#ffd700"/>
-            </svg>
-          </span>
-        </div>
-        <div class="header-titles">
-          <h1>DASHBOARD</h1>
-          <div class="header-sub">Central de Controle</div>
-        </div>
-      </div>
-      <div class="header-right">
-        <div class="status-badge">
-          <span class="status-dot"></span>
-          <span>Sistema Online</span>
-        </div>
-      </div>
-    </header>
 
-    <!-- NAVIGATION -->
-    <nav class="nav-bar">
-      <span class="nav-label">Menu</span>
-      <a href="index.html" class="nav-pill active">🏠 Dashboard</a>
-      <a href="agenda.html" class="nav-pill">📅 Agenda</a>
-      <div class="nav-divider"></div>
-      <a href="vip.html" class="nav-pill">🎟️ VIP</a>
-      <a href="pix.html" class="nav-pill">💸 PIX</a>
-      <a href="diaria.html" class="nav-pill">📒 Diaria</a>
-      <a href="van.html" class="nav-pill">🚐 Van</a>
-      <div class="nav-divider"></div>
-      <a href="vip-admin.html" class="nav-pill">🧠 VIP Admin</a>
-      <a href="pix-admin.html" class="nav-pill">🛡️ PIX Admin</a>
-      <a href="pix-cadastro.html" class="nav-pill">➕ Cadastro</a>
-      <a href="ajustar-cronograma.html" class="nav-pill">🗓️ Cronograma</a>
-    </nav>
+  <!-- TOP NAV -->
+  <nav class="topnav">
+    <a href="index.html" class="nav-brand">
+      <div class="nav-logo">NK</div>
+      <span class="nav-title">NOBREAK</span>
+    </a>
+
+    <button class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+
+    <div class="nav-links">
+      <a href="index.html" class="nav-link active">Home</a>
+      <a href="agenda.html" class="nav-link">Agenda</a>
+      <a href="vip.html" class="nav-link">VIP</a>
+      <a href="pix.html" class="nav-link">PIX</a>
+      <a href="diaria.html" class="nav-link">Diaria</a>
+      <a href="van.html" class="nav-link">Van</a>
+      <a href="vip-admin.html" class="nav-link">Admin</a>
+    </div>
+
+    <div class="nav-status">
+      <span class="nav-status-dot"></span>
+      Online
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">Central de Controle</div>
+    <h1 class="hero-title">
+      <span class="gradient">NOBREAK</span><br>COMPANY
+    </h1>
+    <p class="hero-sub">
+      Gerencie agenda, VIP, pagamentos e toda a operacao em um unico lugar.
+    </p>
+    <div class="hero-actions">
+      <a href="agenda.html" class="btn btn-primary">Abrir Agenda</a>
+      <a href="vip.html" class="btn">Acessar VIP</a>
+    </div>
+  </section>
+
+  <!-- CONTENT -->
+  <div class="content">
 
     <!-- ACESSO RAPIDO -->
-    <section>
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">ACESSO RAPIDO</h2>
-          <p class="section-subtitle">Ferramentas mais usadas</p>
-        </div>
-      </div>
+    <section class="section">
+      <div class="section-label">Navegacao</div>
+      <h2 class="section-title">Acesso Rapido</h2>
 
-      <div class="quick-actions">
-        <a href="agenda.html" class="action-card featured">
-          <div class="action-header">
-            <div class="action-icon">📅</div>
-            <div class="action-badge badge-primary">Destaque</div>
+      <div class="cards-grid">
+        <a href="agenda.html" class="card featured">
+          <div class="card-top">
+            <div class="card-icon purple">📅</div>
+            <span class="card-badge badge-featured">Destaque</span>
           </div>
-          <div class="action-content">
-            <h3 class="action-title">AGENDA</h3>
-            <p class="action-desc">Visualize e gerencie todos os shows e compromissos em um calendario interativo</p>
+          <div class="card-body">
+            <h3 class="card-title">AGENDA</h3>
+            <p class="card-desc">Visualize e gerencie todos os shows e compromissos em um calendario interativo</p>
           </div>
-          <div class="action-footer">
-            <span>Acessar Agenda</span>
+          <div class="card-action">
+            <span>Acessar</span>
             <span class="arrow">→</span>
           </div>
         </a>
 
-        <a href="vip.html" class="action-card">
-          <div class="action-header">
-            <div class="action-icon">🎟️</div>
-            <div class="action-badge badge-accent">Usuario</div>
+        <a href="vip.html" class="card">
+          <div class="card-top">
+            <div class="card-icon cyan">🎟️</div>
+            <span class="card-badge badge-user">Usuario</span>
           </div>
-          <div class="action-content">
-            <h3 class="action-title">LISTA VIP</h3>
-            <p class="action-desc">Entre com seu codigo e reserve seu slot para eventos exclusivos</p>
+          <div class="card-body">
+            <h3 class="card-title">LISTA VIP</h3>
+            <p class="card-desc">Entre com seu codigo e reserve seu slot para eventos exclusivos</p>
           </div>
-          <div class="action-footer">
-            <span>Acessar VIP</span>
+          <div class="card-action">
+            <span>Acessar</span>
             <span class="arrow">→</span>
           </div>
         </a>
 
-        <a href="pix.html" class="action-card">
-          <div class="action-header">
-            <div class="action-icon">💸</div>
-            <div class="action-badge badge-accent">Usuario</div>
+        <a href="pix.html" class="card">
+          <div class="card-top">
+            <div class="card-icon green">💸</div>
+            <span class="card-badge badge-user">Usuario</span>
           </div>
-          <div class="action-content">
-            <h3 class="action-title">PIX</h3>
-            <p class="action-desc">Consulte informacoes de pagamento e gerencie transacoes</p>
+          <div class="card-body">
+            <h3 class="card-title">PIX</h3>
+            <p class="card-desc">Consulte informacoes de pagamento e gerencie transacoes</p>
           </div>
-          <div class="action-footer">
-            <span>Acessar PIX</span>
+          <div class="card-action">
+            <span>Acessar</span>
             <span class="arrow">→</span>
           </div>
         </a>
 
-        <a href="vip-admin.html" class="action-card">
-          <div class="action-header">
-            <div class="action-icon">🧠</div>
-            <div class="action-badge badge-success">Admin</div>
+        <a href="vip-admin.html" class="card">
+          <div class="card-top">
+            <div class="card-icon pink">🧠</div>
+            <span class="card-badge badge-admin">Admin</span>
           </div>
-          <div class="action-content">
-            <h3 class="action-title">VIP ADMIN</h3>
-            <p class="action-desc">Gerencie pool de convites, codigos e confirmacoes</p>
+          <div class="card-body">
+            <h3 class="card-title">VIP ADMIN</h3>
+            <p class="card-desc">Gerencie pool de convites, codigos e confirmacoes</p>
           </div>
-          <div class="action-footer">
-            <span>Acessar Admin</span>
+          <div class="card-action">
+            <span>Acessar</span>
             <span class="arrow">→</span>
           </div>
         </a>
 
-        <a href="diaria.html" class="action-card">
-          <div class="action-header">
-            <div class="action-icon">📒</div>
-            <div class="action-badge badge-accent">Usuario</div>
+        <a href="diaria.html" class="card">
+          <div class="card-top">
+            <div class="card-icon amber">📒</div>
+            <span class="card-badge badge-user">Usuario</span>
           </div>
-          <div class="action-content">
-            <h3 class="action-title">DIARIA</h3>
-            <p class="action-desc">Consulte e controle informacoes de diaria</p>
+          <div class="card-body">
+            <h3 class="card-title">DIARIA</h3>
+            <p class="card-desc">Consulte e controle informacoes de diaria da equipe</p>
           </div>
-          <div class="action-footer">
-            <span>Acessar Diaria</span>
+          <div class="card-action">
+            <span>Acessar</span>
             <span class="arrow">→</span>
           </div>
         </a>
 
-        <a href="van.html" class="action-card">
-          <div class="action-header">
-            <div class="action-icon">🚐</div>
-            <div class="action-badge badge-accent">Usuario</div>
+        <a href="van.html" class="card">
+          <div class="card-top">
+            <div class="card-icon blue">🚐</div>
+            <span class="card-badge badge-user">Usuario</span>
           </div>
-          <div class="action-content">
-            <h3 class="action-title">VAN</h3>
-            <p class="action-desc">Acesse o modulo de controle da van</p>
+          <div class="card-body">
+            <h3 class="card-title">VAN</h3>
+            <p class="card-desc">Acesse o modulo de controle e reserva da van</p>
           </div>
-          <div class="action-footer">
-            <span>Acessar Van</span>
+          <div class="card-action">
+            <span>Acessar</span>
+            <span class="arrow">→</span>
+          </div>
+        </a>
+
+        <a href="pix-admin.html" class="card">
+          <div class="card-top">
+            <div class="card-icon green">🛡️</div>
+            <span class="card-badge badge-admin">Admin</span>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">PIX ADMIN</h3>
+            <p class="card-desc">Painel administrativo de pagamentos e aprovacoes PIX</p>
+          </div>
+          <div class="card-action">
+            <span>Acessar</span>
+            <span class="arrow">→</span>
+          </div>
+        </a>
+
+        <a href="ajustar-cronograma.html" class="card">
+          <div class="card-top">
+            <div class="card-icon purple">🗓️</div>
+            <span class="card-badge badge-admin">Admin</span>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">CRONOGRAMA</h3>
+            <p class="card-desc">Ajuste o cronograma da equipe via planilha ou formulario</p>
+          </div>
+          <div class="card-action">
+            <span>Acessar</span>
             <span class="arrow">→</span>
           </div>
         </a>
@@ -691,44 +710,39 @@
     </section>
 
     <!-- STATUS -->
-    <section class="stats-section">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">STATUS DO SISTEMA</h2>
-          <p class="section-subtitle">Monitoramento em tempo real</p>
-        </div>
-      </div>
+    <section class="section">
+      <div class="section-label">Monitoramento</div>
+      <h2 class="section-title">Status do Sistema</h2>
 
-      <div class="stats-grid">
-        <div class="stat-card">
+      <div class="stats-row">
+        <div class="stat">
           <div class="stat-label">Sistema</div>
-          <div class="stat-value" style="color:var(--success)">ONLINE</div>
-          <div class="stat-trend">✓ Operacional</div>
+          <div class="stat-value" style="color:var(--green)">ONLINE</div>
+          <div class="stat-hint">✓ Operacional</div>
         </div>
-
-        <div class="stat-card">
+        <div class="stat">
           <div class="stat-label">Modulo VIP</div>
-          <div class="stat-value" style="color:var(--primary)">ATIVO</div>
-          <div class="stat-trend">✓ Funcionando</div>
+          <div class="stat-value" style="color:var(--purple)">ATIVO</div>
+          <div class="stat-hint">✓ Funcionando</div>
         </div>
-
-        <div class="stat-card">
+        <div class="stat">
           <div class="stat-label">PIX</div>
-          <div class="stat-value" style="color:var(--accent)">OK</div>
-          <div class="stat-trend">✓ Disponivel</div>
+          <div class="stat-value" style="color:var(--cyan)">OK</div>
+          <div class="stat-hint">✓ Disponivel</div>
         </div>
-
-        <div class="stat-card">
+        <div class="stat">
           <div class="stat-label">Versao</div>
-          <div class="stat-value" style="color:var(--warning)">2.0</div>
-          <div class="stat-trend">✓ Atualizado</div>
+          <div class="stat-value" style="color:var(--amber)">2.0</div>
+          <div class="stat-hint">✓ Atualizado</div>
         </div>
       </div>
     </section>
-
-    <footer class="footer">
-      Nobreak Company &copy; 2025 &mdash; Todos os direitos reservados
-    </footer>
   </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    Nobreak Company &copy; 2025 &mdash; Todos os direitos reservados
+  </footer>
+
 </body>
 </html>
