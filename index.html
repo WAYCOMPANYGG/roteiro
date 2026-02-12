@@ -7,184 +7,479 @@
   <link rel="stylesheet" href="assets/off-ui.css"/>
 
   <style>
-    /* ===== page-specific ===== */
-    .welcome{
-      padding:8px 0 6px;
-      display:flex; flex-direction:column; gap:4px;
+    /* ===== enhanced palette ===== */
+    :root{
+      --vibrant-purple:#9333ea;
+      --vibrant-cyan:#00e5ff;
+      --vibrant-pink:#ff2d95;
+      --vibrant-green:#00f593;
+      --vibrant-amber:#ffb300;
+      --vibrant-blue:#4f8cff;
     }
-    .welcome h1{ margin:0; font-family:Rokiest; letter-spacing:1px; font-size:32px; }
+
+    /* ===== floating orbs ===== */
+    .orbs{
+      position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden;
+    }
+    .orb{
+      position:absolute; border-radius:50%;
+      filter:blur(80px);
+      opacity:.18;
+      animation:orbFloat 18s ease-in-out infinite alternate;
+    }
+    .orb:nth-child(1){
+      width:500px; height:500px;
+      background:var(--vibrant-purple);
+      top:-10%; left:-8%;
+      animation-duration:20s;
+    }
+    .orb:nth-child(2){
+      width:400px; height:400px;
+      background:var(--vibrant-cyan);
+      top:20%; right:-10%;
+      animation-duration:16s;
+      animation-delay:-4s;
+    }
+    .orb:nth-child(3){
+      width:350px; height:350px;
+      background:var(--vibrant-pink);
+      bottom:-5%; left:30%;
+      animation-duration:22s;
+      animation-delay:-8s;
+    }
+    @keyframes orbFloat{
+      0%{ transform:translate(0,0) scale(1); }
+      33%{ transform:translate(40px,-30px) scale(1.08); }
+      66%{ transform:translate(-20px,40px) scale(.95); }
+      100%{ transform:translate(30px,20px) scale(1.04); }
+    }
+
+    /* ===== noise overlay ===== */
+    .noise{
+      position:fixed; inset:0; pointer-events:none; z-index:1;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E");
+      opacity:.10; mix-blend-mode:overlay;
+    }
+
+    /* ===== make shell above orbs ===== */
+    .off-shell{ position:relative; z-index:2; }
+
+    /* ===== sidebar glow ===== */
+    .off-side{
+      border-right-color:rgba(147,51,234,.12);
+      background:linear-gradient(180deg, rgba(10,12,20,.85), rgba(10,12,20,.50));
+    }
+    .off-logo{
+      background:rgba(147,51,234,.22);
+      border-color:rgba(147,51,234,.35);
+      box-shadow:0 0 0 1px rgba(147,51,234,.30), 0 12px 40px rgba(147,51,234,.20);
+      animation:logoPulse 3s ease-in-out infinite;
+    }
+    @keyframes logoPulse{
+      0%,100%{ box-shadow:0 0 0 1px rgba(147,51,234,.30), 0 12px 40px rgba(147,51,234,.15); }
+      50%{ box-shadow:0 0 0 1px rgba(147,51,234,.45), 0 16px 50px rgba(147,51,234,.28); }
+    }
+    .off-navbtn.active{
+      background:rgba(147,51,234,.22);
+      border-color:rgba(147,51,234,.40);
+      box-shadow:0 0 0 1px rgba(147,51,234,.30), 0 14px 40px rgba(147,51,234,.18);
+    }
+    .off-navbtn{
+      transition:.2s cubic-bezier(.4,0,.2,1);
+    }
+    .off-navbtn:hover{
+      transform:translateY(-3px) scale(1.04);
+      box-shadow:0 12px 30px rgba(0,0,0,.4), 0 0 20px rgba(147,51,234,.10);
+    }
+
+    /* ===== welcome header ===== */
+    .welcome{
+      padding:10px 0 8px;
+      display:flex; flex-direction:column; gap:6px;
+      animation:slideDown .5s cubic-bezier(.4,0,.2,1) both;
+    }
+    @keyframes slideDown{
+      from{ opacity:0; transform:translateY(-12px); }
+      to{ opacity:1; transform:translateY(0); }
+    }
+    .welcome h1{
+      margin:0; font-family:Rokiest; letter-spacing:1.5px; font-size:36px;
+      background:linear-gradient(135deg, #fff 0%, var(--vibrant-purple) 50%, var(--vibrant-cyan) 100%);
+      background-size:200% 200%;
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+      animation:gradientShift 4s ease infinite;
+    }
+    @keyframes gradientShift{
+      0%,100%{ background-position:0% 50%; }
+      50%{ background-position:100% 50%; }
+    }
     .welcome .sub{
       color:var(--muted); font-size:13px; line-height:1.5;
     }
 
-    /* ===== section headings ===== */
+    /* ===== section headings with animated line ===== */
     .sec-head{
-      display:flex; align-items:center; gap:10px;
-      margin:22px 0 14px;
+      display:flex; align-items:center; gap:12px;
+      margin:28px 0 16px;
     }
     .sec-head h2{
-      margin:0; font-family:Rokiest; letter-spacing:.6px; font-size:16px;
-      color:rgba(229,231,235,.82);
+      margin:0; font-family:Rokiest; letter-spacing:.8px; font-size:15px;
+      color:rgba(229,231,235,.85);
+      text-transform:uppercase;
     }
     .sec-line{
-      flex:1; height:1px;
-      background:linear-gradient(90deg, rgba(255,255,255,.10), transparent 80%);
+      flex:1; height:1px; position:relative; overflow:hidden;
+      background:rgba(255,255,255,.06);
+    }
+    .sec-line::after{
+      content:''; position:absolute; inset:0;
+      width:60px;
+      background:linear-gradient(90deg, var(--vibrant-purple), var(--vibrant-cyan));
+      animation:shimmerLine 3s ease-in-out infinite;
+    }
+    @keyframes shimmerLine{
+      0%{ transform:translateX(-60px); }
+      50%{ transform:translateX(calc(100vw - 60px)); }
+      100%{ transform:translateX(-60px); }
+    }
+
+    /* ===== hero banner with animated border ===== */
+    .banner{
+      display:flex; align-items:center; gap:18px;
+      padding:22px 24px;
+      background:
+        radial-gradient(600px 250px at 0% 50%, rgba(147,51,234,.12), transparent 55%),
+        radial-gradient(400px 200px at 100% 50%, rgba(0,229,255,.06), transparent 55%),
+        var(--panel);
+      border:1px solid rgba(147,51,234,.20);
+      border-radius:22px;
+      box-shadow:0 24px 80px rgba(0,0,0,.55), 0 0 40px rgba(147,51,234,.06);
+      margin-bottom:10px;
+      position:relative;
+      overflow:hidden;
+      animation:bannerIn .6s cubic-bezier(.4,0,.2,1) .1s both;
+    }
+    @keyframes bannerIn{
+      from{ opacity:0; transform:translateY(16px) scale(.98); }
+      to{ opacity:1; transform:none; }
+    }
+    .banner::before{
+      content:''; position:absolute; inset:0;
+      background:linear-gradient(90deg, transparent, rgba(147,51,234,.04), rgba(0,229,255,.03), transparent);
+      background-size:200% 100%;
+      animation:bannerShimmer 5s ease-in-out infinite;
+      pointer-events:none;
+    }
+    @keyframes bannerShimmer{
+      0%,100%{ background-position:200% 0; }
+      50%{ background-position:-100% 0; }
+    }
+
+    .banner-icon{
+      width:56px; height:56px; flex:0 0 56px;
+      border-radius:16px;
+      display:flex; align-items:center; justify-content:center;
+      background:linear-gradient(135deg, rgba(147,51,234,.25), rgba(0,229,255,.15));
+      border:1px solid rgba(147,51,234,.30);
+      box-shadow:0 0 0 1px rgba(147,51,234,.25), 0 16px 40px rgba(147,51,234,.18);
+      animation:iconFloat 3s ease-in-out infinite;
+    }
+    @keyframes iconFloat{
+      0%,100%{ transform:translateY(0); }
+      50%{ transform:translateY(-4px); }
+    }
+    .banner-icon svg{ width:26px; height:26px; color:var(--vibrant-cyan); }
+
+    .banner-body{ flex:1; min-width:0; }
+    .banner-body h3{
+      margin:0 0 4px; font-family:Rokiest; letter-spacing:.6px; font-size:17px;
+      color:#fff;
+    }
+    .banner-body p{ margin:0; font-size:12.5px; color:var(--muted); line-height:1.5; }
+
+    .banner-actions{ display:flex; gap:10px; flex-wrap:wrap; }
+
+    .sm-btn{
+      height:40px; border-radius:12px; border:0;
+      padding:0 18px; font-weight:800; font-size:12px;
+      cursor:pointer; color:#fff;
+      transition:.22s cubic-bezier(.4,0,.2,1);
+      text-decoration:none;
+      display:inline-flex; align-items:center; gap:7px;
+      position:relative; overflow:hidden;
+    }
+    .sm-btn::after{
+      content:''; position:absolute; inset:0;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.08), transparent);
+      transform:translateX(-100%);
+      transition:transform .4s;
+    }
+    .sm-btn:hover::after{ transform:translateX(100%); }
+    .sm-btn:hover{ transform:translateY(-2px) scale(1.03); }
+    .sm-btn:active{ transform:scale(.97); }
+
+    .sm-btn.purple{
+      background:linear-gradient(135deg, var(--vibrant-purple), var(--vibrant-cyan));
+      box-shadow:0 6px 24px rgba(147,51,234,.30);
+    }
+    .sm-btn.purple:hover{
+      box-shadow:0 10px 32px rgba(147,51,234,.45);
+    }
+    .sm-btn.ghost{
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      backdrop-filter:blur(6px);
+    }
+    .sm-btn.ghost:hover{
+      background:rgba(255,255,255,.10);
+      border-color:rgba(255,255,255,.20);
     }
 
     /* ===== card grid ===== */
     .grid{
       display:grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-columns:repeat(3, 1fr);
       gap:14px;
     }
 
+    /* ===== module cards ===== */
     .module{
       display:flex; align-items:flex-start; gap:14px;
-      padding:18px;
-      background: var(--panel2);
-      border:1px solid rgba(255,255,255,.08);
+      padding:20px;
+      background:rgba(14,18,32,.55);
+      border:1px solid rgba(255,255,255,.07);
       border-radius:18px;
       text-decoration:none; color:inherit;
-      transition:.22s ease;
       cursor:pointer;
       position:relative;
       overflow:hidden;
+      transition:.28s cubic-bezier(.4,0,.2,1);
+      backdrop-filter:blur(8px);
+      /* scroll reveal default */
+      opacity:0; transform:translateY(18px);
     }
+    .module.visible{
+      opacity:1; transform:translateY(0);
+    }
+
+    /* animated gradient border on hover */
     .module::before{
-      content:''; position:absolute; inset:0;
-      background:radial-gradient(300px 180px at 0% 0%, var(--glow-color, rgba(124,58,237,.06)), transparent 60%);
-      opacity:0; transition:opacity .25s; pointer-events:none;
+      content:''; position:absolute; inset:-1px;
+      border-radius:18px;
+      background:conic-gradient(from var(--border-angle, 0deg),
+        transparent 40%, var(--card-color, var(--vibrant-purple)) 50%, transparent 60%);
+      opacity:0;
+      transition:opacity .35s;
+      z-index:-1;
     }
+    .module::after{
+      content:''; position:absolute; inset:1px;
+      border-radius:17px;
+      background:rgba(14,18,32,.90);
+      z-index:-1;
+      transition:background .3s;
+    }
+
     .module:hover{
-      transform:translateY(-3px);
-      border-color:rgba(255,255,255,.14);
-      box-shadow:0 16px 40px rgba(0,0,0,.40);
+      transform:translateY(-5px) scale(1.01);
+      border-color:transparent;
+      box-shadow:
+        0 20px 50px rgba(0,0,0,.45),
+        0 0 30px var(--card-glow, rgba(147,51,234,.10));
     }
     .module:hover::before{ opacity:1; }
+    .module:active{ transform:translateY(-2px) scale(.99); }
+
+    /* mouse glow */
+    .module .mouse-glow{
+      position:absolute; width:250px; height:250px;
+      border-radius:50%;
+      background:radial-gradient(circle, var(--card-glow, rgba(147,51,234,.08)), transparent 70%);
+      pointer-events:none;
+      opacity:0;
+      transition:opacity .3s;
+      transform:translate(-50%,-50%);
+      z-index:0;
+    }
+    .module:hover .mouse-glow{ opacity:1; }
+
+    /* card color variants */
+    .module.c-purple{ --card-color:var(--vibrant-purple); --card-glow:rgba(147,51,234,.12); }
+    .module.c-cyan  { --card-color:var(--vibrant-cyan);   --card-glow:rgba(0,229,255,.10); }
+    .module.c-green { --card-color:var(--vibrant-green);  --card-glow:rgba(0,245,147,.10); }
+    .module.c-amber { --card-color:var(--vibrant-amber);  --card-glow:rgba(255,179,0,.10); }
+    .module.c-pink  { --card-color:var(--vibrant-pink);   --card-glow:rgba(255,45,149,.10); }
+    .module.c-blue  { --card-color:var(--vibrant-blue);   --card-glow:rgba(79,140,255,.10); }
 
     .mod-icon{
-      width:46px; height:46px; flex:0 0 46px;
+      width:48px; height:48px; flex:0 0 48px;
       border-radius:14px;
       display:flex; align-items:center; justify-content:center;
       border:1px solid rgba(255,255,255,.08);
-      transition:.22s ease;
+      transition:.3s cubic-bezier(.4,0,.2,1);
+      position:relative; z-index:1;
     }
     .mod-icon svg{ width:22px; height:22px; }
     .module:hover .mod-icon{
-      transform:scale(1.06);
-      border-color:rgba(255,255,255,.14);
+      transform:scale(1.10) rotate(-3deg);
+      border-color:rgba(255,255,255,.18);
     }
 
-    .mod-icon.purple{ background:rgba(124,58,237,.12); color:var(--purple); --glow-color:rgba(124,58,237,.08); }
-    .mod-icon.cyan  { background:rgba(6,182,212,.10);   color:var(--cyan);   --glow-color:rgba(6,182,212,.08); }
-    .mod-icon.green { background:rgba(34,197,94,.10);   color:var(--green);  --glow-color:rgba(34,197,94,.08); }
-    .mod-icon.amber { background:rgba(245,158,11,.10);  color:var(--amber);  --glow-color:rgba(245,158,11,.08); }
-    .mod-icon.red   { background:rgba(239,68,68,.10);   color:var(--red);    --glow-color:rgba(239,68,68,.08); }
+    .mod-icon.purple{
+      background:linear-gradient(135deg, rgba(147,51,234,.18), rgba(147,51,234,.08));
+      color:var(--vibrant-purple);
+      box-shadow:0 4px 16px rgba(147,51,234,.12);
+    }
+    .mod-icon.cyan{
+      background:linear-gradient(135deg, rgba(0,229,255,.15), rgba(0,229,255,.06));
+      color:var(--vibrant-cyan);
+      box-shadow:0 4px 16px rgba(0,229,255,.10);
+    }
+    .mod-icon.green{
+      background:linear-gradient(135deg, rgba(0,245,147,.15), rgba(0,245,147,.06));
+      color:var(--vibrant-green);
+      box-shadow:0 4px 16px rgba(0,245,147,.10);
+    }
+    .mod-icon.amber{
+      background:linear-gradient(135deg, rgba(255,179,0,.15), rgba(255,179,0,.06));
+      color:var(--vibrant-amber);
+      box-shadow:0 4px 16px rgba(255,179,0,.10);
+    }
+    .mod-icon.pink{
+      background:linear-gradient(135deg, rgba(255,45,149,.15), rgba(255,45,149,.06));
+      color:var(--vibrant-pink);
+      box-shadow:0 4px 16px rgba(255,45,149,.10);
+    }
+    .mod-icon.blue{
+      background:linear-gradient(135deg, rgba(79,140,255,.15), rgba(79,140,255,.06));
+      color:var(--vibrant-blue);
+      box-shadow:0 4px 16px rgba(79,140,255,.10);
+    }
 
-    /* propagate glow color to card */
-    .module:has(.mod-icon.purple){ --glow-color:rgba(124,58,237,.07); }
-    .module:has(.mod-icon.cyan)  { --glow-color:rgba(6,182,212,.07); }
-    .module:has(.mod-icon.green) { --glow-color:rgba(34,197,94,.07); }
-    .module:has(.mod-icon.amber) { --glow-color:rgba(245,158,11,.07); }
-    .module:has(.mod-icon.red)   { --glow-color:rgba(239,68,68,.07); }
-
-    .mod-info{ display:flex; flex-direction:column; gap:3px; min-width:0; }
+    .mod-info{ display:flex; flex-direction:column; gap:4px; min-width:0; position:relative; z-index:1; }
     .mod-name{
-      font-weight:900; font-size:13px; letter-spacing:.3px;
-      color:var(--text);
+      font-weight:800; font-size:13.5px; letter-spacing:.3px;
+      color:#f0f0f5;
     }
     .mod-desc{
-      font-size:11.5px; color:var(--muted); line-height:1.45;
+      font-size:11.5px; color:var(--muted); line-height:1.5;
     }
-
-    /* ===== quick-action banner ===== */
-    .banner{
-      display:flex; align-items:center; gap:16px;
-      padding:18px 20px;
-      background:
-        radial-gradient(500px 200px at 0% 50%, rgba(124,58,237,.10), transparent 60%),
-        var(--panel);
-      border:1px solid rgba(124,58,237,.16);
-      border-radius:22px;
-      box-shadow: var(--shadow);
-      margin-bottom:8px;
-      animation: off-enter .35s ease both;
+    .mod-arrow{
+      display:inline-flex; margin-top:4px;
+      font-size:11px; font-weight:800; letter-spacing:.5px;
+      color:var(--card-color, var(--vibrant-purple));
+      opacity:.6;
+      transition:.25s;
+      gap:4px; align-items:center;
     }
-    .banner-icon{
-      width:52px; height:52px; flex:0 0 52px;
-      border-radius:16px;
-      display:flex; align-items:center; justify-content:center;
-      background:rgba(124,58,237,.14);
-      border:1px solid rgba(124,58,237,.22);
-      box-shadow:var(--glow);
+    .mod-arrow svg{
+      width:14px; height:14px;
+      transition:transform .25s cubic-bezier(.4,0,.2,1);
     }
-    .banner-icon svg{ width:26px; height:26px; color:var(--purple); }
-    .banner-body{ flex:1; min-width:0; }
-    .banner-body h3{
-      margin:0 0 2px; font-family:Rokiest; letter-spacing:.5px; font-size:16px;
-    }
-    .banner-body p{ margin:0; font-size:12px; color:var(--muted); }
-    .banner-actions{ display:flex; gap:8px; flex-wrap:wrap; }
-
-    .sm-btn{
-      height:38px; border-radius:12px; border:0;
-      padding:0 14px; font-weight:900; font-size:12px;
-      cursor:pointer; color:#fff;
-      transition:.16s ease; text-decoration:none;
-      display:inline-flex; align-items:center; gap:6px;
-    }
-    .sm-btn:hover{ transform:translateY(-2px); }
-    .sm-btn.purple{
-      background:linear-gradient(135deg, rgba(124,58,237,.92), rgba(6,182,212,.65));
-      box-shadow:var(--glow);
-    }
-    .sm-btn.ghost{
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-    }
+    .module:hover .mod-arrow{ opacity:1; }
+    .module:hover .mod-arrow svg{ transform:translateX(4px); }
 
     /* ===== status row ===== */
     .status-row{
       display:flex; gap:10px; flex-wrap:wrap;
-      margin-top:22px;
+      margin-top:26px;
+      animation:fadeUp .5s ease .8s both;
+    }
+    @keyframes fadeUp{
+      from{ opacity:0; transform:translateY(10px); }
+      to{ opacity:1; transform:translateY(0); }
     }
     .status-chip{
-      display:inline-flex; align-items:center; gap:7px;
-      padding:7px 12px;
-      border:1px solid rgba(255,255,255,.08);
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 14px;
+      border:1px solid rgba(255,255,255,.06);
       border-radius:999px;
       background:rgba(255,255,255,.03);
       font-size:11px; font-weight:700;
-      color:var(--muted);
+      color:rgba(229,231,235,.70);
+      transition:.2s;
+      backdrop-filter:blur(6px);
+    }
+    .status-chip:hover{
+      background:rgba(255,255,255,.06);
+      border-color:rgba(255,255,255,.12);
+      transform:translateY(-1px);
     }
     .dot{
-      width:6px; height:6px; border-radius:50%;
-      flex:0 0 6px;
+      width:7px; height:7px; border-radius:50%;
+      flex:0 0 7px;
+      position:relative;
     }
-    .dot.green{ background:var(--green); box-shadow:0 0 8px var(--green); }
-    .dot.amber{ background:var(--amber); box-shadow:0 0 8px var(--amber); }
+    .dot::after{
+      content:''; position:absolute; inset:-3px;
+      border-radius:50%;
+      background:inherit;
+      opacity:.35;
+      animation:dotPulse 2s ease-in-out infinite;
+    }
+    @keyframes dotPulse{
+      0%,100%{ transform:scale(1); opacity:.35; }
+      50%{ transform:scale(1.6); opacity:0; }
+    }
+    .dot.green{ background:var(--vibrant-green); box-shadow:0 0 10px var(--vibrant-green); }
+    .dot.amber{ background:var(--vibrant-amber); box-shadow:0 0 10px var(--vibrant-amber); }
 
-    /* ===== animation stagger ===== */
-    .module{ animation: off-enter .3s ease both; }
-    .module:nth-child(1){ animation-delay:.04s }
-    .module:nth-child(2){ animation-delay:.08s }
-    .module:nth-child(3){ animation-delay:.12s }
-    .module:nth-child(4){ animation-delay:.16s }
-    .module:nth-child(5){ animation-delay:.20s }
-    .module:nth-child(6){ animation-delay:.24s }
+    /* ===== footer ===== */
+    .off-footer{
+      margin-top:32px;
+      opacity:.5;
+      transition:opacity .2s;
+    }
+    .off-footer:hover{ opacity:.8; }
+
+    /* ===== animation stagger for scroll-reveal (handled by JS) ===== */
+    .module{ transition: opacity .45s cubic-bezier(.4,0,.2,1), transform .45s cubic-bezier(.4,0,.2,1), box-shadow .28s, border-color .28s; }
 
     /* ===== responsive ===== */
-    @media(max-width:980px){
-      .banner{ flex-direction:column; text-align:center; }
-      .banner-actions{ justify-content:center; }
+
+    /* Tablet */
+    @media(max-width:1100px){
+      .grid{ grid-template-columns:repeat(2, 1fr); }
     }
-    @media(max-width:540px){
-      .grid{ grid-template-columns:1fr; }
+
+    /* Mobile landscape / small tablet */
+    @media(max-width:980px){
+      .banner{ flex-direction:column; text-align:center; gap:14px; }
+      .banner-actions{ justify-content:center; }
+      .banner-icon{ animation:none; }
+      .welcome h1{ font-size:30px; }
+    }
+
+    /* Mobile */
+    @media(max-width:640px){
+      .grid{ grid-template-columns:1fr; gap:12px; }
+      .off-main{ padding:16px; }
+      .banner{ padding:18px 16px; border-radius:18px; }
+      .module{ padding:16px; border-radius:14px; }
+      .welcome h1{ font-size:26px; }
+      .sec-head{ margin:22px 0 12px; }
+      .status-row{ gap:8px; }
+      .status-chip{ font-size:10px; padding:6px 10px; }
+    }
+
+    /* Very small */
+    @media(max-width:380px){
+      .banner-actions{ flex-direction:column; width:100%; }
+      .sm-btn{ width:100%; justify-content:center; }
     }
   </style>
 </head>
 
 <body>
+
+<!-- Floating background orbs -->
+<div class="orbs">
+  <div class="orb"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
+</div>
+<div class="noise"></div>
 
 <div class="off-shell">
 
@@ -243,14 +538,14 @@
       </div>
     </div>
 
-    <!-- quick-action banner -->
+    <!-- hero banner -->
     <div class="banner">
       <div class="banner-icon">
         <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="20" height="18" rx="2"/><path d="M3 10h20M10 4v18"/></svg>
       </div>
       <div class="banner-body">
         <h3>AGENDA DE SHOWS</h3>
-        <p>Visualize e gerencie todos os shows e compromissos da equipe</p>
+        <p>Visualize e gerencie todos os shows e compromissos da equipe em tempo real</p>
       </div>
       <div class="banner-actions">
         <a href="agenda.html" class="sm-btn purple">Abrir Agenda</a>
@@ -258,71 +553,83 @@
       </div>
     </div>
 
-    <!-- MODULOS (usuario) -->
+    <!-- MODULOS -->
     <div class="sec-head">
-      <h2>MODULOS</h2>
+      <h2>Modulos</h2>
       <div class="sec-line"></div>
     </div>
 
-    <div class="grid">
+    <div class="grid" id="gridModulos">
 
-      <a href="agenda.html" class="module">
+      <a href="agenda.html" class="module c-purple">
+        <div class="mouse-glow"></div>
         <div class="mod-icon purple">
           <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="16" height="16" rx="2"/><path d="M3 9h16M8 2v4M14 2v4"/></svg>
         </div>
         <div class="mod-info">
           <span class="mod-name">Agenda</span>
           <span class="mod-desc">Shows, compromissos e calendario interativo</span>
+          <span class="mod-arrow">ACESSAR <svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </div>
       </a>
 
-      <a href="vip.html" class="module">
+      <a href="vip.html" class="module c-cyan">
+        <div class="mouse-glow"></div>
         <div class="mod-icon cyan">
           <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3 6.5H21l-5.5 4 2 6.5L12 15l-5.5 4 2-6.5L3 8.5h6z"/></svg>
         </div>
         <div class="mod-info">
           <span class="mod-name">Lista VIP</span>
-          <span class="mod-desc">Entre com seu codigo e reserve seu slot</span>
+          <span class="mod-desc">Reserve seu slot com codigo exclusivo</span>
+          <span class="mod-arrow">ACESSAR <svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </div>
       </a>
 
-      <a href="pix.html" class="module">
+      <a href="pix.html" class="module c-green">
+        <div class="mouse-glow"></div>
         <div class="mod-icon green">
           <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="18" height="13" rx="2"/><path d="M2 10h18"/></svg>
         </div>
         <div class="mod-info">
           <span class="mod-name">PIX</span>
           <span class="mod-desc">Pagamentos e consultas financeiras</span>
+          <span class="mod-arrow">ACESSAR <svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </div>
       </a>
 
-      <a href="diaria.html" class="module">
+      <a href="diaria.html" class="module c-amber">
+        <div class="mouse-glow"></div>
         <div class="mod-icon amber">
           <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 16v4M4.93 4.93l2.83 2.83M14.24 14.24l2.83 2.83M2 12h4M16 12h4M4.93 19.07l2.83-2.83M14.24 7.76l2.83-2.83"/></svg>
         </div>
         <div class="mod-info">
           <span class="mod-name">Diaria</span>
           <span class="mod-desc">Controle de diarias da equipe</span>
+          <span class="mod-arrow">ACESSAR <svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </div>
       </a>
 
-      <a href="van.html" class="module">
-        <div class="mod-icon purple">
+      <a href="van.html" class="module c-blue">
+        <div class="mouse-glow"></div>
+        <div class="mod-icon blue">
           <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="20" height="10" rx="2"/><circle cx="6" cy="16" r="2"/><circle cx="16" cy="16" r="2"/><path d="M1 11h20"/></svg>
         </div>
         <div class="mod-info">
           <span class="mod-name">Van</span>
           <span class="mod-desc">Reservas e controle de transporte</span>
+          <span class="mod-arrow">ACESSAR <svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </div>
       </a>
 
-      <a href="dashboardsocial.html" class="module">
-        <div class="mod-icon cyan">
+      <a href="dashboardsocial.html" class="module c-pink">
+        <div class="mouse-glow"></div>
+        <div class="mod-icon pink">
           <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
         </div>
         <div class="mod-info">
           <span class="mod-name">Dashboard Social</span>
           <span class="mod-desc">Metricas e analytics das redes</span>
+          <span class="mod-arrow">ACESSAR <svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </div>
       </a>
 
@@ -330,49 +637,57 @@
 
     <!-- ADMINISTRACAO -->
     <div class="sec-head">
-      <h2>ADMINISTRACAO</h2>
+      <h2>Administracao</h2>
       <div class="sec-line"></div>
     </div>
 
-    <div class="grid">
+    <div class="grid" id="gridAdmin">
 
-      <a href="vip-admin.html" class="module">
-        <div class="mod-icon red">
+      <a href="vip-admin.html" class="module c-pink">
+        <div class="mouse-glow"></div>
+        <div class="mod-icon pink">
           <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         </div>
         <div class="mod-info">
           <span class="mod-name">VIP Admin</span>
           <span class="mod-desc">Gerenciar pool de convites e codigos</span>
+          <span class="mod-arrow">ACESSAR <svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </div>
       </a>
 
-      <a href="pix-admin.html" class="module">
+      <a href="pix-admin.html" class="module c-green">
+        <div class="mouse-glow"></div>
         <div class="mod-icon green">
           <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
         </div>
         <div class="mod-info">
           <span class="mod-name">PIX Admin</span>
           <span class="mod-desc">Aprovacoes e gestao de pagamentos</span>
+          <span class="mod-arrow">ACESSAR <svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </div>
       </a>
 
-      <a href="ajustar-cronograma.html" class="module">
+      <a href="ajustar-cronograma.html" class="module c-amber">
+        <div class="mouse-glow"></div>
         <div class="mod-icon amber">
           <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         </div>
         <div class="mod-info">
           <span class="mod-name">Ajustar Cronograma</span>
           <span class="mod-desc">Editar cronograma via planilha</span>
+          <span class="mod-arrow">ACESSAR <svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </div>
       </a>
 
-      <a href="pix-cadastro.html" class="module">
-        <div class="mod-icon green">
+      <a href="pix-cadastro.html" class="module c-cyan">
+        <div class="mouse-glow"></div>
+        <div class="mod-icon cyan">
           <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
         </div>
         <div class="mod-info">
           <span class="mod-name">PIX Cadastro</span>
           <span class="mod-desc">Cadastrar novos destinatarios PIX</span>
+          <span class="mod-arrow">ACESSAR <svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </div>
       </a>
 
@@ -386,13 +701,54 @@
     </div>
 
     <!-- footer -->
-    <div class="off-footer" style="margin-top:28px;">
+    <div class="off-footer">
       <span>Nobreak Company &copy; 2025</span>
       <span>Todos os direitos reservados</span>
     </div>
 
   </main>
 </div>
+
+<script>
+// ===== Scroll-reveal staggered animation =====
+(function(){
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        const cards = e.target.querySelectorAll('.module');
+        cards.forEach((c, i) => {
+          setTimeout(() => c.classList.add('visible'), i * 70);
+        });
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.grid').forEach(g => obs.observe(g));
+})();
+
+// ===== Mouse-follow glow on cards =====
+document.querySelectorAll('.module').forEach(card => {
+  const glow = card.querySelector('.mouse-glow');
+  if(!glow) return;
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    glow.style.left = (e.clientX - r.left) + 'px';
+    glow.style.top = (e.clientY - r.top) + 'px';
+  });
+});
+
+// ===== Animated border angle (CSS Houdini fallback) =====
+(function(){
+  let angle = 0;
+  function tick(){
+    angle = (angle + 0.8) % 360;
+    document.documentElement.style.setProperty('--border-angle', angle + 'deg');
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+</script>
 
 </body>
 </html>
