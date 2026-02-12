@@ -3,746 +3,396 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Nobreak Company | Home</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <title>Home | Nobreak Company</title>
+  <link rel="stylesheet" href="assets/off-ui.css"/>
 
   <style>
-    @font-face{
-      font-family:"Rokiest";
-      src:url("https://raw.githubusercontent.com/NOBRAKEGG/iMake/main/assets/fonts/Rokiest-Extrabold.otf") format("opentype");
-      font-weight:800;font-display:swap;
+    /* ===== page-specific ===== */
+    .welcome{
+      padding:8px 0 6px;
+      display:flex; flex-direction:column; gap:4px;
+    }
+    .welcome h1{ margin:0; font-family:Rokiest; letter-spacing:1px; font-size:32px; }
+    .welcome .sub{
+      color:var(--muted); font-size:13px; line-height:1.5;
     }
 
-    :root{
-      --bg1:#050611;
-      --bg2:#0b1220;
-      --panel:rgba(10,16,28,.72);
-      --panel-solid:#0d1322;
-      --surface:rgba(255,255,255,.04);
-      --surface-hover:rgba(255,255,255,.07);
-      --stroke:rgba(255,255,255,.08);
-      --stroke-light:rgba(255,255,255,.12);
-      --text:#e5e7eb;
-      --text-secondary:#cbd5e1;
-      --muted:rgba(229,231,235,.55);
-      --purple:#8b5cf6;
-      --pink:#FF0080;
-      --cyan:#06b6d4;
-      --green:#22c55e;
-      --amber:#f59e0b;
-      --red:#ef4444;
-      --blue:#3b82f6;
+    /* ===== section headings ===== */
+    .sec-head{
+      display:flex; align-items:center; gap:10px;
+      margin:22px 0 14px;
+    }
+    .sec-head h2{
+      margin:0; font-family:Rokiest; letter-spacing:.6px; font-size:16px;
+      color:rgba(229,231,235,.82);
+    }
+    .sec-line{
+      flex:1; height:1px;
+      background:linear-gradient(90deg, rgba(255,255,255,.10), transparent 80%);
     }
 
-    *{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-
-    body{
-      min-height:100vh;
-      font-family:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(900px 500px at 10% 10%,rgba(139,92,246,.14),transparent 60%),
-        radial-gradient(800px 500px at 90% 15%,rgba(6,182,212,.12),transparent 60%),
-        radial-gradient(700px 400px at 50% 90%,rgba(255,0,128,.08),transparent 60%),
-        linear-gradient(160deg,var(--bg1),var(--bg2));
-      background-attachment:fixed;
-      overflow-x:hidden;
-      -webkit-font-smoothing:antialiased;
-    }
-
-    /* Noise overlay */
-    body::after{
-      content:'';
-      position:fixed;inset:0;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.15'/%3E%3C/svg%3E");
-      opacity:.12;
-      mix-blend-mode:overlay;
-      pointer-events:none;
-      z-index:9999;
-    }
-
-    /* ========== TOP NAV ========== */
-    .topnav{
-      position:fixed;top:0;left:0;right:0;
-      z-index:1000;
-      padding:14px 32px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      background:rgba(5,6,17,.65);
-      backdrop-filter:blur(20px) saturate(1.4);
-      border-bottom:1px solid var(--stroke);
-      transition:background .3s;
-    }
-
-    .nav-brand{
-      display:flex;
-      align-items:center;
+    /* ===== card grid ===== */
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap:14px;
-      text-decoration:none;
-      color:var(--text);
     }
 
-    .nav-logo{
-      width:42px;height:42px;
-      border-radius:12px;
-      display:grid;place-items:center;
-      font-family:'Rokiest',sans-serif;
-      font-size:14px;
-      letter-spacing:.5px;
-      background:
-        radial-gradient(60px 60px at 30% 25%,rgba(139,92,246,.7),transparent 60%),
-        radial-gradient(60px 60px at 75% 70%,rgba(6,182,212,.5),transparent 65%),
-        rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow:0 8px 24px rgba(0,0,0,.4);
-    }
-
-    .nav-title{
-      font-family:'Rokiest',sans-serif;
-      font-size:18px;
-      letter-spacing:.5px;
-    }
-
-    .nav-links{
-      display:flex;
-      align-items:center;
-      gap:6px;
-      flex-wrap:wrap;
-    }
-
-    .nav-link{
-      padding:8px 16px;
-      border-radius:999px;
-      text-decoration:none;
-      color:var(--muted);
-      font-size:13px;
-      font-weight:600;
-      transition:all .2s;
-      border:1px solid transparent;
-    }
-    .nav-link:hover{
-      color:var(--text);
-      background:var(--surface);
-      border-color:var(--stroke);
-    }
-    .nav-link.active{
-      color:#fff;
-      background:linear-gradient(135deg,var(--purple),var(--pink));
-      border-color:transparent;
-      box-shadow:0 4px 16px rgba(139,92,246,.3);
-    }
-
-    .nav-status{
-      display:flex;align-items:center;gap:8px;
-      padding:8px 16px;
-      border-radius:999px;
-      border:1px solid rgba(34,197,94,.2);
-      background:rgba(34,197,94,.08);
-      font-size:12px;font-weight:600;
-      color:var(--green);
-    }
-    .nav-status-dot{
-      width:7px;height:7px;border-radius:50%;
-      background:var(--green);
-      box-shadow:0 0 10px var(--green);
-      animation:pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse{
-      0%,100%{opacity:1;transform:scale(1)}
-      50%{opacity:.5;transform:scale(1.3)}
-    }
-
-    /* Mobile menu toggle */
-    .menu-toggle{
-      display:none;
-      width:40px;height:40px;
-      border-radius:10px;
-      border:1px solid var(--stroke);
-      background:var(--surface);
-      color:var(--text);
-      font-size:20px;
+    .module{
+      display:flex; align-items:flex-start; gap:14px;
+      padding:18px;
+      background: var(--panel2);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      text-decoration:none; color:inherit;
+      transition:.22s ease;
       cursor:pointer;
-      place-items:center;
-    }
-
-    /* ========== HERO ========== */
-    .hero{
-      padding:160px 32px 80px;
-      text-align:center;
       position:relative;
+      overflow:hidden;
     }
-
-    .hero::before{
-      content:'';
-      position:absolute;
-      top:80px;left:50%;
-      transform:translateX(-50%);
-      width:600px;height:600px;
-      background:radial-gradient(circle,rgba(139,92,246,.15),rgba(6,182,212,.08),transparent 70%);
-      pointer-events:none;
-      filter:blur(60px);
+    .module::before{
+      content:''; position:absolute; inset:0;
+      background:radial-gradient(300px 180px at 0% 0%, var(--glow-color, rgba(124,58,237,.06)), transparent 60%);
+      opacity:0; transition:opacity .25s; pointer-events:none;
     }
-
-    .hero-badge{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 20px;
-      border-radius:999px;
-      border:1px solid rgba(139,92,246,.25);
-      background:rgba(139,92,246,.08);
-      font-size:12px;font-weight:700;
-      color:var(--purple);
-      text-transform:uppercase;
-      letter-spacing:1px;
-      margin-bottom:32px;
-      animation:fadeUp .6s ease both;
-    }
-
-    .hero-title{
-      font-family:'Rokiest',sans-serif;
-      font-size:clamp(48px,8vw,86px);
-      letter-spacing:1px;
-      line-height:1;
-      margin-bottom:20px;
-      position:relative;
-      animation:fadeUp .6s ease .1s both;
-    }
-
-    .hero-title .gradient{
-      background:linear-gradient(135deg,var(--purple),var(--pink),var(--cyan));
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-      background-clip:text;
-    }
-
-    .hero-sub{
-      font-size:clamp(16px,2vw,20px);
-      color:var(--muted);
-      font-weight:400;
-      max-width:560px;
-      margin:0 auto 40px;
-      line-height:1.6;
-      animation:fadeUp .6s ease .2s both;
-    }
-
-    .hero-actions{
-      display:flex;
-      justify-content:center;
-      gap:14px;
-      flex-wrap:wrap;
-      animation:fadeUp .6s ease .3s both;
-    }
-
-    .btn{
-      height:48px;
-      padding:0 28px;
-      border-radius:999px;
-      border:1px solid var(--stroke);
-      background:var(--surface);
-      color:var(--text);
-      font-family:'Poppins',sans-serif;
-      font-size:14px;
-      font-weight:600;
-      cursor:pointer;
-      transition:all .25s;
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      text-decoration:none;
-    }
-    .btn:hover{
-      transform:translateY(-2px);
-      border-color:var(--stroke-light);
-      box-shadow:0 8px 24px rgba(0,0,0,.3);
-    }
-
-    .btn-primary{
-      background:linear-gradient(135deg,var(--purple),var(--pink));
-      border-color:transparent;
-      color:#fff;
-      font-weight:700;
-      box-shadow:0 6px 24px rgba(139,92,246,.35);
-    }
-    .btn-primary:hover{
-      box-shadow:0 10px 32px rgba(139,92,246,.45);
+    .module:hover{
       transform:translateY(-3px);
+      border-color:rgba(255,255,255,.14);
+      box-shadow:0 16px 40px rgba(0,0,0,.40);
     }
+    .module:hover::before{ opacity:1; }
 
-    @keyframes fadeUp{
-      from{opacity:0;transform:translateY(20px)}
-      to{opacity:1;transform:translateY(0)}
-    }
-
-    /* ========== CONTENT ========== */
-    .content{
-      max-width:1200px;
-      margin:0 auto;
-      padding:0 32px 80px;
-    }
-
-    .section{margin-bottom:60px}
-
-    .section-label{
-      font-size:11px;
-      font-weight:700;
-      text-transform:uppercase;
-      letter-spacing:2px;
-      color:var(--purple);
-      margin-bottom:8px;
-    }
-
-    .section-title{
-      font-family:'Space Grotesk',sans-serif;
-      font-size:26px;
-      font-weight:600;
-      letter-spacing:-0.3px;
-      color:var(--text);
-      margin-bottom:32px;
-    }
-
-    /* ========== CARDS GRID ========== */
-    .cards-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
-      gap:16px;
-    }
-
-    .card{
-      background:var(--panel);
-      border:1px solid var(--stroke);
-      border-radius:20px;
-      padding:28px;
-      text-decoration:none;
-      color:inherit;
-      position:relative;
-      overflow:hidden;
-      transition:all .3s cubic-bezier(.4,0,.2,1);
-      backdrop-filter:blur(10px);
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-    }
-
-    .card::before{
-      content:'';
-      position:absolute;inset:-1px;
-      border-radius:20px;
-      background:linear-gradient(135deg,transparent,transparent);
-      opacity:0;
-      transition:opacity .3s;
-      pointer-events:none;
-      z-index:0;
-    }
-
-    .card:hover{
-      transform:translateY(-4px);
-      border-color:rgba(139,92,246,.25);
-      box-shadow:
-        0 20px 40px rgba(0,0,0,.35),
-        0 0 60px rgba(139,92,246,.06);
-    }
-
-    .card:hover::before{
-      opacity:1;
-      background:radial-gradient(circle at 30% 0%,rgba(139,92,246,.08),transparent 50%);
-    }
-
-    .card.featured{
-      border-color:rgba(139,92,246,.2);
-      background:
-        radial-gradient(400px 200px at 10% 10%,rgba(139,92,246,.08),transparent 50%),
-        var(--panel);
-    }
-
-    .card-top{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      position:relative;z-index:1;
-    }
-
-    .card-icon{
-      width:50px;height:50px;
+    .mod-icon{
+      width:46px; height:46px; flex:0 0 46px;
       border-radius:14px;
-      display:grid;place-items:center;
-      font-size:24px;
-      border:1px solid var(--stroke);
-      transition:all .3s;
+      display:flex; align-items:center; justify-content:center;
+      border:1px solid rgba(255,255,255,.08);
+      transition:.22s ease;
+    }
+    .mod-icon svg{ width:22px; height:22px; }
+    .module:hover .mod-icon{
+      transform:scale(1.06);
+      border-color:rgba(255,255,255,.14);
     }
 
-    .card-icon.purple{background:rgba(139,92,246,.10)}
-    .card-icon.cyan{background:rgba(6,182,212,.10)}
-    .card-icon.pink{background:rgba(255,0,128,.10)}
-    .card-icon.green{background:rgba(34,197,94,.10)}
-    .card-icon.amber{background:rgba(245,158,11,.10)}
-    .card-icon.blue{background:rgba(59,130,246,.10)}
+    .mod-icon.purple{ background:rgba(124,58,237,.12); color:var(--purple); --glow-color:rgba(124,58,237,.08); }
+    .mod-icon.cyan  { background:rgba(6,182,212,.10);   color:var(--cyan);   --glow-color:rgba(6,182,212,.08); }
+    .mod-icon.green { background:rgba(34,197,94,.10);   color:var(--green);  --glow-color:rgba(34,197,94,.08); }
+    .mod-icon.amber { background:rgba(245,158,11,.10);  color:var(--amber);  --glow-color:rgba(245,158,11,.08); }
+    .mod-icon.red   { background:rgba(239,68,68,.10);   color:var(--red);    --glow-color:rgba(239,68,68,.08); }
 
-    .card:hover .card-icon{
-      transform:scale(1.08);
-      box-shadow:0 0 20px rgba(139,92,246,.12);
-    }
+    /* propagate glow color to card */
+    .module:has(.mod-icon.purple){ --glow-color:rgba(124,58,237,.07); }
+    .module:has(.mod-icon.cyan)  { --glow-color:rgba(6,182,212,.07); }
+    .module:has(.mod-icon.green) { --glow-color:rgba(34,197,94,.07); }
+    .module:has(.mod-icon.amber) { --glow-color:rgba(245,158,11,.07); }
+    .module:has(.mod-icon.red)   { --glow-color:rgba(239,68,68,.07); }
 
-    .card-badge{
-      padding:5px 12px;
-      border-radius:999px;
-      font-size:10px;
-      font-weight:700;
-      text-transform:uppercase;
-      letter-spacing:.5px;
-      border:1px solid;
-    }
-
-    .badge-featured{background:rgba(139,92,246,.10);color:var(--purple);border-color:rgba(139,92,246,.2)}
-    .badge-user{background:rgba(6,182,212,.10);color:var(--cyan);border-color:rgba(6,182,212,.2)}
-    .badge-admin{background:rgba(34,197,94,.10);color:var(--green);border-color:rgba(34,197,94,.2)}
-
-    .card-body{
-      position:relative;z-index:1;
-      display:flex;flex-direction:column;gap:8px;
-    }
-
-    .card-title{
-      font-family:'Space Grotesk',sans-serif;
-      font-size:17px;
-      font-weight:600;
-      letter-spacing:-0.2px;
+    .mod-info{ display:flex; flex-direction:column; gap:3px; min-width:0; }
+    .mod-name{
+      font-weight:900; font-size:13px; letter-spacing:.3px;
       color:var(--text);
     }
-
-    .card-desc{
-      font-size:13px;
-      color:var(--muted);
-      line-height:1.6;
+    .mod-desc{
+      font-size:11.5px; color:var(--muted); line-height:1.45;
     }
 
-    .card-action{
-      display:flex;align-items:center;gap:8px;
-      font-size:13px;font-weight:600;
-      color:var(--purple);
-      position:relative;z-index:1;
-      margin-top:auto;
+    /* ===== quick-action banner ===== */
+    .banner{
+      display:flex; align-items:center; gap:16px;
+      padding:18px 20px;
+      background:
+        radial-gradient(500px 200px at 0% 50%, rgba(124,58,237,.10), transparent 60%),
+        var(--panel);
+      border:1px solid rgba(124,58,237,.16);
+      border-radius:22px;
+      box-shadow: var(--shadow);
+      margin-bottom:8px;
+      animation: off-enter .35s ease both;
     }
-
-    .card-action .arrow{
-      display:inline-block;
-      transition:transform .3s;
-    }
-
-    .card:hover .card-action .arrow{
-      transform:translateX(5px);
-    }
-
-    /* ========== STATS ========== */
-    .stats-row{
-      display:grid;
-      grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-      gap:16px;
-    }
-
-    .stat{
-      background:var(--panel);
-      border:1px solid var(--stroke);
+    .banner-icon{
+      width:52px; height:52px; flex:0 0 52px;
       border-radius:16px;
-      padding:22px;
-      backdrop-filter:blur(10px);
-      transition:all .3s;
-      position:relative;
-      overflow:hidden;
+      display:flex; align-items:center; justify-content:center;
+      background:rgba(124,58,237,.14);
+      border:1px solid rgba(124,58,237,.22);
+      box-shadow:var(--glow);
+    }
+    .banner-icon svg{ width:26px; height:26px; color:var(--purple); }
+    .banner-body{ flex:1; min-width:0; }
+    .banner-body h3{
+      margin:0 0 2px; font-family:Rokiest; letter-spacing:.5px; font-size:16px;
+    }
+    .banner-body p{ margin:0; font-size:12px; color:var(--muted); }
+    .banner-actions{ display:flex; gap:8px; flex-wrap:wrap; }
+
+    .sm-btn{
+      height:38px; border-radius:12px; border:0;
+      padding:0 14px; font-weight:900; font-size:12px;
+      cursor:pointer; color:#fff;
+      transition:.16s ease; text-decoration:none;
+      display:inline-flex; align-items:center; gap:6px;
+    }
+    .sm-btn:hover{ transform:translateY(-2px); }
+    .sm-btn.purple{
+      background:linear-gradient(135deg, rgba(124,58,237,.92), rgba(6,182,212,.65));
+      box-shadow:var(--glow);
+    }
+    .sm-btn.ghost{
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
     }
 
-    .stat::before{
-      content:'';position:absolute;inset:0;
-      background:radial-gradient(circle at 50% 100%,rgba(6,182,212,.04),transparent 60%);
-      opacity:0;transition:opacity .3s;pointer-events:none;
+    /* ===== status row ===== */
+    .status-row{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin-top:22px;
     }
-
-    .stat:hover{
-      transform:translateY(-2px);
-      border-color:var(--stroke-light);
-      box-shadow:0 12px 30px rgba(0,0,0,.25);
-    }
-    .stat:hover::before{opacity:1}
-
-    .stat-label{
-      font-size:10px;font-weight:700;
-      text-transform:uppercase;letter-spacing:1px;
-      color:var(--muted);margin-bottom:10px;
-    }
-
-    .stat-value{
-      font-family:'Space Grotesk',sans-serif;
-      font-size:26px;font-weight:600;
-      letter-spacing:-0.5px;
-      margin-bottom:6px;
-    }
-
-    .stat-hint{
-      font-size:11px;font-weight:600;
-      color:var(--green);
-    }
-
-    /* ========== FOOTER ========== */
-    .footer{
-      border-top:1px solid var(--stroke);
-      padding:32px;
-      text-align:center;
-      font-size:12px;
+    .status-chip{
+      display:inline-flex; align-items:center; gap:7px;
+      padding:7px 12px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:999px;
+      background:rgba(255,255,255,.03);
+      font-size:11px; font-weight:700;
       color:var(--muted);
     }
-    .footer a{color:var(--purple);text-decoration:none;font-weight:600}
-    .footer a:hover{text-decoration:underline}
-
-    /* ========== RESPONSIVE ========== */
-    @media(max-width:900px){
-      .nav-links{display:none}
-      .nav-links.open{
-        display:flex;
-        flex-direction:column;
-        position:absolute;
-        top:100%;left:0;right:0;
-        background:rgba(5,6,17,.92);
-        backdrop-filter:blur(20px);
-        border-bottom:1px solid var(--stroke);
-        padding:16px;
-        gap:4px;
-      }
-      .nav-links.open .nav-link{
-        padding:12px 16px;
-        border-radius:12px;
-        width:100%;
-      }
-      .menu-toggle{display:grid}
-      .nav-status{display:none}
-      .hero{padding:140px 20px 60px}
-      .content{padding:0 20px 60px}
-      .cards-grid{grid-template-columns:1fr}
+    .dot{
+      width:6px; height:6px; border-radius:50%;
+      flex:0 0 6px;
     }
+    .dot.green{ background:var(--green); box-shadow:0 0 8px var(--green); }
+    .dot.amber{ background:var(--amber); box-shadow:0 0 8px var(--amber); }
 
-    @media(max-width:480px){
-      .topnav{padding:12px 16px}
-      .hero-title{font-size:42px}
-      .hero-sub{font-size:15px}
-      .hero-actions{flex-direction:column;align-items:center}
-      .btn{width:100%;max-width:280px;justify-content:center}
-      .stats-row{grid-template-columns:1fr 1fr}
-      .card{padding:22px}
+    /* ===== animation stagger ===== */
+    .module{ animation: off-enter .3s ease both; }
+    .module:nth-child(1){ animation-delay:.04s }
+    .module:nth-child(2){ animation-delay:.08s }
+    .module:nth-child(3){ animation-delay:.12s }
+    .module:nth-child(4){ animation-delay:.16s }
+    .module:nth-child(5){ animation-delay:.20s }
+    .module:nth-child(6){ animation-delay:.24s }
+
+    /* ===== responsive ===== */
+    @media(max-width:980px){
+      .banner{ flex-direction:column; text-align:center; }
+      .banner-actions{ justify-content:center; }
+    }
+    @media(max-width:540px){
+      .grid{ grid-template-columns:1fr; }
     }
   </style>
 </head>
 
 <body>
 
-  <!-- TOP NAV -->
-  <nav class="topnav">
-    <a href="index.html" class="nav-brand">
-      <div class="nav-logo">NK</div>
-      <span class="nav-title">NOBREAK</span>
-    </a>
+<div class="off-shell">
 
-    <button class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="off-side">
+    <div class="off-logo">NK</div>
+    <nav class="off-nav">
 
-    <div class="nav-links">
-      <a href="index.html" class="nav-link active">Home</a>
-      <a href="agenda.html" class="nav-link">Agenda</a>
-      <a href="vip.html" class="nav-link">VIP</a>
-      <a href="pix.html" class="nav-link">PIX</a>
-      <a href="diaria.html" class="nav-link">Diaria</a>
-      <a href="van.html" class="nav-link">Van</a>
-      <a href="vip-admin.html" class="nav-link">Admin</a>
-    </div>
+      <a href="index.html" class="off-navbtn active" aria-label="Home">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 11 4l8 6.5"/><path d="M5 9.5V18a1 1 0 0 0 1 1h3.5v-4.5h3V19H16a1 1 0 0 0 1-1V9.5"/></svg>
+        <span class="tip">Home</span>
+      </a>
 
-    <div class="nav-status">
-      <span class="nav-status-dot"></span>
-      Online
-    </div>
-  </nav>
+      <a href="agenda.html" class="off-navbtn" aria-label="Agenda">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="16" height="16" rx="2"/><path d="M3 9h16M8 2v4M14 2v4"/></svg>
+        <span class="tip">Agenda</span>
+      </a>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-badge">Central de Controle</div>
-    <h1 class="hero-title">
-      <span class="gradient">NOBREAK</span><br>COMPANY
-    </h1>
-    <p class="hero-sub">
-      Gerencie agenda, VIP, pagamentos e toda a operacao em um unico lugar.
-    </p>
-    <div class="hero-actions">
-      <a href="agenda.html" class="btn btn-primary">Abrir Agenda</a>
-      <a href="vip.html" class="btn">Acessar VIP</a>
-    </div>
-  </section>
+      <a href="vip.html" class="off-navbtn" aria-label="VIP">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3 6.5H21l-5.5 4 2 6.5L12 15l-5.5 4 2-6.5L3 8.5h6z"/></svg>
+        <span class="tip">VIP</span>
+      </a>
 
-  <!-- CONTENT -->
-  <div class="content">
+      <a href="pix.html" class="off-navbtn" aria-label="PIX">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="18" height="13" rx="2"/><path d="M2 10h18"/></svg>
+        <span class="tip">PIX</span>
+      </a>
 
-    <!-- ACESSO RAPIDO -->
-    <section class="section">
-      <div class="section-label">Navegacao</div>
-      <h2 class="section-title">Acesso Rapido</h2>
+      <a href="diaria.html" class="off-navbtn" aria-label="Diaria">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 16v4M4.93 4.93l2.83 2.83M14.24 14.24l2.83 2.83M2 12h4M16 12h4M4.93 19.07l2.83-2.83M14.24 7.76l2.83-2.83"/></svg>
+        <span class="tip">Diaria</span>
+      </a>
 
-      <div class="cards-grid">
-        <a href="agenda.html" class="card featured">
-          <div class="card-top">
-            <div class="card-icon purple">📅</div>
-            <span class="card-badge badge-featured">Destaque</span>
-          </div>
-          <div class="card-body">
-            <h3 class="card-title">AGENDA</h3>
-            <p class="card-desc">Visualize e gerencie todos os shows e compromissos em um calendario interativo</p>
-          </div>
-          <div class="card-action">
-            <span>Acessar</span>
-            <span class="arrow">→</span>
-          </div>
-        </a>
+      <a href="van.html" class="off-navbtn" aria-label="Van">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="20" height="10" rx="2"/><circle cx="6" cy="16" r="2"/><circle cx="16" cy="16" r="2"/><path d="M1 11h20"/></svg>
+        <span class="tip">Van</span>
+      </a>
 
-        <a href="vip.html" class="card">
-          <div class="card-top">
-            <div class="card-icon cyan">🎟️</div>
-            <span class="card-badge badge-user">Usuario</span>
-          </div>
-          <div class="card-body">
-            <h3 class="card-title">LISTA VIP</h3>
-            <p class="card-desc">Entre com seu codigo e reserve seu slot para eventos exclusivos</p>
-          </div>
-          <div class="card-action">
-            <span>Acessar</span>
-            <span class="arrow">→</span>
-          </div>
-        </a>
+    </nav>
+  </aside>
 
-        <a href="pix.html" class="card">
-          <div class="card-top">
-            <div class="card-icon green">💸</div>
-            <span class="card-badge badge-user">Usuario</span>
-          </div>
-          <div class="card-body">
-            <h3 class="card-title">PIX</h3>
-            <p class="card-desc">Consulte informacoes de pagamento e gerencie transacoes</p>
-          </div>
-          <div class="card-action">
-            <span>Acessar</span>
-            <span class="arrow">→</span>
-          </div>
-        </a>
+  <!-- ===== MAIN ===== -->
+  <main class="off-main">
 
-        <a href="vip-admin.html" class="card">
-          <div class="card-top">
-            <div class="card-icon pink">🧠</div>
-            <span class="card-badge badge-admin">Admin</span>
-          </div>
-          <div class="card-body">
-            <h3 class="card-title">VIP ADMIN</h3>
-            <p class="card-desc">Gerencie pool de convites, codigos e confirmacoes</p>
-          </div>
-          <div class="card-action">
-            <span>Acessar</span>
-            <span class="arrow">→</span>
-          </div>
-        </a>
-
-        <a href="diaria.html" class="card">
-          <div class="card-top">
-            <div class="card-icon amber">📒</div>
-            <span class="card-badge badge-user">Usuario</span>
-          </div>
-          <div class="card-body">
-            <h3 class="card-title">DIARIA</h3>
-            <p class="card-desc">Consulte e controle informacoes de diaria da equipe</p>
-          </div>
-          <div class="card-action">
-            <span>Acessar</span>
-            <span class="arrow">→</span>
-          </div>
-        </a>
-
-        <a href="van.html" class="card">
-          <div class="card-top">
-            <div class="card-icon blue">🚐</div>
-            <span class="card-badge badge-user">Usuario</span>
-          </div>
-          <div class="card-body">
-            <h3 class="card-title">VAN</h3>
-            <p class="card-desc">Acesse o modulo de controle e reserva da van</p>
-          </div>
-          <div class="card-action">
-            <span>Acessar</span>
-            <span class="arrow">→</span>
-          </div>
-        </a>
-
-        <a href="pix-admin.html" class="card">
-          <div class="card-top">
-            <div class="card-icon green">🛡️</div>
-            <span class="card-badge badge-admin">Admin</span>
-          </div>
-          <div class="card-body">
-            <h3 class="card-title">PIX ADMIN</h3>
-            <p class="card-desc">Painel administrativo de pagamentos e aprovacoes PIX</p>
-          </div>
-          <div class="card-action">
-            <span>Acessar</span>
-            <span class="arrow">→</span>
-          </div>
-        </a>
-
-        <a href="ajustar-cronograma.html" class="card">
-          <div class="card-top">
-            <div class="card-icon purple">🗓️</div>
-            <span class="card-badge badge-admin">Admin</span>
-          </div>
-          <div class="card-body">
-            <h3 class="card-title">CRONOGRAMA</h3>
-            <p class="card-desc">Ajuste o cronograma da equipe via planilha ou formulario</p>
-          </div>
-          <div class="card-action">
-            <span>Acessar</span>
-            <span class="arrow">→</span>
-          </div>
-        </a>
+    <!-- topbar -->
+    <div class="off-topbar">
+      <div class="welcome">
+        <h1>NOBREAK</h1>
+        <span class="sub">Painel central &mdash; gerencie tudo em um lugar</span>
       </div>
-    </section>
-
-    <!-- STATUS -->
-    <section class="section">
-      <div class="section-label">Monitoramento</div>
-      <h2 class="section-title">Status do Sistema</h2>
-
-      <div class="stats-row">
-        <div class="stat">
-          <div class="stat-label">Sistema</div>
-          <div class="stat-value" style="color:var(--green)">ONLINE</div>
-          <div class="stat-hint">✓ Operacional</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Modulo VIP</div>
-          <div class="stat-value" style="color:var(--purple)">ATIVO</div>
-          <div class="stat-hint">✓ Funcionando</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">PIX</div>
-          <div class="stat-value" style="color:var(--cyan)">OK</div>
-          <div class="stat-hint">✓ Disponivel</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Versao</div>
-          <div class="stat-value" style="color:var(--amber)">2.0</div>
-          <div class="stat-hint">✓ Atualizado</div>
-        </div>
+      <div class="off-actions">
+        <span class="off-pill">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="5"/><path d="M7 5v3l2 1"/></svg>
+          v2.0
+        </span>
       </div>
-    </section>
-  </div>
+    </div>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    Nobreak Company &copy; 2025 &mdash; Todos os direitos reservados
-  </footer>
+    <!-- quick-action banner -->
+    <div class="banner">
+      <div class="banner-icon">
+        <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="20" height="18" rx="2"/><path d="M3 10h20M10 4v18"/></svg>
+      </div>
+      <div class="banner-body">
+        <h3>AGENDA DE SHOWS</h3>
+        <p>Visualize e gerencie todos os shows e compromissos da equipe</p>
+      </div>
+      <div class="banner-actions">
+        <a href="agenda.html" class="sm-btn purple">Abrir Agenda</a>
+        <a href="vip.html" class="sm-btn ghost">Lista VIP</a>
+      </div>
+    </div>
+
+    <!-- MODULOS (usuario) -->
+    <div class="sec-head">
+      <h2>MODULOS</h2>
+      <div class="sec-line"></div>
+    </div>
+
+    <div class="grid">
+
+      <a href="agenda.html" class="module">
+        <div class="mod-icon purple">
+          <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="16" height="16" rx="2"/><path d="M3 9h16M8 2v4M14 2v4"/></svg>
+        </div>
+        <div class="mod-info">
+          <span class="mod-name">Agenda</span>
+          <span class="mod-desc">Shows, compromissos e calendario interativo</span>
+        </div>
+      </a>
+
+      <a href="vip.html" class="module">
+        <div class="mod-icon cyan">
+          <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3 6.5H21l-5.5 4 2 6.5L12 15l-5.5 4 2-6.5L3 8.5h6z"/></svg>
+        </div>
+        <div class="mod-info">
+          <span class="mod-name">Lista VIP</span>
+          <span class="mod-desc">Entre com seu codigo e reserve seu slot</span>
+        </div>
+      </a>
+
+      <a href="pix.html" class="module">
+        <div class="mod-icon green">
+          <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="18" height="13" rx="2"/><path d="M2 10h18"/></svg>
+        </div>
+        <div class="mod-info">
+          <span class="mod-name">PIX</span>
+          <span class="mod-desc">Pagamentos e consultas financeiras</span>
+        </div>
+      </a>
+
+      <a href="diaria.html" class="module">
+        <div class="mod-icon amber">
+          <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 16v4M4.93 4.93l2.83 2.83M14.24 14.24l2.83 2.83M2 12h4M16 12h4M4.93 19.07l2.83-2.83M14.24 7.76l2.83-2.83"/></svg>
+        </div>
+        <div class="mod-info">
+          <span class="mod-name">Diaria</span>
+          <span class="mod-desc">Controle de diarias da equipe</span>
+        </div>
+      </a>
+
+      <a href="van.html" class="module">
+        <div class="mod-icon purple">
+          <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="20" height="10" rx="2"/><circle cx="6" cy="16" r="2"/><circle cx="16" cy="16" r="2"/><path d="M1 11h20"/></svg>
+        </div>
+        <div class="mod-info">
+          <span class="mod-name">Van</span>
+          <span class="mod-desc">Reservas e controle de transporte</span>
+        </div>
+      </a>
+
+      <a href="dashboardsocial.html" class="module">
+        <div class="mod-icon cyan">
+          <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        </div>
+        <div class="mod-info">
+          <span class="mod-name">Dashboard Social</span>
+          <span class="mod-desc">Metricas e analytics das redes</span>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- ADMINISTRACAO -->
+    <div class="sec-head">
+      <h2>ADMINISTRACAO</h2>
+      <div class="sec-line"></div>
+    </div>
+
+    <div class="grid">
+
+      <a href="vip-admin.html" class="module">
+        <div class="mod-icon red">
+          <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="mod-info">
+          <span class="mod-name">VIP Admin</span>
+          <span class="mod-desc">Gerenciar pool de convites e codigos</span>
+        </div>
+      </a>
+
+      <a href="pix-admin.html" class="module">
+        <div class="mod-icon green">
+          <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+        </div>
+        <div class="mod-info">
+          <span class="mod-name">PIX Admin</span>
+          <span class="mod-desc">Aprovacoes e gestao de pagamentos</span>
+        </div>
+      </a>
+
+      <a href="ajustar-cronograma.html" class="module">
+        <div class="mod-icon amber">
+          <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </div>
+        <div class="mod-info">
+          <span class="mod-name">Ajustar Cronograma</span>
+          <span class="mod-desc">Editar cronograma via planilha</span>
+        </div>
+      </a>
+
+      <a href="pix-cadastro.html" class="module">
+        <div class="mod-icon green">
+          <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+        </div>
+        <div class="mod-info">
+          <span class="mod-name">PIX Cadastro</span>
+          <span class="mod-desc">Cadastrar novos destinatarios PIX</span>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- status chips -->
+    <div class="status-row">
+      <div class="status-chip"><span class="dot green"></span> Sistema operacional</div>
+      <div class="status-chip"><span class="dot green"></span> VIP ativo</div>
+      <div class="status-chip"><span class="dot green"></span> PIX disponivel</div>
+    </div>
+
+    <!-- footer -->
+    <div class="off-footer" style="margin-top:28px;">
+      <span>Nobreak Company &copy; 2025</span>
+      <span>Todos os direitos reservados</span>
+    </div>
+
+  </main>
+</div>
 
 </body>
 </html>
