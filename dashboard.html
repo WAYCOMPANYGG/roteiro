@@ -1498,6 +1498,116 @@
 
         // Inicializar
         calculateStats();
+
+        // ========== MODAL DE BOAS-VINDAS ==========
+        function showWelcomeModal() {
+            const modal = document.getElementById('welcomeModal');
+            const username = document.getElementById('welcomeUsername');
+            
+            // Preencher nome do usuário
+            username.textContent = currentUser.name;
+            
+            // Mostrar modal com delay
+            setTimeout(() => {
+                modal.classList.add('active');
+            }, 500);
+        }
+
+        function closeWelcomeModal() {
+            const modal = document.getElementById('welcomeModal');
+            modal.classList.remove('active');
+            
+            // Salvar que já mostrou o modal
+            localStorage.setItem('welcomeModalShown_' + currentUser.id, 'true');
+        }
+
+        // Verificar se deve mostrar o modal
+        function checkWelcomeModal() {
+            const modalShown = localStorage.getItem('welcomeModalShown_' + currentUser.id);
+            
+            // Mostrar apenas se for a primeira vez do dia
+            const today = new Date().toDateString();
+            const lastShown = localStorage.getItem('welcomeModalLastShown_' + currentUser.id);
+            
+            if (!modalShown || lastShown !== today) {
+                showWelcomeModal();
+                localStorage.setItem('welcomeModalLastShown_' + currentUser.id, today);
+            }
+        }
+
+        // Permitir fechar com ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeWelcomeModal();
+            }
+        });
+
+        // Fechar ao clicar fora do modal
+        document.getElementById('welcomeModal').addEventListener('click', (e) => {
+            if (e.target.id === 'welcomeModal') {
+                closeWelcomeModal();
+            }
+        });
+
+        // Iniciar verificação do modal
+        checkWelcomeModal();
     </script>
+
+    <!-- Modal de Boas-Vindas -->
+    <div class="welcome-modal-overlay" id="welcomeModal">
+        <div class="welcome-modal">
+            <!-- Partículas de fundo -->
+            <div class="particles">
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+            </div>
+
+            <div class="welcome-modal-content">
+                <div class="welcome-emoji">🎉</div>
+                
+                <h1 class="welcome-modal-title">
+                    Seja bem-vindo(a),
+                    <span class="welcome-username" id="welcomeUsername">Usuário</span>
+                </h1>
+                
+                <p class="welcome-modal-subtitle">
+                    Estamos felizes em ter você de volta! Prepare-se para uma experiência incrível.
+                </p>
+
+                <!-- Seção de Atualizações -->
+                <div class="updates-section">
+                    <div class="updates-title">
+                        <span>📢 Novidades</span>
+                        <span class="updates-badge">NOVO</span>
+                    </div>
+                    <div class="updates-list">
+                        <div class="update-item">
+                            <div class="update-icon">✨</div>
+                            <span><strong>Dashboard renovado:</strong> Interface moderna e mais intuitiva</span>
+                        </div>
+                        <div class="update-item">
+                            <div class="update-icon">🚀</div>
+                            <span><strong>Módulo Financeiro:</strong> Controle completo das suas finanças</span>
+                        </div>
+                        <div class="update-item">
+                            <div class="update-icon">🎨</div>
+                            <span><strong>Design System:</strong> Experiência visual aprimorada</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-access-system" onclick="closeWelcomeModal()">
+                    <span class="btn-text">
+                        <span>Acessar Sistema</span>
+                        <span class="btn-arrow">→</span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
