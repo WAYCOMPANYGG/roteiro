@@ -642,9 +642,8 @@
     }
 
     body.dragging-seat {
-      position: fixed;
-      width: 100%;
       overflow: hidden;
+      touch-action: none;
     }
 
     @media (max-width: 1200px) {
@@ -890,14 +889,9 @@
   function lockBodyScroll(){
     __scrollY = window.scrollY || window.pageYOffset || 0;
     document.body.classList.add('dragging-seat');
-    document.body.style.top = `-${__scrollY}px`;
   }
   function unlockBodyScroll(){
     document.body.classList.remove('dragging-seat');
-    const top = document.body.style.top;
-    document.body.style.top = '';
-    const y = top ? parseInt(top.replace('-', '').replace('px','') || '0', 10) : __scrollY;
-    window.scrollTo(0, y || 0);
   }
 
   function toast(msg, icon = '✅'){
