@@ -1500,76 +1500,76 @@
         calculateStats();
 
         // ========== MODAL DE BOAS-VINDAS ==========
-        function showWelcomeModal() {
-            console.log('🎉 Mostrando modal de boas-vindas...');
+        // Esperar DOM carregar completamente
+        window.addEventListener('load', function() {
+            console.log('🔄 Inicializando modal de boas-vindas...');
+            
             const modal = document.getElementById('welcomeModal');
             const username = document.getElementById('welcomeUsername');
             
             if (!modal) {
-                console.error('❌ Modal não encontrado!');
+                console.error('❌ Modal não encontrado no DOM!');
                 return;
             }
             
             if (!username) {
-                console.error('❌ Username element não encontrado!');
+                console.error('❌ Elemento username não encontrado!');
                 return;
             }
             
-            // Preencher nome do usuário
-            username.textContent = currentUser.name;
-            console.log('✅ Username preenchido:', currentUser.name);
+            console.log('✅ Elementos do modal encontrados!');
             
-            // Mostrar modal com delay
-            setTimeout(() => {
-                modal.classList.add('active');
-                console.log('✅ Modal ativado!');
-            }, 500);
-        }
-
-        function closeWelcomeModal() {
-            console.log('🚪 Fechando modal...');
-            const modal = document.getElementById('welcomeModal');
-            modal.classList.remove('active');
+            // Função para mostrar modal
+            function showWelcomeModal() {
+                console.log('🎉 Mostrando modal de boas-vindas...');
+                
+                // Preencher nome do usuário
+                username.textContent = currentUser.name;
+                console.log('✅ Username preenchido:', currentUser.name);
+                
+                // Mostrar modal com delay
+                setTimeout(() => {
+                    modal.classList.add('active');
+                    console.log('✅ Modal ativado!');
+                }, 500);
+            }
             
-            // Salvar que já mostrou o modal
-            localStorage.setItem('welcomeModalShown_' + currentUser.id, 'true');
-            console.log('✅ Modal fechado!');
-        }
-
-        // Verificar se deve mostrar o modal
-        function checkWelcomeModal() {
+            // Função para fechar modal
+            window.closeWelcomeModal = function() {
+                console.log('🚪 Fechando modal...');
+                modal.classList.remove('active');
+                localStorage.setItem('welcomeModalShown_' + currentUser.id, 'true');
+                console.log('✅ Modal fechado!');
+            };
+            
+            // Fechar com ESC
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.classList.contains('active')) {
+                    window.closeWelcomeModal();
+                }
+            });
+            
+            // Fechar ao clicar fora
+            modal.addEventListener('click', (e) => {
+                if (e.target.id === 'welcomeModal') {
+                    window.closeWelcomeModal();
+                }
+            });
+            
             // MODO TESTE: SEMPRE MOSTRA O MODAL
+            console.log('🚀 Iniciando modal...');
             showWelcomeModal();
             
-            /* CÓDIGO ORIGINAL (descomente depois):
-            const modalShown = localStorage.getItem('welcomeModalShown_' + currentUser.id);
-            
+            /* CÓDIGO ORIGINAL (descomente depois e comente a linha acima):
             const today = new Date().toDateString();
             const lastShown = localStorage.getItem('welcomeModalLastShown_' + currentUser.id);
             
-            if (!modalShown || lastShown !== today) {
+            if (lastShown !== today) {
                 showWelcomeModal();
                 localStorage.setItem('welcomeModalLastShown_' + currentUser.id, today);
             }
             */
-        }
-
-        // Permitir fechar com ESC
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeWelcomeModal();
-            }
         });
-
-        // Fechar ao clicar fora do modal
-        document.getElementById('welcomeModal').addEventListener('click', (e) => {
-            if (e.target.id === 'welcomeModal') {
-                closeWelcomeModal();
-            }
-        });
-
-        // Iniciar verificação do modal
-        checkWelcomeModal();
     </script>
 
     <!-- Modal de Boas-Vindas -->
