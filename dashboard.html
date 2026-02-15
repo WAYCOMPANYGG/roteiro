@@ -446,6 +446,196 @@
             transform: translateX(4px);
         }
 
+        /* Quick Actions Grid */
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .quick-action-card {
+            background: rgba(30, 30, 46, 0.5);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quick-action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ec4899, #8b5cf6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .quick-action-card:hover::before {
+            opacity: 1;
+        }
+
+        .quick-action-card:hover {
+            transform: translateX(4px);
+            border-color: rgba(236, 72, 153, 0.3);
+            background: rgba(30, 30, 46, 0.7);
+        }
+
+        .quick-action-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(236, 72, 153, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .quick-action-content {
+            flex: 1;
+        }
+
+        .quick-action-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .quick-action-desc {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .quick-action-arrow {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .quick-action-card:hover .quick-action-arrow {
+            background: rgba(236, 72, 153, 0.2);
+            transform: translateX(4px);
+        }
+
+        /* Updates Grid */
+        .updates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .update-card {
+            background: rgba(30, 30, 46, 0.5);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .update-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .update-status {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .update-status.new {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .update-status.coming {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        .update-status.planned {
+            background: rgba(139, 92, 246, 0.2);
+            color: #8b5cf6;
+        }
+
+        .update-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            background: rgba(236, 72, 153, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 16px;
+        }
+
+        .update-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .update-desc {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .update-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .update-version {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .update-date {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .header-content {
@@ -699,7 +889,7 @@
             <!-- Welcome Section -->
             <div class="welcome-section">
                 <h1 class="welcome-title">Bem-vindo de volta! 👋</h1>
-                <p class="welcome-subtitle">Aqui está uma visão geral do seu sistema</p>
+                <p class="welcome-subtitle">Acesse rapidamente suas ferramentas favoritas</p>
             </div>
 
             <!-- Quick Stats -->
@@ -753,8 +943,102 @@
                 </div>
             </div>
 
-            <!-- Modules Section -->
+            <!-- Acessos Rápidos -->
             <div class="section-header">
+                <h2 class="section-title">⚡ Acessos Rápidos</h2>
+            </div>
+
+            <div class="quick-actions-grid">
+                <a href="van.html" class="quick-action-card">
+                    <div class="quick-action-icon">🚐</div>
+                    <div class="quick-action-content">
+                        <h3 class="quick-action-title">Ver Layout da Van</h3>
+                        <p class="quick-action-desc">Visualizar assentos e passageiros</p>
+                    </div>
+                    <div class="quick-action-arrow">→</div>
+                </a>
+
+                <a href="cronograma.html" class="quick-action-card">
+                    <div class="quick-action-icon">📋</div>
+                    <div class="quick-action-content">
+                        <h3 class="quick-action-title">Próximos Eventos</h3>
+                        <p class="quick-action-desc">Timeline de shows agendados</p>
+                    </div>
+                    <div class="quick-action-arrow">→</div>
+                </a>
+
+                <a href="financeiro.html" class="quick-action-card">
+                    <div class="quick-action-icon">💰</div>
+                    <div class="quick-action-content">
+                        <h3 class="quick-action-title">Resumo Financeiro</h3>
+                        <p class="quick-action-desc">Receitas e despesas do mês</p>
+                    </div>
+                    <div class="quick-action-arrow">→</div>
+                </a>
+
+                <a href="pix.html" class="quick-action-card">
+                    <div class="quick-action-icon">💳</div>
+                    <div class="quick-action-content">
+                        <h3 class="quick-action-title">Pagamentos PIX</h3>
+                        <p class="quick-action-desc">Transferências recentes</p>
+                    </div>
+                    <div class="quick-action-arrow">→</div>
+                </a>
+            </div>
+
+            <!-- Próximas Atualizações -->
+            <div class="section-header" style="margin-top: 40px;">
+                <h2 class="section-title">🚀 Próximas Atualizações</h2>
+            </div>
+
+            <div class="updates-grid">
+                <div class="update-card">
+                    <div class="update-status new">Novo</div>
+                    <div class="update-icon">🎨</div>
+                    <h3 class="update-title">Sistema de Themes</h3>
+                    <p class="update-desc">Personalize as cores do sistema com temas customizados</p>
+                    <div class="update-meta">
+                        <span class="update-version">v2.1</span>
+                        <span class="update-date">Mar 2026</span>
+                    </div>
+                </div>
+
+                <div class="update-card">
+                    <div class="update-status coming">Em breve</div>
+                    <div class="update-icon">📱</div>
+                    <h3 class="update-title">App Mobile</h3>
+                    <p class="update-desc">Aplicativo nativo para iOS e Android</p>
+                    <div class="update-meta">
+                        <span class="update-version">v2.2</span>
+                        <span class="update-date">Abr 2026</span>
+                    </div>
+                </div>
+
+                <div class="update-card">
+                    <div class="update-status planned">Planejado</div>
+                    <div class="update-icon">🤖</div>
+                    <h3 class="update-title">IA Assistente</h3>
+                    <p class="update-desc">Inteligência artificial para otimizar agendamentos</p>
+                    <div class="update-meta">
+                        <span class="update-version">v2.3</span>
+                        <span class="update-date">Mai 2026</span>
+                    </div>
+                </div>
+
+                <div class="update-card">
+                    <div class="update-status planned">Planejado</div>
+                    <div class="update-icon">📊</div>
+                    <h3 class="update-title">Relatórios Avançados</h3>
+                    <p class="update-desc">Dashboards interativos e exportação de dados</p>
+                    <div class="update-meta">
+                        <span class="update-version">v2.4</span>
+                        <span class="update-date">Jun 2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modules Section -->
+            <div class="section-header" style="margin-top: 40px;">
                 <h2 class="section-title">Módulos do Sistema</h2>
             </div>
 
