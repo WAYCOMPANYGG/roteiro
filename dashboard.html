@@ -1501,31 +1501,49 @@
 
         // ========== MODAL DE BOAS-VINDAS ==========
         function showWelcomeModal() {
+            console.log('🎉 Mostrando modal de boas-vindas...');
             const modal = document.getElementById('welcomeModal');
             const username = document.getElementById('welcomeUsername');
             
+            if (!modal) {
+                console.error('❌ Modal não encontrado!');
+                return;
+            }
+            
+            if (!username) {
+                console.error('❌ Username element não encontrado!');
+                return;
+            }
+            
             // Preencher nome do usuário
             username.textContent = currentUser.name;
+            console.log('✅ Username preenchido:', currentUser.name);
             
             // Mostrar modal com delay
             setTimeout(() => {
                 modal.classList.add('active');
+                console.log('✅ Modal ativado!');
             }, 500);
         }
 
         function closeWelcomeModal() {
+            console.log('🚪 Fechando modal...');
             const modal = document.getElementById('welcomeModal');
             modal.classList.remove('active');
             
             // Salvar que já mostrou o modal
             localStorage.setItem('welcomeModalShown_' + currentUser.id, 'true');
+            console.log('✅ Modal fechado!');
         }
 
         // Verificar se deve mostrar o modal
         function checkWelcomeModal() {
+            // MODO TESTE: SEMPRE MOSTRA O MODAL
+            showWelcomeModal();
+            
+            /* CÓDIGO ORIGINAL (descomente depois):
             const modalShown = localStorage.getItem('welcomeModalShown_' + currentUser.id);
             
-            // Mostrar apenas se for a primeira vez do dia
             const today = new Date().toDateString();
             const lastShown = localStorage.getItem('welcomeModalLastShown_' + currentUser.id);
             
@@ -1533,6 +1551,7 @@
                 showWelcomeModal();
                 localStorage.setItem('welcomeModalLastShown_' + currentUser.id, today);
             }
+            */
         }
 
         // Permitir fechar com ESC
